@@ -1,0 +1,36 @@
+/*@media only screen and (max-width: 767px){*/
+/* for < 768px */
+
+	.header {
+    	height: 50px;
+    	position: relative;
+	}
+
+	.body {
+		top: 50px;
+		position: relative;
+	}
+
+	.footer {
+		position: absolute;
+		bottom: 0%;
+		background-image: url("images/footers.png");
+		height: 70px;
+		width: 100%;
+	}
+
+	.btn_logged {
+		margin: 1.5% 0%;
+	}
+
+@media only screen and (min-width: 768px){
+
+	.header {
+    	height: 100px;
+	}
+
+	.body {
+		top: 100px;
+	}
+
+}

@@ -5,11 +5,16 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <link rel="stylesheet" type="text/css" href="../../public/css/style.css"/>
+        <script src="../../public/js/jquery.js"></script>
+        <script src="../../public/js/JQS_Scheduler/dist/jquery.schedule.js"></script>
+        <link rel="stylesheet" href="../../public/js/JQS_Scheduler/dist/jquery.schedule.css">
+
+        <title>PAGOD</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
+        
         <!-- Styles -->
         <style>
             html, body {

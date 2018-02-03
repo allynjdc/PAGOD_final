@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>jQuery Schedule Demo</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="dist/jquery.schedule.css">
+    <link rel="stylesheet" href="dist/jquery.schedule-demo.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+<h1>jQuery Schedule Demo</h1>
+
+<h2>Edition mode</h2>
+<pre>
+$("#schedule").jqs();
+</pre>
+<div id="schedule" class="jqs-demo"></div>
+
+<input type="button" value="Export" id="export" />
+<input type="button" value="Import" id="import" />
+<input type="button" value="Reset" id="reset" />
+<pre>
+$("#schedule").jqs('export');
+
+$("#schedule").jqs('import', [
+     {
+         day: 1,
+         periods: [
+             ["8:00", "10:00"],
+         ]
+     }, {
+        day: 4,
+        periods: [
+            ["20:00", "00:00"],
+            ["00:00", "02:00"]
+        ]
+    }
+]);
+
+$("#schedule").jqs('reset');
+</pre>
+
+<textarea id="result"></textarea>
+
+<h2>Read mode</h2>
+<pre>
+$("#schedule2").jqs({
+    mode: "read",
+    data: [
+        {
+            day: 0,
+            periods: [
+                ["20:00", "00:00"],
+                ["00:00", "02:00"]
+            ]
+        }, {
+            day: 3,
+            periods: [
+                ["00:00", "08:30"],
+                ["09:00", "12:00"]
+            ]
+        }
+    ]
+});
+</pre>
+<div id="schedule2" class="jqs-demo"></div>
+
+<h2>Translation & 12-hour clock</h2>
+<pre>
+$("#schedule3").jqs({
+    mode: "read",
+    days: ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"],
+    hour: 12,
+    data: [
+        {
+            day: 0,
+            periods: [
+                ["10pm", "12am"],
+                ["12am", "2:30am"]
+            ]
+        }
+    ]
+});
+</pre>
+<div id="schedule3" class="jqs-demo"></div>
+
+<script src="dist/jquery.schedule.js"></script>
+<script>
+    $(function () {
+        $("#schedule").jqs();
+
+        $("#schedule2").jqs({
+            mode: "read",
+            data: [
+                {
+                    day: 0,
+                    periods: [
+                        ["20:00", "00:00"],
+                        ["00:00", "02:00"]
+                    ]
+                }, {
+                    day: 3,
+                    periods: [
+                        ["00:00", "08:30"],
+                        ["09:00", "12:00"]
+                    ]
+                }
+            ]
+        });
+
+        $("#schedule3").jqs({
+            mode: "read",
+            days: ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"],
+            hour: 12,
+            data: [
+                {
+                    day: 0,
+                    periods: [
+                        ["10pm", "12am"],
+                        ["12am", "2:30am"]
+                    ]
+                }
+            ]
+        });
+
+        $("#export").click(function () {
+            $("#result").val($("#schedule").jqs('export'));
+        });
+
+        $("#import").click(function () {
+             var ret = $("#schedule").jqs('import', [
+                 {
+                     day: 1,
+                     periods: [
+                         ["8:00", "10:00"],
+                     ]
+                 }, {
+                    day: 4,
+                    periods: [
+                        ["20:00", "00:00"],
+                        ["00:00", "02:00"]
+                    ]
+                }
+            ]);
+
+            $("#result").val(ret);
+        });
+
+        $("#reset").click(function () {
+            $("#schedule").jqs('reset');
+        });
+    });
+</script>
+
+</body>
+</html>
