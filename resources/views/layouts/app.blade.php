@@ -11,7 +11,19 @@
     <title>{{ config('app.name', 'PAGOD') }}</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-3.3.7-dist/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}"/>
+    <link rel="stylesheet" href="{{ asset('js/JQS_Scheduler/dist/jquery.schedule.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style_home1.css') }}"/>
+    <script src="{{ asset('css/bootstrap-3.3.7-dist/js/jquery.min.js')}}"></script>
+    <script src="{{ asset('js/JQS_Scheduler/dist/jquery.schedule.js') }}"></script>
+    
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+
+     @stack('styles')
+
 </head>
 <body>
     <div id="app">
@@ -24,15 +36,12 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="index.htm" class="navbar-brand">{{ config('app.name', 'PAGOD') }}</a>
+                    <a href="/home" class="navbar-brand">{{ config('app.name', 'PAGOD') }}</a>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="home1.htm" data-toggle="tooltip" data-placement="bottom" title="Logout"><span class="glyphicon glyphicon-off"></span></a></li>             
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="index.htm" data-toggle="tooltip" data-placement="bottom" title="Home" >
+                            <a href="/home" data-toggle="tooltip" data-placement="bottom" title="Home" >
                                 <span class="glyphicon glyphicon-home"></span>
                             </a>
                         </li>

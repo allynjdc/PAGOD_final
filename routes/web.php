@@ -12,9 +12,13 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+	return view('auth/login');
 })->middleware('guest');
-
+	
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index');
+Route::get('/studyplan','HomeController@plan');
+Route::get('/acadprogress','HomeController@progress');
+Route::get('/addwishlist','HomeController@wishlist');
+Route::get('/addpreference','HomeController@preference');
