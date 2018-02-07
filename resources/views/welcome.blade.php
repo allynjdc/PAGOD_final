@@ -1,100 +1,61 @@
 <!DOCTYPE html>
 <html lang="{{ config('app.locale') }}">
     <head>
+        <title>{{ config('app.name', 'PAGOD') }}</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" type="text/css" href="../../public/css/style.css"/>
-        <script src="../../public/js/jquery.js"></script>
-        <script src="../../public/js/JQS_Scheduler/dist/jquery.schedule.js"></script>
-        <link rel="stylesheet" href="../../public/js/JQS_Scheduler/dist/jquery.schedule.css">
-
-        <title>PAGOD</title>
-
+        <link rel="stylesheet" href="{{ asset('css/bootstrap-3.3.7-dist/css/bootstrap.min.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('js/JQS_Scheduler/dist/jquery.schedule.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/style_home1.css') }}"/>
+        <script src="{{ asset('css/bootstrap-3.3.7-dist/js/jquery.min.js')}}"></script>
+        <script src="{{ asset('js/JQS_Scheduler/dist/jquery.schedule.js') }}"></script>
+        
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-        
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @if (Auth::check())
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ url('/login') }}">Login</a>
-                        <a href="{{ url('/register') }}">Register</a>
-                    @endif
-                </div>
-            @endif
+        <div id="container" class="container body">
+            <div class="row">
 
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
+                <div id="welcome" class="col-xs-12 col-md-5 col-md-offset-1 ">
+                    <p>
+                        Please type the Student ID and password given to you in the appropriate Student Number and Password boxes at the right then click on the "login" button to enter the menu and registration page.
+                    </p>
+                    <ul>
+                        <li> Get your login account from your college.</li>
+                        <li> Note the schedule posted on the main page of this site. </li>
+                        <li><b> IMPORTANT:  Always update your personal data. </b></li>
+                    </ul>
+                    <p>
+                        <b>Problems, Comments, Suggestions?</b> Email us at <b style="color:green">gvicay@up.edu.ph</b> / <b style="color:green">adcalcaben@up.edu.ph</b> or call <b style="color:green"> (+63)946-0902-913 </b> / <b style="color:green"> (+63)907-0580-991</b>
+                    </p>
                 </div>
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                <div class="col-xs-12 col-md-4 col-md-offset-1">
+                    <div class="panel panel-default panel-shadow login_panel">
+                        <div class="panel-body">
+                            <form method="POST" action="index.htm">
+                                <div class="input-group btn_logged">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                    <input type="text" name="student_number" class="form-control" placeholder="Student Number" /> 
+                                </div>
+                                <div class="input-group btn_logged">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                                    <input type="password" name="password" class="form-control" placeholder="Password" />
+                                </div>
+                                <button class="btn btn-primary btn-block" type="submit" name="submit">LOG IN <span class="glyphicon glyphicon-log-in"></span></button>
+                            </form>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+        </div>
+        <div id="footer" class="text-center footer">
+            <p> <br> CALCABEN - ICAY &copy; 2017 </p>
         </div>
     </body>
 </html>
