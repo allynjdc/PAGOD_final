@@ -25,4 +25,24 @@ class HomeController extends Controller
     {
         return view('home');
     }
+
+    public function plan()
+    {
+        return view('studyplan');
+    }
+
+    public function progress()
+    {
+        return view('acadprogress');
+    }
+
+    public function wishlist()
+    {
+        return view('addwishlist');
+    }
+
+    public function preference()
+    {
+        return view('addpreference');
+    }
 }

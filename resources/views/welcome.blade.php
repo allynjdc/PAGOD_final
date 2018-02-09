@@ -33,11 +33,11 @@
                         <b>Problems, Comments, Suggestions?</b> Email us at <b style="color:green">gvicay@up.edu.ph</b> / <b style="color:green">adcalcaben@up.edu.ph</b> or call <b style="color:green"> (+63)946-0902-913 </b> / <b style="color:green"> (+63)907-0580-991</b>
                     </p>
                 </div>
-
+ 
                 <div class="col-xs-12 col-md-4 col-md-offset-1">
                     <div class="panel panel-default panel-shadow login_panel">
                         <div class="panel-body">
-                            <form method="POST" action="index.htm">
+                            <form method="GET" action="/home">
                                 <div class="input-group btn_logged">
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                                     <input type="text" name="student_number" class="form-control" placeholder="Student Number" /> 
