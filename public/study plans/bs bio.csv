@@ -1,0 +1,66 @@
+year, semester, courseName, type, units, lec/lab
+1,1, , ge(ssp),3, lec
+1,1, , ge(ssp),3, lec
+1,1, math11, service,3, lec
+1,1, geo11, core,3, lec
+1,1, zoo10, core,5, lec
+1,1, zoo10, core, , lab
+1,1, pe1, service,2, lec
+1,1, , nstp,3, lec
+1,2, , ge(ah),3, lec
+1,2, , ge(mst),3, lec
+1,2, math14, service,3, lec
+1,2, bot10, core,5, lec
+1,2, bot10, core, , lab
+1,2, chem11, service,5, lec
+1,2, chem11, service, , lab
+1,2, , pe,2, lec
+1,2, , nstp,3, lec
+2,1, , ge(ssp),3, lec
+2,1, , ge(ah),3, lec
+2,1, math100, service,4, lec
+2,1, chem23, service,5, lec
+2,1, chem23, service, , lab
+2,1, zoo111, core,3, lec
+2,1, zoo111.1, core,2, lab
+2,1, , pe,2, lec
+2,2, , ge(ssp),3, lec
+2,2, , ge(ah),3, lec
+2,2, , pe,2, lec
+2,2, bot111, core,3, lec
+2,2, bot111.1, core,2, lab
+2,2, bio180, core,3, lec
+2,2, bio180, core, , lab
+2,2, chem31, service,3, lec
+2,2, chem31.1, service,2, lab
+3,1, bio120, core,3, lec
+3,1, bio120.1, core,2, lab
+3,1, physics51, service,3, lec
+3,1, physics51.1, service,1, lab
+3,1, chem40, service,3, lec
+3,1, chem40.1, service,2, lab
+3,1, zoo102, core,3, lec
+3,1, zoo102.1, core,2, lab
+3,2, bio160, core,3, lec
+3,2, physics52, service,3, lec
+3,2, physics52.1, service,1, lab
+3,2, bio150, core,3, lec
+3,2, bio140, core,3, lec
+3,2, bio140.1, core,1, lab
+3,2, bio121, core,5, lec
+3,2, bio121, core, , lab
+3,midyear, bio160.1, core,2, lec
+4,1, , ge(ah),3, lec
+4,1, , ge(ssp),3, lec
+4,1, , freeelective,3, lec
+4,1, bio189, core,3, lec
+4,1, pi100, service,3, lec
+4,1, zoo131, core,3, lec
+4,1, zoo131.1, core,2, lab
+4,2, , ge(mst),3, lec
+4,2, , ge(ah),3, lec
+4,2, zoo120, core,3, lec
+4,2, zoo120.1, core,3, lab
+4,2, bio196, core,3, lec
+4,2, bio199, core,3, lec
+4,2, , majorelective, 3-5, lec
