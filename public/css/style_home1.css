@@ -1,11 +1,24 @@
 /*@media only screen and (max-width: 767px){*/
 /* for < 768px */
 
-	body {
+	body { 
 		/*background-image: url("../images/empty_classroom.jpg");
 		background-repeat: no-repeat;
    		background-attachment: fixed;
     	background-position: bottom;*/
+	}
+
+	.but_color, .but_color:hover, .but_color:active, .but_color:visited, .but_color:link {
+		background-color: #7a0202;
+		color: white;
+	}
+
+	.anchor_color, .anchor_color:hover, .anchor_color:active, .anchor_color:visited, .anchor_color:link {
+		color: #7a0202;
+	}
+
+	.table_text {
+		color: #7a0202;
 	}
 
 	.header, .footer {
@@ -19,7 +32,7 @@
 	}
 
 	.footer {
-		position: absolute;
+		position: absolute; 
 		bottom: 0%;
 		width: 100%;
 	}

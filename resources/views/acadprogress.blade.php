@@ -13,12 +13,12 @@
 				<div class="panel panel-default">
 					<div class="panel panel-heading">
 						<h4>
-							<a data-toggle="collapse" href="#major">
+							<a class="anchor_color" data-toggle="collapse" href="#major">
 								Major Courses
 							</a>
 						</h4>
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:77%">
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:77%">
 				      			<span class="sr-only">17 / 22 Major Courses</span>
 				    		</div>
 				  		</div>
@@ -132,12 +132,12 @@
 				<div class="panel panel-default">
 					<div class="panel panel-heading">
 						<h4>
-							<a data-toggle="collapse" href="#required">
+							<a class="anchor_color" data-toggle="collapse" href="#required">
 								Required Courses
 							</a>
 						</h4>
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:89%">
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:89%">
 				      			<span class="sr-only">8 / 9 Required Courses</span>
 				    		</div>
 				  		</div>
@@ -206,12 +206,12 @@
 				<div class="panel panel-default">
 					<div class="panel panel-heading">
 						<h4>
-							<a data-toggle="collapse" href="#elec">
+							<a class="anchor_color" data-toggle="collapse" href="#elec">
 								Elective Courses
 							</a>
 						</h4>
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:33%">
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:33%">
 				      			<span class="sr-only">2 / 6 Elective Courses</span>
 				    		</div>
 				  		</div>
@@ -250,12 +250,12 @@
 				<div class="panel panel-default">
 					<div class="panel panel-heading">
 						<h4>
-							<a data-toggle="collapse" href="#geah">
+							<a class="anchor_color" data-toggle="collapse" href="#geah">
 								GE(AH) Courses
 							</a>
 						</h4>
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:80%">
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:80%">
 				      			<span class="sr-only">4 / 5 GE(AH)</span>
 				    		</div>
 				  		</div>
@@ -309,12 +309,12 @@
 				<div class="panel panel-default">
 					<div class="panel panel-heading">
 						<h4>
-							<a data-toggle="collapse" href="#gemst">
+							<a class="anchor_color" data-toggle="collapse" href="#gemst">
 								GE(MST) Courses
 							</a>
 						</h4>
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
 				      			<span class="sr-only">4 / 4 Complete</span>
 				    		</div>
 				  		</div>
@@ -363,12 +363,12 @@
 				<div class="panel panel-default">
 					<div class="panel panel-heading">
 						<h4>
-							<a data-toggle="collapse" href="#gessp">
+							<a class="anchor_color" data-toggle="collapse" href="#gessp">
 								GE(SSP) Courses
 							</a>
 						</h4>
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
 				      			<span class="sr-only">5 / 5 Complete</span>
 				    		</div>
 				  		</div>
@@ -422,12 +422,12 @@
 				<div class="panel panel-default">
 					<div class="panel panel-heading">
 						<h4>
-							<a data-toggle="collapse" href="#pe">
+							<a class="anchor_color" data-toggle="collapse" href="#pe">
 								PE Courses
 							</a>
 						</h4>
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
 				      			<span class="sr-only">4 / 4 Complete</span>
 				    		</div>
 				  		</div>
@@ -476,12 +476,12 @@
 				<div class="panel panel-default">
 					<div class="panel panel-heading">
 						<h4>
-							<a data-toggle="collapse" href="#nstp">
+							<a class="anchor_color" data-toggle="collapse" href="#nstp">
 								NSTP Courses
 							</a>
 						</h4>
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:100%">
 				      			<span class="sr-only">2 / 2 Complete</span>
 				    		</div>
 				  		</div>

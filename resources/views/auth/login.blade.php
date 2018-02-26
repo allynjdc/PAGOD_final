@@ -2,6 +2,7 @@
 <html lang="{{ config('app.locale') }}">
     <head>
         <title>{{ config('app.name', 'PAGOD') }}</title>
+        <link rel="shortcut icon" href="{{ asset('images/pagod.ico') }}" type="image/x-icon">
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -36,8 +37,11 @@
  
                 <div class="col-xs-12 col-md-4 col-md-offset-1">
                     <div class="panel panel-default panel-shadow login_panel">
+                        <!-- <div>
+                            <img class="pagod_login" src="{{ asset('images/pagod.ico') }}">
+                        </div> -->
                         <div class="panel-body">
-                            <form method="GET" action="/home">
+                            <form method="POST" action="/home">
                                 <div class="input-group btn_logged">
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                                     <input type="text" name="student_number" class="form-control" placeholder="Student Number" /> 
@@ -46,7 +50,7 @@
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                     <input type="password" name="password" class="form-control" placeholder="Password" />
                                 </div>
-                                <button class="btn btn-primary btn-block" type="submit" name="submit">LOG IN <span class="glyphicon glyphicon-log-in"></span></button>
+                                <button class="but_color btn btn-block" type="submit" name="submit">LOG IN <span class="glyphicon glyphicon-log-in"></span></button>
                             </form>
                         </div>
                     </div>

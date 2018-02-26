@@ -12,7 +12,7 @@
 					<div class="panel-body">
 						<div class="btn-group">
 							<div class="btn-group-justified">
-								<a class="btn btn-primary" data-toggle="modal" href="#addconstraint"><span class="glyphicon glyphicon-plus"></span> ADD CONSTRAINT</a>
+								<a class="btn but_color" data-toggle="modal" href="#addconstraint"><span class="glyphicon glyphicon-plus"></span> ADD CONSTRAINT</a>
 							</div>
 							<!-- PRIORITIES -->
 							<div class="panel-group priorities" id="accordion">
@@ -70,7 +70,7 @@
 								</div>
 							</div>
   							<div class="btn-group-justified">
-								<a id="generate_btn" class="btn btn-primary" href="javascript:void(0)"> GENERATE </a>
+								<a id="generate_btn" class="btn but_color" href="javascript:void(0)"> GENERATE </a>
 							</div>
   						</div>
 					</div>
@@ -119,7 +119,7 @@
   							<div id="addcourserestriction" class="tab-pane fade active in">
   								<div class="input-group bootstrap-timepicker timepicker btn_logged">
 									<div class="input-group-btn">
-										<button data-constraint="mustnothave" type="button" class="btn btn-primary dropdown-toggle add-constraint-btn" data-toggle="dropdown">Must Not Have <span class="caret"></span></button>
+										<button data-constraint="mustnothave" type="button" class="btn but_color dropdown-toggle add-constraint-btn" data-toggle="dropdown">Must Not Have <span class="caret"></span></button>
 										<ul class="dropdown-menu" role="menu">
 											<li role="presentation">
 												<a class="add-constraint-item constraint-item" href="javascript:void(0)">Must Have</a>
@@ -155,7 +155,7 @@
   							</div>
 						</div>
 						<hr />
-						<button id="add_constraint" type="submit" class="btn btn-primary btn_logged">Add</button>
+						<button id="add_constraint" type="submit" class="btn but_color btn_logged">Add</button>
 			    		<button type="button" class="btn btn-default btn_logged" data-dismiss="modal">Close</button>
 			    	</form>
 			    </div>

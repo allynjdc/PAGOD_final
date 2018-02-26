@@ -5,12 +5,12 @@
 <div class="col-md-8 col-sm-12">
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h4><strong>FIRST YEAR</strong> <small class="pull-right">A.Y. 2014-2015</small></h4>
+			<h4 class="table_text"><strong>FIRST YEAR</strong> <small class="pull-right">A.Y. 2014-2015</small></h4>
 		</div>
 		<div class="table-responsive">
 			<table class="table table-hover">
 				<thead>
-					<tr>
+					<tr class="table_text">
 						<th>First Semester</th>
 						<th>Units</th>
 						<th>Completion</th>
@@ -65,7 +65,7 @@
 		<div class="table-responsive">
 			<table class="table table-hover">
 				<thead>
-					<tr>
+					<tr class="table_text">
 						<th>Second Semester</th>
 						<th>Units</th>
 						<th>Completion</th>
@@ -125,12 +125,12 @@
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h4><strong>SECOND YEAR</strong> <small class="pull-right">A.Y. 2015-2016</small></h4>
+			<h4 class="table_text"><strong>SECOND YEAR</strong> <small class="pull-right">A.Y. 2015-2016</small></h4>
 		</div>
 		<div class="table-responsive">
 			<table class="table table-hover">
 				<thead>
-					<tr>
+					<tr class="table_text">
 						<th>First Semester</th>
 						<th>Units</th>
 						<th>Completion</th>
@@ -190,7 +190,7 @@
 		<div class="table-responsive">
 			<table class="table table-hover">
 				<thead>
-					<tr>
+					<tr class="table_text">
 						<th>Second Semester</th>
 						<th>Units</th>
 						<th>Completion</th>
@@ -250,12 +250,12 @@
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h4><strong>THIRD YEAR</strong> <small class="pull-right">A.Y. 2016-2017</small></h4>
+			<h4 class="table_text"><strong>THIRD YEAR</strong> <small class="pull-right">A.Y. 2016-2017</small></h4>
 		</div>
 		<div class="table-responsive">
 			<table class="table table-hover">
 				<thead>
-					<tr>
+					<tr class="table_text">
 						<th>First Semester</th>
 						<th>Units</th>
 						<th>Completion</th>
@@ -305,7 +305,7 @@
 		<div class="table-responsive">
 			<table class="table table-hover">
 				<thead>
-					<tr>
+					<tr class="table_text">
 						<th>Second Semester</th>
 						<th>Units</th>
 						<th>Completion</th>
@@ -355,7 +355,7 @@
 		<div class="table-responsive">
 			<table class="table table-hover">
 				<thead>
-					<tr>
+					<tr class="table_text">
 						<th>Midyear</th>
 						<th>Units</th>
 						<th>Completion</th>
@@ -380,12 +380,12 @@
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h4><strong>FOURTH YEAR</strong> <small class="pull-right">A.Y. 2017-2018</small></h4>
+			<h4 class="table_text"><strong>FOURTH YEAR</strong> <small class="pull-right">A.Y. 2017-2018</small></h4>
 		</div>
 		<div class="table-responsive">
 			<table class="table table-hover">
 				<thead>
-					<tr>
+					<tr class="table_text">
 						<th>First Semester</th>
 						<th>Units</th>
 						<th>Completion</th>
@@ -440,7 +440,7 @@
 		<div class="table-responsive">
 			<table class="table table-hover">
 				<thead>
-					<tr>
+					<tr class="table_text">
 						<th>Second Semester</th>
 						<th>Units</th>
 						<th>Completion</th>
