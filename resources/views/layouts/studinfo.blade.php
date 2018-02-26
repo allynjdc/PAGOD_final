@@ -20,16 +20,16 @@
 						</div>
 						<div class="ge-counts col-md-12 text-center">
 							<div class="count1 col-md-3 text-center">
-								<p><b><a href="#electives" data-toggle="modal">Electives</a></b><br> 4 </p>
+								<p><b><a class="anchor_color" href="#electives" data-toggle="modal">Electives</a></b><br> 4 </p>
 							</div>
 							<div class="count1 col-md-3 text-center">
-								<p><b><a href="#ah" data-toggle="modal">AH</a></b><br> 5 </p>
+								<p><b><a class="anchor_color" href="#ah" data-toggle="modal">AH</a></b><br> 5 </p>
 							</div>
 							<div class="count1 col-md-3 text-center">
-								<p><b><a href="#mst" data-toggle="modal">MST</a></b><br> 4 </p>
+								<p><b><a class="anchor_color" href="#mst" data-toggle="modal">MST</a></b><br> 4 </p>
 							</div>
 							<div class="count1 col-md-3 text-center">
-								<p><b><a href="#ssp" data-toggle="modal">SSP</a></b><br> 5 </p>
+								<p><b><a class="anchor_color" href="#ssp" data-toggle="modal">SSP</a></b><br> 5 </p>
 							</div>
 						</div>
 					</div>
@@ -41,16 +41,16 @@
 					<div class="panel-body">
 						<div class="btn-group">
 							<div class="btn-group-justified btn_logged">
-								<a class="btn btn-primary" href="/addwishlist"> Check Schedule Generator </a>
+								<a class="btn but_color" href="/addwishlist"> Check Schedule Generator </a>
 							</div>
 							<div class="btn-group-justified btn_logged">
-								<a class="btn btn-primary" href="/addpreference"> Edit Subject Preferences </a>
+								<a class="btn but_color" href="/addpreference"> Edit Subject Preferences </a>
 							</div>
 							<div class="btn-group-justified btn_logged">
-								<a class="btn btn-primary" href="/studyplan"> View Study Plan </a>
+								<a class="btn but_color" href="/studyplan"> View Study Plan </a>
 							</div>
 							<div class="btn-group-justified btn_logged">
-								<a class="btn btn-primary" href="/acadprogress"> View Academic Progress </a>
+								<a class="btn but_color" href="/acadprogress"> View Academic Progress </a>
 							</div>
 						</div>
 					</div>

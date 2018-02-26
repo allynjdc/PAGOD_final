@@ -231,14 +231,14 @@
 								<td>PI 100</td>
 								<td>3.0</td>
 								<td>
-									<a href='#remove' data-toggle='modal' class=''><span class="glyphicon glyphicon-remove"></span></a>
+									<a href='#remove' data-toggle='modal' class='anchor_color'><span class="glyphicon glyphicon-remove"></span></a>
 								</td>
 							</tr>
 							<tr>
 								<td>CMSC 198.2</td>
 								<td>3.0</td>
 								<td>
-									<a><span class="glyphicon glyphicon-remove"></span></a>
+									<a href='#remove' data-toggle='modal' class='anchor_color'><span class="glyphicon glyphicon-remove"></span></a>
 								</td>
 							</tr>
 							<tr>
@@ -257,7 +257,7 @@
 								</td>
 								<td>3.0</td>
 								<td>
-									<a href='#remove' data-toggle='modal' class=''><span class="glyphicon glyphicon-remove"></span></a>
+									<a href='#remove' data-toggle='modal' class='anchor_color'><span class="glyphicon glyphicon-remove"></span></a>
 								</td>
 							</tr>
 							<tr>
@@ -276,7 +276,7 @@
 								</td>
 								<td>3.0</td>
 								<td>
-									<a href='#remove' data-toggle='modal' class=''><span class="glyphicon glyphicon-remove"></span></a>
+									<a href='#remove' data-toggle='modal' class='anchor_color'><span class="glyphicon glyphicon-remove"></span></a>
 								</td>
 							</tr>
 							<tr>
@@ -295,7 +295,7 @@
 								</td>
 								<td>3.0</td>
 								<td>
-									<a href='#remove' data-toggle='modal' class=''><span class="glyphicon glyphicon-remove"></span></a>
+									<a href='#remove' data-toggle='modal' class='anchor_color'><span class="glyphicon glyphicon-remove"></span></a>
 								</td>
 							</tr>
 							<tr>
@@ -325,7 +325,7 @@
 								</td>
 								<td>3.0</td>
 								<td>
-									<a href='#remove' data-toggle='modal' class=''><span class="glyphicon glyphicon-remove"></span></a>
+									<a href='#remove' data-toggle='modal' class='anchor_color'><span class="glyphicon glyphicon-remove"></span></a>
 								</td>
 							</tr>
 						</tbody>
@@ -340,7 +340,7 @@
 				</div>
 				<div>
 					<div class="btn-group btn_logged pull-right">
-						<a class="btn btn-primary" href="/addwishlist"> Send Preference </a>
+						<a class="btn but_color" href="/addwishlist"> Send Preference </a>
 					</div>
 				</div>
 			</div>
