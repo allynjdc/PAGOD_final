@@ -1,69 +1,6 @@
 #!/usr/bin/python
 import csv
-
-class Student:
-	biodiv = ["bs bio", "bs ph"]
-	cfos = ["bs fisheries"]
-	cm = ["bs accountancy", "bs business administration", "bs management"]
-	dpsm = ["bs appmath", "bs chem", "bs cmsc", "bs stat"]
-	humdiv = ["bs cms", "ba lit"]
-	socscidiv = ["ba cd", "ba hist", "ba polsci (double major)", "ba polsci (single major)", "ba psych", "ba socio", "bs econ"]
-	sotech = ["bs chemical engineering", "bs food technology"]
-	def __init__(self, year, semester, degreeProgram, allCourses, coursesTaken):
-		self.year = year
-		self.semester = semester
-		self.degreeProgram = degreeProgram
-		self.allCourses = allCourses
-		self.coursesTaken = coursesTaken
-		if degreeProgram in Student.biodiv:
-			self.department = "bio div"
-		elif degreeProgram in Student.cfos:
-			self.department = "cfos"
-		elif degreeProgram in Student.cm:
-			self.department = "CM"
-		elif degreeProgram in Student.dpsm:
-			self.department = "dpsm"
-		elif degreeProgram in Student.humdiv:
-			self.department = "hum div"
-		elif degreeProgram in Student.socscidiv:
-			self.department = "socsci div"
-		elif degreeProgram in Student.sotech:
-			self.department = "sotech"
-
-class Subject:
-	def __init__(self, year, semester, courseName, courseType, units, leclab):
-		self.year = year
-		self.semester = semester
-		self.courseName = courseName
-		self.courseType = courseType
-		self.units = units
-		self.leclab = leclab
-
-	def displaySubject(self):
-		print ("Year : "+ self.year+ ", Semester: "+ self.semester+ ", Course Name: "+ self.courseName+ ", Subject Type: "+ self.courseType+ ", Units: "+ self.units+", Lec or Lab: "+self.leclab)
-
-def createSubjectList(pathname):
-	ifile = open(pathname, "rt", encoding="utf8")
-	reader = csv.reader(ifile)
-	subjects = []
-	subjectAttributes = []
-	rownum = 0
-	for row in reader:
-		if rownum == 0:
-			rownum += 1
-			continue
-		for col in row:
-			subjectAttributes.append(col.strip())
-		if(len(subjectAttributes) < 6):
-			subject = Subject(" ", " ", subjectAttributes[0].lower(), subjectAttributes[1].lower(), " ", " ")
-		else:
-			subject = Subject(subjectAttributes[0], subjectAttributes[1], subjectAttributes[2].lower(), subjectAttributes[3].lower(), subjectAttributes[4], subjectAttributes[5].lower())
-		subjects.append(subject)
-		subjectAttributes = []
-		rownum += 1
-
-	ifile.close()
-	return subjects
+import classes
 
 def countCourseType(courseList, courseType):
 	counter = 0
@@ -124,17 +61,7 @@ def coursesToTake(allCourses, coursesTaken):
 	return output
 
 if __name__ == '__main__':
-	student = Student(3, 2, "bs chemical engineering", createSubjectList("../study plans/bs chemical engineering.csv"), createSubjectList("../csv/3rdYrChemEng.csv"))
-	# print("_______Courses you already took________")
-	# for courseTaken in student.coursesTaken:
-	# 	courseTaken.displaySubject()
-	# for course in student.allCourses:
-	# 	course.displaySubject()
-	# print(student.department)
-	# print("_______Courses you need to take________")
-	# neededcourses = coursesToTake(student.allCourses, student.coursesTaken)
-	# for course in neededcourses:
-	# 	course.displaySubject()
+	student = classes.Student(3, 2, "bs chemical engineering", classes.createSubjectList("../study plans/bs chemical engineering.csv"), classes.createSubjectList("../csv/3rdYrChemEng.csv"))
 	neededcourses = coursesToTake(student.allCourses, student.coursesTaken)
 	for neededcourse in neededcourses:
 		neededcourse.displaySubject()
