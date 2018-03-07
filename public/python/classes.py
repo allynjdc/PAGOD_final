@@ -51,22 +51,18 @@ class Subject:
 		print ("Year : "+ self.year+ ", Semester: "+ self.semester+ ", Course Name: "+ self.courseName+ ", Subject Type: "+ self.courseType+ ", Units: "+ self.units+", Lec or Lab: "+self.leclab)
 
 class ClassOffering:
-	def __init__(self, academicYear, semester, courseName, campus, leclab, sessions, section, units, instructor):
+	def __init__(self, academicYear, semester, courseName, campus, leclab, section, units, instructor):
 		self.academicYear = academicYear
 		self.semester = semester
 		self.courseName = courseName
 		self.campus = campus
 		self.leclab = leclab
 		self.section = section
-		self.sessions = sessions
 		self.units = units
 		self.instructor = instructor
+
 	def setSessions(self, sessions):
 		self.sessions = sessions
-	def displayClassOffering(self):
-		print ("Course Name: "+ self.courseName+ ", Section: "+self.section+", Units: "+ self.units+", Lec or Lab: "+self.leclab+", Instructor: "+self.instructor)
-		for session in self.sessions:
-			session.displaySession()
 
 class Session:
 	def __init__(self, room, days, start, end):
@@ -80,9 +76,9 @@ class Session:
 		self.start = start
 	def setEnd(self, end):
 		self.end = end
-	def displaySession(self):
-		print(self.room+" "+self.days+" "+self.start+"-"+self.end)
-		
+	# def displaySession(self):
+	# 	print(self.room+" "+self.days+" "+self.start+"-"+self.end)
+
 def csvReader(pathname):
 	ifile = open(pathname, "rt", encoding="utf8", errors="ignore")
 	reader = csv.reader(ifile)
@@ -124,20 +120,22 @@ def createClassesList(pathname):
 			elif col in needlower:
 				subjectAttributes.append(row[col].strip().replace(" ","").lower())
 			else:
-				subjectAttributes.append(row[col].split(","))
+				splitted = row[col].split(",")
+				for index in range(1, len(splitted)):
+					splitted[index] = splitted[index].replace(" ","")
+				subjectAttributes.append(splitted)
 		classofferings.append(subjectAttributes)
-
+	classList = []
 	for classoffering in classofferings:
-		classoffering = createClassOffering(classoffering)
-		classoffering.displayClassOffering()
+		classList.append(createClassOffering(classoffering))
+
 	ifile.close()
+	return classList
 
 def createTimeString(timeString):
 	# morning = [7, 8, 9, 10, 11]
 	# afternoon = [12, 1, 2, 3, 4, 5]
-	hour, minute = timeString.split(":")
-	hour = int(hour)
-	minute = int(minute)
+	hour, minute = splitTimeString(timeString)
 	if hour >= 7 and hour <= 11:
 		timeString = timeString+"AM"
 	else:
@@ -145,10 +143,21 @@ def createTimeString(timeString):
 	return timeString
 	# parsedTime = datetime.strptime(timeString, "%I:%M%p")
 	# return datetime.time(parsedTime)
+def createTimeDecimal(timeString):
+	hour, minute = splitTimeString(timeString)
+	if hour < 7:
+		hour += 12
+	minute = minute/60
+	return hour+minute
 
+def splitTimeString(timeString):
+	hour, minute = timeString.split(":")
+	hour = int(hour)
+	minute = int(minute)
+	return hour, minute
 
 def createClassOffering(classitem):
-	classoffering = ClassOffering(classitem[0], classitem[1], classitem[2], classitem[3], classitem[4], [], classitem[6], classitem[9], classitem[11])
+	classoffering = ClassOffering(classitem[0], classitem[1], classitem[2], classitem[3], classitem[4], classitem[6], classitem[9], classitem[11])
 	room = classitem[5]
 	days = classitem[7]
 	time = classitem[8]
@@ -157,14 +166,15 @@ def createClassOffering(classitem):
 		session = Session(room[index], days[index], "", "")
 		try:
 			start, end = time[index].split("-")
-			start = createTime(start)
-			end = createTime(end)
+			start = createTimeDecimal(start)
+			end = createTimeDecimal(end)
 		except ValueError:
-			start = "TBA"
-			end = "TBA"
+			start = None
+			end = None
 		session.setStart(start)
 		session.setEnd(end)
 		sessions.append(session)
 
 	classoffering.setSessions(sessions)
+	# print(type(classoffering))
 	return classoffering
