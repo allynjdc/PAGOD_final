@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import csv
-from datetime import datetime
+from datetime import datetime 
 
 class Student:
 	biodiv = ["bs bio", "bs ph"]

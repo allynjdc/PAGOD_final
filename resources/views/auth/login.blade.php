@@ -41,8 +41,10 @@
                             <img class="pagod_login" src="{{ asset('images/pagod.ico') }}">
                         </div> -->
                         <div class="panel-body">
-                            <form method="POST" action="/home">
-                                <div class="input-group btn_logged">
+                            <form method="POST" action="{{ route('login') }}">
+                            {{ csrf_field() }}
+                            <!-- {{ route('login') }} -->
+                                <div class="input-group btn_logged"> 
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
                                     <input type="text" name="student_number" class="form-control" placeholder="Student Number" /> 
                                 </div>

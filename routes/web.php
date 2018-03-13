@@ -16,8 +16,8 @@ Route::get('/', function () {
 })->middleware('guest');
 	
 Auth::routes();
-
-Route::get('/home', 'HomeController@index');
+Route::post('login',array('uses' => 'HomeController@confirmUser'));
+Route::get('/home', 'HomeController@index'); 
 Route::get('/studyplan','HomeController@plan');
 Route::get('/acadprogress','HomeController@progress');
 Route::get('/addwishlist','HomeController@wishlist');
