@@ -1,6 +1,47 @@
 #!/usr/bin/python
 import csv
-from datetime import datetime 
+import numpy as np
+from datetime import datetime
+
+class Problem:
+	def __init__(self, variables, classOfferingList):
+		variable_domain = {}
+		for variable in variables:
+			variable_domain.setdefault(variable, 0)
+			variable_domain[variable] = self.findSections(variable, classOfferingList)
+
+		self.variable_domain = variable_domain
+
+	def getDayValue(self, day):
+		if day == "M":
+			return 0
+		elif day == "T":
+			return 1
+		elif day == "W":
+			return 2
+		elif day == "Th":
+			return 3
+		elif day == "F":
+			return 4
+		elif day == "S":
+			return 5
+		return 6
+
+	def slotList(self):
+		return list(np.arange(7, 19.25, .25, dtype="double"))
+
+	def findSections(self, courseName, classOfferingList):
+		return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName]
+
+	def findDayIndices(self, slotList, start, end, day):
+		index1 = slotList.index(start)
+		index2 = slotList.index(end)
+		day_value = self.getDayValue(day)
+		slotLength = len(slotList)
+		index1 = (day_value * slotLength) + index1
+		index2 = (day_value * slotLength) + index2
+		return list(np.arange(index1, index2))
+
 
 class Student:
 	biodiv = ["bs bio", "bs ph"]
@@ -143,6 +184,7 @@ def createTimeString(timeString):
 	return timeString
 	# parsedTime = datetime.strptime(timeString, "%I:%M%p")
 	# return datetime.time(parsedTime)
+
 def createTimeDecimal(timeString):
 	hour, minute = splitTimeString(timeString)
 	if hour < 7:
