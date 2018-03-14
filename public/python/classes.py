@@ -8,8 +8,9 @@ class Problem:
 		variable_domain = {}
 		for variable in variables:
 			variable_domain.setdefault(variable, 0)
+			# sections = self.findSections(variable, classOfferingList)
+			# slotList = []
 			variable_domain[variable] = self.findSections(variable, classOfferingList)
-
 		self.variable_domain = variable_domain
 
 	def getDayValue(self, day):
@@ -42,6 +43,45 @@ class Problem:
 		index2 = (day_value * slotLength) + index2
 		return list(np.arange(index1, index2))
 
+	def checkCompleteness(self, assignments):
+		for key in assignments.keys():
+			if len(assignments[key]) == 0:
+				return False
+		if self.checkListConflict(assignments):
+			return False
+		return True
+
+	def checkListConflict(self, assignments):
+		for key in assignments.keys():
+			currList = assignments[key]
+			for item in assignments.keys():
+				if item == key:
+					continue
+				if self.checkConflict(currList, assignments[item]):
+					return True
+		return False
+
+	def checkConflict(self, list1, list2):
+		return not set(list1).isdisjoint(list2)
+
+	def selectUnassignedVariable(self, assignments):
+		for key in assignments.keys():
+			if len(assignments[key]) == 0:
+				return key
+
+	def orderDomainValues(self, name):
+		sections = self.variable_domain[name]
+		values = []
+		for section in sections:
+			sessions = section.sessions
+			slotList = []
+			for session in sessions:
+				days = session.days.split(" ")
+				for day in days:
+					dayIndices = self.findDayIndices(self.slotList(), session.start, session.end, day)
+					slotList = slotList + dayIndices
+			values.append(slotList)
+		return values
 
 class Student:
 	biodiv = ["bs bio", "bs ph"]

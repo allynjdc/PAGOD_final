@@ -3,6 +3,21 @@ import csv
 import classes
 import numpy as np
 
+def backtracking(assignment, problem):
+	if problem.checkCompleteness(assignment):
+		return assignment
+	var = problem.selectUnassignedVariable(assignment)
+	for value in problem.orderDomainValues(var):
+		temp = assignment
+		temp[var] = value
+		if not problem.checkListConflict(temp):
+			assignment[var] = value
+			result = backtracking(assignment, problem)
+			if result != None:
+				return result
+			assignment[var] = []
+	return None
+
 
 if __name__ == "__main__":
 	coursesToTake = [
@@ -19,6 +34,11 @@ if __name__ == "__main__":
 	classOfferingList = classes.createClassesList("../csv/data.csv")
 	coursenamesToTake = [course.courseName for course in coursesToTake]
 	problem = classes.Problem(coursenamesToTake, classOfferingList)
+	# print(problem.variable_domain)
+	assignment = {}
+	for key in problem.variable_domain.keys():
+		assignment.setdefault(key, [])
+	print(backtracking(assignment, problem))
 	# sections = findSections("math54", classOfferingList)
 	# backtracking([], coursesToTake)
 	# for section in sections:
