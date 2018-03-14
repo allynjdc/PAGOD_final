@@ -45,7 +45,7 @@ class Problem:
 
 	def checkCompleteness(self, assignments):
 		for key in assignments.keys():
-			if len(assignments[key]) == 0:
+			if assignments[key] == None:
 				return False
 		if self.checkListConflict(assignments):
 			return False
@@ -54,10 +54,11 @@ class Problem:
 	def checkListConflict(self, assignments):
 		for key in assignments.keys():
 			currList = assignments[key]
+			currList = self.classOfferingToList(currList)
 			for item in assignments.keys():
 				if item == key:
 					continue
-				if self.checkConflict(currList, assignments[item]):
+				if self.checkConflict(currList, self.classOfferingToList(assignments[item])):
 					return True
 		return False
 
@@ -66,7 +67,7 @@ class Problem:
 
 	def selectUnassignedVariable(self, assignments):
 		for key in assignments.keys():
-			if len(assignments[key]) == 0:
+			if assignments[key] == None:
 				return key
 
 	def orderDomainValues(self, name):
@@ -82,6 +83,19 @@ class Problem:
 					slotList = slotList + dayIndices
 			values.append(slotList)
 		return values
+
+	def classOfferingToList(self, section):
+		if section == None:
+			return []
+		sessions = section.sessions
+		slotList = []
+		for session in sessions:
+			days = session.days.split(" ")
+			for day in days:
+				dayIndices = self.findDayIndices(self.slotList(), session.start, session.end, day)
+				slotList = slotList + dayIndices
+		return slotList
+
 
 class Student:
 	biodiv = ["bs bio", "bs ph"]
@@ -145,6 +159,11 @@ class ClassOffering:
 	def setSessions(self, sessions):
 		self.sessions = sessions
 
+	def displayClassOffering(self):
+		print(self.courseName, "Section", self.section, self.instructor, self.leclab)
+		for session in self.sessions:
+			session.displaySession()
+
 class Session:
 	def __init__(self, room, days, start, end):
 		self.room = room
@@ -157,8 +176,8 @@ class Session:
 		self.start = start
 	def setEnd(self, end):
 		self.end = end
-	# def displaySession(self):
-	# 	print(self.room+" "+self.days+" "+self.start+"-"+self.end)
+	def displaySession(self):
+		print("\t",self.room, self.days, str(self.start)+"-"+str(self.end))
 
 def csvReader(pathname):
 	ifile = open(pathname, "rt", encoding="utf8", errors="ignore")

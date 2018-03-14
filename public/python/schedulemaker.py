@@ -7,7 +7,7 @@ def backtracking(assignment, problem):
 	if problem.checkCompleteness(assignment):
 		return assignment
 	var = problem.selectUnassignedVariable(assignment)
-	for value in problem.orderDomainValues(var):
+	for value in problem.variable_domain[var]:
 		temp = assignment
 		temp[var] = value
 		if not problem.checkListConflict(temp):
@@ -17,7 +17,6 @@ def backtracking(assignment, problem):
 				return result
 			assignment[var] = []
 	return None
-
 
 if __name__ == "__main__":
 	coursesToTake = [
@@ -37,16 +36,7 @@ if __name__ == "__main__":
 	# print(problem.variable_domain)
 	assignment = {}
 	for key in problem.variable_domain.keys():
-		assignment.setdefault(key, [])
-	print(backtracking(assignment, problem))
-	# sections = findSections("math54", classOfferingList)
-	# backtracking([], coursesToTake)
-	# for section in sections:
-	# 	sessions = section.sessions
-	# 	print("Section ",section.section)
-	# 	for index in range(len(sessions)):
-	# 		days = sessions[index].days.split(" ")
-	# 		print("\tSession "+str(index+1))
-	# 		for day in days:
-	# 			dayIndices = findDayIndices(slotList(), sessions[index].start, sessions[index].end, day)
-	# 			print("\t\t",day, dayIndices, sessions[index].start, sessions[index].end)
+		assignment.setdefault(key, None)
+	assignment = backtracking(assignment, problem)
+	for key in assignment.keys():
+		assignment[key].displayClassOffering()
