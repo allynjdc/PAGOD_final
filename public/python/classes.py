@@ -4,12 +4,11 @@ import numpy as np
 from datetime import datetime
 
 class Problem:
-	def __init__(self, variables, classOfferingList):
+	def __init__(self, variables):
 		variable_domain = {}
 		for variable in variables:
 			variable_domain.setdefault(variable, 0)
-			# sections = self.findSections(variable, classOfferingList)
-			# slotList = []
+			classOfferingList = createClassesList("../csv/data.csv")
 			variable_domain[variable] = self.findSections(variable, classOfferingList)
 		self.variable_domain = variable_domain
 
@@ -32,15 +31,26 @@ class Problem:
 		return list(np.arange(7, 19.25, .25, dtype="double"))
 
 	def findSections(self, courseName, classOfferingList):
+		try:
+			if courseName.index("ge(") == 0:
+				print(courseName)
+				return createClassesList("../csv/"+courseName+".csv")
+		except ValueError as e:
+			"""Substring was not found"""
 		return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName]
 
+
 	def findDayIndices(self, slotList, start, end, day):
-		index1 = slotList.index(start)
-		index2 = slotList.index(end)
-		day_value = self.getDayValue(day)
-		slotLength = len(slotList)
-		index1 = (day_value * slotLength) + index1
-		index2 = (day_value * slotLength) + index2
+		if start != None or end != None:
+			index1 = slotList.index(start)
+			index2 = slotList.index(end)
+			day_value = self.getDayValue(day)
+			slotLength = len(slotList)
+			index1 = (day_value * slotLength) + index1
+			index2 = (day_value * slotLength) + index2
+		else:
+			index1 = 9999
+			index2 = 9999
 		return list(np.arange(index1, index2))
 
 	def checkCompleteness(self, assignments):

@@ -24,16 +24,17 @@ if __name__ == "__main__":
 		classes.Subject("4", "2", "che135", "core", "2", "lab"),
 		classes.Subject("4", "2", "che140", "core", "3", "lec"),
 		classes.Subject("4", "2", "ee6", "core", "4", "lec"),
-		classes.Subject("4", "2", "es13", "core", "3", "lec")
+		classes.Subject("4", "2", "es13", "core", "3", "lec"),
+		classes.Subject("4", "2", "", "ge(ah)", "3", "lec"),
+		classes.Subject("4", "2", "", "ge(mst)",  "3", "lec")
 	]
-	
-	# for course in coursesToTake:
-	# 	course.displaySubject()
-	
-	classOfferingList = classes.createClassesList("../csv/data.csv")
-	coursenamesToTake = [course.courseName for course in coursesToTake]
-	problem = classes.Problem(coursenamesToTake, classOfferingList)
-	# print(problem.variable_domain)
+	coursenamesToTake = []
+	for course in coursesToTake:
+		if course.courseName != "":
+			coursenamesToTake.append(course.courseName)
+		else:
+			coursenamesToTake.append(course.courseType)
+	problem = classes.Problem(coursenamesToTake)
 	assignment = {}
 	for key in problem.variable_domain.keys():
 		assignment.setdefault(key, None)
