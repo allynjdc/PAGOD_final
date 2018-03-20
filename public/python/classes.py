@@ -4,8 +4,9 @@ import numpy as np
 from datetime import datetime
 
 class Problem:
-	def __init__(self, variables):
+	def __init__(self, variables, coursesTaken):
 		variable_domain = {}
+		self.coursesTaken = coursesTaken
 		for variable in variables:
 			variable_domain.setdefault(variable, 0)
 			classOfferingList = createClassesList("../csv/data.csv")
@@ -33,8 +34,8 @@ class Problem:
 	def findSections(self, courseName, classOfferingList):
 		try:
 			if courseName.index("ge(") == 0:
-				print(courseName)
-				return createClassesList("../csv/"+courseName+".csv")
+				subjectsTaken = [classoffering.courseName for classoffering in self.coursesTaken]
+				return [classoffering for classoffering in createClassesList("../csv/"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
 		except ValueError as e:
 			"""Substring was not found"""
 		return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName]

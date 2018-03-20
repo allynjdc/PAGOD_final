@@ -3,6 +3,20 @@ import csv
 import classes
 import numpy as np
 
+def initbacktracking(coursesToTake, coursesTaken):
+	coursenamesToTake = []
+	for course in coursesToTake:
+		if course.courseName != "":
+			coursenamesToTake.append(course.courseName)
+		else:
+			coursenamesToTake.append(course.courseType)
+	problem = classes.Problem(coursenamesToTake, coursesTaken)
+	assignment = {}
+	for key in problem.variable_domain.keys():
+		assignment.setdefault(key, None)
+	assignment = backtracking(assignment, problem)
+	return assignment
+
 def backtracking(assignment, problem):
 	if problem.checkCompleteness(assignment):
 		return assignment
@@ -19,6 +33,7 @@ def backtracking(assignment, problem):
 	return None
 
 if __name__ == "__main__":
+	student = classes.Student(3, 2, "bs chemical engineering", classes.createSubjectList("../study plans/bs chemical engineering.csv"), classes.createSubjectList("../csv/3rdYrChemEng.csv"))
 	coursesToTake = [
 		classes.Subject("4", "2", "che123", "core", "3", "lec"),
 		classes.Subject("4", "2", "che135", "core", "2", "lab"),
@@ -28,16 +43,6 @@ if __name__ == "__main__":
 		classes.Subject("4", "2", "", "ge(ah)", "3", "lec"),
 		classes.Subject("4", "2", "", "ge(mst)",  "3", "lec")
 	]
-	coursenamesToTake = []
-	for course in coursesToTake:
-		if course.courseName != "":
-			coursenamesToTake.append(course.courseName)
-		else:
-			coursenamesToTake.append(course.courseType)
-	problem = classes.Problem(coursenamesToTake)
-	assignment = {}
-	for key in problem.variable_domain.keys():
-		assignment.setdefault(key, None)
-	assignment = backtracking(assignment, problem)
+	assignment = initbacktracking(coursesToTake, student.coursesTaken)
 	for key in assignment.keys():
 		assignment[key].displayClassOffering()
