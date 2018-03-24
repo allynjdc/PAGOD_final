@@ -33,7 +33,7 @@ def backtracking(assignment, problem):
 	return None
 
 if __name__ == "__main__":
-	student = classes.Student(3, 2, "bs chemical engineering", classes.createSubjectList("../study plans/bs chemical engineering.csv"), classes.createSubjectList("../csv/3rdYrChemEng.csv"))
+	student = classes.Student(3, "2016-2017", 2, "bs chemical engineering", classes.createSubjectList("../study plans/bs chemical engineering.csv"), classes.createSubjectList("../csv/3rdYrChemEng.csv"))
 	coursesToTake = [
 		classes.Subject("4", "2", "che123", "core", "3", "lec"),
 		classes.Subject("4", "2", "che135", "core", "2", "lab"),
@@ -41,7 +41,8 @@ if __name__ == "__main__":
 		classes.Subject("4", "2", "ee6", "core", "4", "lec"),
 		classes.Subject("4", "2", "es13", "core", "3", "lec"),
 		classes.Subject("4", "2", "", "ge(ah)", "3", "lec"),
-		classes.Subject("4", "2", "", "ge(mst)",  "3", "lec")
+		classes.Subject("4", "2", "", "ge(mst)",  "3", "lec"),
+		classes.Subject("1", "2", "", "pe", "2", "lec")
 	]
 	assignment = initbacktracking(coursesToTake, student.coursesTaken)
 	for key in assignment.keys():

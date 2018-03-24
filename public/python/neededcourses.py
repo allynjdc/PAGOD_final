@@ -61,7 +61,7 @@ def coursesToTake(allCourses, coursesTaken):
 	return output
 
 if __name__ == '__main__':
-	student = classes.Student(3, 2, "bs chemical engineering", classes.createSubjectList("../study plans/bs chemical engineering.csv"), classes.createSubjectList("../csv/3rdYrChemEng.csv"))
+	student = classes.Student(3, "2016-2017", 2, "bs chemical engineering", classes.createSubjectList("../study plans/bs chemical engineering.csv"), classes.createSubjectList("../csv/3rdYrChemEng.csv"))
 	neededcourses = coursesToTake(student.allCourses, student.coursesTaken)
 	for neededcourse in neededcourses:
 		neededcourse.displaySubject()

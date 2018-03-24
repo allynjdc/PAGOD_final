@@ -37,7 +37,15 @@ class Problem:
 				subjectsTaken = [classoffering.courseName for classoffering in self.coursesTaken]
 				return [classoffering for classoffering in createClassesList("../csv/"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
 		except ValueError as e:
-			"""Substring was not found"""
+			"""Substring 'ge(' was not found"""
+		pe_sports = {"badminton": "2, 7", "bowling": "2, 14", "ballroomdance":"2, 26", "basketballwomen":"2, 1W", "tabletennis":"2, 10","swimming":"2, 19", "volleyball":"2, 5", "lawntennis":"2, 9", "football":"2, 3", "softball":"2, 4", "popularballroomdance":"2, 26", "internationalfolkdance":"2, 27", "philippinefolkdance":"2, 28", "basketballmen":"2, 1M", "basketball":"2, 1", "baseball": "2, 23", "advancedvolleyball": "3, 5", "socialrecreation": "3, 4", "advancedbadminton":"3, 7", "advancedtabletennis": "3, 10", "moderndance": "3, 2", "camping": "3, 6", "jazz": "3, 3", "advancedlawntennis": "3, 9"}
+		if pe_sports.has_key(courseName):
+			pe_subjects_to_avoid = []
+			for course in self.coursesTaken:
+				if course.courseType == "pe":
+					pe_subjects_to_avoid.append(pe_sports[course.courseName])
+			pe_num, sec_id = pe_sports[courseName].split(", ")
+
 		return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName]
 
 
@@ -116,8 +124,9 @@ class Student:
 	humdiv = ["bs cms", "ba lit"]
 	socscidiv = ["ba cd", "ba hist", "ba polsci (double major)", "ba polsci (single major)", "ba psych", "ba socio", "bs econ"]
 	sotech = ["bs chemical engineering", "bs food technology"]
-	def __init__(self, year, semester, degreeProgram, allCourses, coursesTaken):
+	def __init__(self, year,  academicYear, semester, degreeProgram, allCourses, coursesTaken):
 		self.year = year
+		self.academicYear = academicYear
 		self.semester = semester
 		self.degreeProgram = degreeProgram
 		self.allCourses = allCourses
@@ -157,8 +166,8 @@ class Subject:
 		print ("Year : "+ self.year+ ", Semester: "+ self.semester+ ", Course Name: "+ self.courseName+ ", Subject Type: "+ self.courseType+ ", Units: "+ self.units+", Lec or Lab: "+self.leclab)
 
 class ClassOffering:
-	def __init__(self, academicYear, semester, courseName, campus, leclab, section, units, instructor):
-		self.academicYear = academicYear
+	def __init__(self, year, semester, courseName, campus, leclab, section, units, instructor):
+		self.year = year
 		self.semester = semester
 		self.courseName = courseName
 		self.campus = campus
