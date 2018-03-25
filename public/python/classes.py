@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import csv
 import numpy as np
+import re
 from datetime import datetime
 
 class Problem:
@@ -38,13 +39,28 @@ class Problem:
 				return [classoffering for classoffering in createClassesList("../csv/"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
 		except ValueError as e:
 			"""Substring 'ge(' was not found"""
-		pe_sports = {"badminton": "2, 7", "bowling": "2, 14", "ballroomdance":"2, 26", "basketballwomen":"2, 1W", "tabletennis":"2, 10","swimming":"2, 19", "volleyball":"2, 5", "lawntennis":"2, 9", "football":"2, 3", "softball":"2, 4", "popularballroomdance":"2, 26", "internationalfolkdance":"2, 27", "philippinefolkdance":"2, 28", "basketballmen":"2, 1M", "basketball":"2, 1", "baseball": "2, 23", "advancedvolleyball": "3, 5", "socialrecreation": "3, 4", "advancedbadminton":"3, 7", "advancedtabletennis": "3, 10", "moderndance": "3, 2", "camping": "3, 6", "jazz": "3, 3", "advancedlawntennis": "3, 9"}
-		if pe_sports.has_key(courseName):
-			pe_subjects_to_avoid = []
+
+		if courseName == "pe":
+			pe_2_sports = {"badminton": "7", "bowling": "14", "ballroomdance":"26", "basketballwomen":"1", "tabletennis":"10","swimming":"19", "volleyball":"5", "lawntennis":"9", "football":"3", "softball":"4", "popularballroomdance":"26", "internationalfolkdance":"27", "philippinefolkdance":"28", "basketball":"1", "baseball": "23"}
+			pe_3_sports = {"advancedvolleyball": "5", "socialrecreation": "4", "advancedbadminton":"7", "advancedtabletennis": "10", "moderndance": "2", "camping": "6", "jazz": "3", "advancedlawntennis": "9"}
+			pe_2_subjects_to_avoid = []
+			pe_3_subjects_to_avoid = []
 			for course in self.coursesTaken:
 				if course.courseType == "pe":
-					pe_subjects_to_avoid.append(pe_sports[course.courseName])
-			pe_num, sec_id = pe_sports[courseName].split(", ")
+					if course.courseName in pe_2_sports.keys():
+						pe_2_subjects_to_avoid.append(pe_2_sports[course.courseName])
+					elif course.courseName in pe_3_sports.keys():
+						pe_3_subjects_to_avoid.append(pe_3_sports[course.courseName])
+			output = [classoffering for classoffering in classOfferingList if classoffering.courseName == "pe2" or classoffering.courseName == "pe3"]
+			if len(pe_2_subjects_to_avoid) != 0:
+				for sec in pe_2_subjects_to_avoid:
+					regex = sec+".+"
+					output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe2")]
+			if len(pe_3_subjects_to_avoid) != 0:
+				for sec in pe_3_subjects_to_avoid:
+					regex = sec+".+"
+					output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe3")]
+			return output
 
 		return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName]
 
