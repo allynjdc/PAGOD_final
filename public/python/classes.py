@@ -1,15 +1,17 @@
 #!/usr/bin/python
 import csv
 import numpy as np
+import re
 from datetime import datetime
 
 class Problem:
-	def __init__(self, variables, classOfferingList):
+	def __init__(self, variables, coursesTaken):
 		variable_domain = {}
+		self.coursesTaken = coursesTaken
 		for variable in variables:
 			variable_domain.setdefault(variable, 0)
+			classOfferingList = createClassesList("../csv/data.csv")
 			variable_domain[variable] = self.findSections(variable, classOfferingList)
-
 		self.variable_domain = variable_domain
 
 	def getDayValue(self, day):
@@ -31,16 +33,103 @@ class Problem:
 		return list(np.arange(7, 19.25, .25, dtype="double"))
 
 	def findSections(self, courseName, classOfferingList):
+		try:
+			if courseName.index("ge(") == 0:
+				subjectsTaken = [classoffering.courseName for classoffering in self.coursesTaken]
+				return [classoffering for classoffering in createClassesList("../csv/"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
+		except ValueError as e:
+			"""Substring 'ge(' was not found"""
+
+		if courseName == "pe":
+			pe_2_sports = {"badminton": "7", "bowling": "14", "ballroomdance":"26", "basketballwomen":"1", "tabletennis":"10","swimming":"19", "volleyball":"5", "lawntennis":"9", "football":"3", "softball":"4", "popularballroomdance":"26", "internationalfolkdance":"27", "philippinefolkdance":"28", "basketball":"1", "baseball": "23"}
+			pe_3_sports = {"advancedvolleyball": "5", "socialrecreation": "4", "advancedbadminton":"7", "advancedtabletennis": "10", "moderndance": "2", "camping": "6", "jazz": "3", "advancedlawntennis": "9"}
+			pe_2_subjects_to_avoid = []
+			pe_3_subjects_to_avoid = []
+			for course in self.coursesTaken:
+				if course.courseType == "pe":
+					if course.courseName in pe_2_sports.keys():
+						pe_2_subjects_to_avoid.append(pe_2_sports[course.courseName])
+					elif course.courseName in pe_3_sports.keys():
+						pe_3_subjects_to_avoid.append(pe_3_sports[course.courseName])
+			output = [classoffering for classoffering in classOfferingList if classoffering.courseName == "pe2" or classoffering.courseName == "pe3"]
+			if len(pe_2_subjects_to_avoid) != 0:
+				for sec in pe_2_subjects_to_avoid:
+					regex = sec+".+"
+					output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe2")]
+			if len(pe_3_subjects_to_avoid) != 0:
+				for sec in pe_3_subjects_to_avoid:
+					regex = sec+".+"
+					output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe3")]
+			return output
+
 		return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName]
 
+
 	def findDayIndices(self, slotList, start, end, day):
-		index1 = slotList.index(start)
-		index2 = slotList.index(end)
-		day_value = self.getDayValue(day)
-		slotLength = len(slotList)
-		index1 = (day_value * slotLength) + index1
-		index2 = (day_value * slotLength) + index2
+		if start != None or end != None:
+			index1 = slotList.index(start)
+			index2 = slotList.index(end)
+			day_value = self.getDayValue(day)
+			slotLength = len(slotList)
+			index1 = (day_value * slotLength) + index1
+			index2 = (day_value * slotLength) + index2
+		else:
+			index1 = 9999
+			index2 = 9999
 		return list(np.arange(index1, index2))
+
+	def checkCompleteness(self, assignments):
+		for key in assignments.keys():
+			if assignments[key] == None:
+				return False
+		if self.checkListConflict(assignments):
+			return False
+		return True
+
+	def checkListConflict(self, assignments):
+		for key in assignments.keys():
+			currList = assignments[key]
+			currList = self.classOfferingToList(currList)
+			for item in assignments.keys():
+				if item == key:
+					continue
+				if self.checkConflict(currList, self.classOfferingToList(assignments[item])):
+					return True
+		return False
+
+	def checkConflict(self, list1, list2):
+		return not set(list1).isdisjoint(list2)
+
+	def selectUnassignedVariable(self, assignments):
+		for key in assignments.keys():
+			if assignments[key] == None:
+				return key
+
+	def orderDomainValues(self, name):
+		sections = self.variable_domain[name]
+		values = []
+		for section in sections:
+			sessions = section.sessions
+			slotList = []
+			for session in sessions:
+				days = session.days.split(" ")
+				for day in days:
+					dayIndices = self.findDayIndices(self.slotList(), session.start, session.end, day)
+					slotList = slotList + dayIndices
+			values.append(slotList)
+		return values
+
+	def classOfferingToList(self, section):
+		if section == None:
+			return []
+		sessions = section.sessions
+		slotList = []
+		for session in sessions:
+			days = session.days.split(" ")
+			for day in days:
+				dayIndices = self.findDayIndices(self.slotList(), session.start, session.end, day)
+				slotList = slotList + dayIndices
+		return slotList
 
 
 class Student:
@@ -51,8 +140,9 @@ class Student:
 	humdiv = ["bs cms", "ba lit"]
 	socscidiv = ["ba cd", "ba hist", "ba polsci (double major)", "ba polsci (single major)", "ba psych", "ba socio", "bs econ"]
 	sotech = ["bs chemical engineering", "bs food technology"]
-	def __init__(self, year, semester, degreeProgram, allCourses, coursesTaken):
+	def __init__(self, year,  academicYear, semester, degreeProgram, allCourses, coursesTaken):
 		self.year = year
+		self.academicYear = academicYear
 		self.semester = semester
 		self.degreeProgram = degreeProgram
 		self.allCourses = allCourses
@@ -92,8 +182,8 @@ class Subject:
 		print ("Year : "+ self.year+ ", Semester: "+ self.semester+ ", Course Name: "+ self.courseName+ ", Subject Type: "+ self.courseType+ ", Units: "+ self.units+", Lec or Lab: "+self.leclab)
 
 class ClassOffering:
-	def __init__(self, academicYear, semester, courseName, campus, leclab, section, units, instructor):
-		self.academicYear = academicYear
+	def __init__(self, year, semester, courseName, campus, leclab, section, units, instructor):
+		self.year = year
 		self.semester = semester
 		self.courseName = courseName
 		self.campus = campus
@@ -104,6 +194,11 @@ class ClassOffering:
 
 	def setSessions(self, sessions):
 		self.sessions = sessions
+
+	def displayClassOffering(self):
+		print(self.courseName, "Section", self.section, self.instructor, self.leclab)
+		for session in self.sessions:
+			session.displaySession()
 
 class Session:
 	def __init__(self, room, days, start, end):
@@ -117,8 +212,8 @@ class Session:
 		self.start = start
 	def setEnd(self, end):
 		self.end = end
-	# def displaySession(self):
-	# 	print(self.room+" "+self.days+" "+self.start+"-"+self.end)
+	def displaySession(self):
+		print("\t",self.room, self.days, str(self.start)+"-"+str(self.end))
 
 def csvReader(pathname):
 	ifile = open(pathname, "rt", encoding="utf8", errors="ignore")
