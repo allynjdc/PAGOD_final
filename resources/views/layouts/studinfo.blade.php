@@ -15,8 +15,13 @@
 							<img class="profile-img-index img-thumbnail img-responsive" alt="profile" src="images/profile.jpeg" data-toggle="modal" data-target="#profile-img"/>
 						</div>
 						<div class="text-name-index">
-							<h4><b> Allyn Joy Calcaben</b></h4>
-							<small> BS in Computer Science VI </small>
+							<!-- 
+							<h4><b>{{Auth::user()->name}}</b></h4>
+							<small>{{ Auth::user()->course }} </small> 
+							-->
+
+							<h4><b>Allyn Joy Calcaben</b></h4>
+							<small>BS in Computer Science</small>
 						</div>
 						<div class="ge-counts col-md-12 text-center">
 							<div class="count1 col-md-3 text-center">
