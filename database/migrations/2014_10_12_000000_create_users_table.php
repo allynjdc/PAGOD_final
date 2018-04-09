@@ -16,11 +16,25 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('student_number')->unique();
             $table->string('password');
+            $table->string('course');
+            $table->string('courses_taken');
             $table->rememberToken();
             $table->timestamps();
         });
+
+        /*
+         * AppServiceProvider.php
+         *
+         *
+         * use Illuminate\Support\Facades\Schema;
+         *
+         * public function boot() {
+         *   Schema::defaultStringLength(191);
+         * }
+         *
+        */
     }
 
     /**
