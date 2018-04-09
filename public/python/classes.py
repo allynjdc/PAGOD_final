@@ -152,14 +152,14 @@ class Student:
 	humdiv = ["bs cms", "ba lit"]
 	socscidiv = ["ba cd", "ba hist", "ba polsci (double major)", "ba polsci (single major)", "ba psych", "ba socio", "bs econ"]
 	sotech = ["bs chemical engineering", "bs food technology"]
-	def __init__(self, year,  academicYear, semester, degreeProgram, allCourses, coursesTaken, electiveList):
+	def __init__(self, year,  academicYear, semester, degreeProgram, coursesTaken):
 		self.year = year
 		self.academicYear = academicYear
 		self.semester = semester
 		self.degreeProgram = degreeProgram
-		self.allCourses = allCourses
+		self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
 		self.coursesTaken = coursesTaken
-		self.electiveList = electiveList
+		self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
 		if degreeProgram in Student.biodiv:
 			self.department = "bio div"
 			self.campus = "miagao"
