@@ -5,9 +5,10 @@ import re
 from datetime import datetime
 
 class Problem:
-	def __init__(self, variables, coursesTaken):
+	def __init__(self, variables, coursesTaken, electiveList):
 		variable_domain = {}
 		self.coursesTaken = coursesTaken
+		self.electiveList = electiveList
 		for variable in variables:
 			variable_domain.setdefault(variable, 0)
 			classOfferingList = createClassesList("../csv/data.csv")
@@ -33,34 +34,44 @@ class Problem:
 		return list(np.arange(7, 19.25, .25, dtype="double"))
 
 	def findSections(self, courseName, classOfferingList):
+		courseName, leclab = courseName.split("-")
+		if leclab == "lab":
+			return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName and classoffering.leclab == "lab"]
 		try:
 			if courseName.index("ge(") == 0:
+				courseName = "".join(i for i in courseName if not i.isdigit())
 				subjectsTaken = [classoffering.courseName for classoffering in self.coursesTaken]
 				return [classoffering for classoffering in createClassesList("../csv/"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
+			if courseName.index("pe") == 0:
+				pe_2_sports = {"badminton": "7", "bowling": "14", "ballroomdance":"26", "basketballwomen":"1", "tabletennis":"10","swimming":"19", "volleyball":"5", "lawntennis":"9", "football":"3", "softball":"4", "popularballroomdance":"26", "internationalfolkdance":"27", "philippinefolkdance":"28", "basketball":"1", "baseball": "23"}
+				pe_3_sports = {"advancedvolleyball": "5", "socialrecreation": "4", "advancedbadminton":"7", "advancedtabletennis": "10", "moderndance": "2", "camping": "6", "jazz": "3", "advancedlawntennis": "9"}
+				pe_2_subjects_to_avoid = []
+				pe_3_subjects_to_avoid = []
+				for course in self.coursesTaken:
+					if course.courseType == "pe":
+						if course.courseName in pe_2_sports.keys():
+							pe_2_subjects_to_avoid.append(pe_2_sports[course.courseName])
+						elif course.courseName in pe_3_sports.keys():
+							pe_3_subjects_to_avoid.append(pe_3_sports[course.courseName])
+				output = [classoffering for classoffering in classOfferingList if classoffering.courseName == "pe2" or classoffering.courseName == "pe3"]
+				if len(pe_2_subjects_to_avoid) != 0:
+					for sec in pe_2_subjects_to_avoid:
+						regex = sec+".+"
+						output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe2")]
+				if len(pe_3_subjects_to_avoid) != 0:
+					for sec in pe_3_subjects_to_avoid:
+						regex = sec+".+"
+						output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe3")]
+				return output
+
+			if courseName.index("elective") == 0:
+				elective_names = [elective.courseName for elective in self.electiveList]
+				available_electives = [classoffering for classoffering in classOfferingList if classoffering.courseName in elective_names]
+				electives_taken = [course.courseName for course in self.coursesTaken if course.courseType == "elective"]
+				output = [elective for elective in available_electives if elective.courseName not in electives_taken]
+				return output
 		except ValueError as e:
 			"""Substring 'ge(' was not found"""
-
-		if courseName == "pe":
-			pe_2_sports = {"badminton": "7", "bowling": "14", "ballroomdance":"26", "basketballwomen":"1", "tabletennis":"10","swimming":"19", "volleyball":"5", "lawntennis":"9", "football":"3", "softball":"4", "popularballroomdance":"26", "internationalfolkdance":"27", "philippinefolkdance":"28", "basketball":"1", "baseball": "23"}
-			pe_3_sports = {"advancedvolleyball": "5", "socialrecreation": "4", "advancedbadminton":"7", "advancedtabletennis": "10", "moderndance": "2", "camping": "6", "jazz": "3", "advancedlawntennis": "9"}
-			pe_2_subjects_to_avoid = []
-			pe_3_subjects_to_avoid = []
-			for course in self.coursesTaken:
-				if course.courseType == "pe":
-					if course.courseName in pe_2_sports.keys():
-						pe_2_subjects_to_avoid.append(pe_2_sports[course.courseName])
-					elif course.courseName in pe_3_sports.keys():
-						pe_3_subjects_to_avoid.append(pe_3_sports[course.courseName])
-			output = [classoffering for classoffering in classOfferingList if classoffering.courseName == "pe2" or classoffering.courseName == "pe3"]
-			if len(pe_2_subjects_to_avoid) != 0:
-				for sec in pe_2_subjects_to_avoid:
-					regex = sec+".+"
-					output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe2")]
-			if len(pe_3_subjects_to_avoid) != 0:
-				for sec in pe_3_subjects_to_avoid:
-					regex = sec+".+"
-					output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe3")]
-			return output
 
 		return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName]
 
@@ -136,17 +147,19 @@ class Student:
 	biodiv = ["bs bio", "bs ph"]
 	cfos = ["bs fisheries"]
 	cm = ["bs accountancy", "bs business administration", "bs management"]
-	dpsm = ["bs appmath", "bs chem", "bs cmsc", "bs stat"]
+	dpsm = ["bs appmath", "bs cmsc", "bs stat"]
+	chem = ["bs chem"]
 	humdiv = ["bs cms", "ba lit"]
 	socscidiv = ["ba cd", "ba hist", "ba polsci (double major)", "ba polsci (single major)", "ba psych", "ba socio", "bs econ"]
 	sotech = ["bs chemical engineering", "bs food technology"]
-	def __init__(self, year,  academicYear, semester, degreeProgram, allCourses, coursesTaken):
+	def __init__(self, year,  academicYear, semester, degreeProgram, allCourses, coursesTaken, electiveList):
 		self.year = year
 		self.academicYear = academicYear
 		self.semester = semester
 		self.degreeProgram = degreeProgram
 		self.allCourses = allCourses
 		self.coursesTaken = coursesTaken
+		self.electiveList = electiveList
 		if degreeProgram in Student.biodiv:
 			self.department = "bio div"
 			self.campus = "miagao"
@@ -158,6 +171,9 @@ class Student:
 			self.campus = "iloilocity"
 		elif degreeProgram in Student.dpsm:
 			self.department = "dpsm"
+			self.campus = "miagao"
+		elif degreeProgram in Student.chem:
+			self.department = "chem"
 			self.campus = "miagao"
 		elif degreeProgram in Student.humdiv:
 			self.department = "hum div"
@@ -199,6 +215,21 @@ class ClassOffering:
 		print(self.courseName, "Section", self.section, self.instructor, self.leclab)
 		for session in self.sessions:
 			session.displaySession()
+
+class Elective:
+	def __init__(self, courseName, courseTitle, units):
+		self.courseName = courseName
+		self.courseTitle = courseTitle
+		self.units = units
+
+def createElectiveList(pathname):
+	ifile, reader = csvReader(pathname)
+	subjects = []
+	for row in reader:
+		subject = Elective(row[0], row[1], row[2])
+		subjects.append(subject)
+	ifile.close()
+	return subjects
 
 class Session:
 	def __init__(self, room, days, start, end):
@@ -313,5 +344,4 @@ def createClassOffering(classitem):
 		sessions.append(session)
 
 	classoffering.setSessions(sessions)
-	# print(type(classoffering))
 	return classoffering
