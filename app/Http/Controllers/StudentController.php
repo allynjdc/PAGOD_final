@@ -6,13 +6,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
+//use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Routing\Redirector;
+use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use App\User;
 use Session;
 use Helper;
 use Auth;
+use Hash;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -21,9 +24,9 @@ class StudentController extends Controller
 {
 
 	public function index(){
-
+ 
 		$rules = array(
-		    'student_number' => 'required|min:9|max:9', 
+		    'username' => 'required|min:9|max:9', 
 		    'password' => 'required|min:3' 
 		);
 
@@ -40,20 +43,20 @@ class StudentController extends Controller
 
 		    // create our user data for the authentication
 		    $data = array(
-		        'student_number' => Input::get('student_number'),
+		        'username' => Input::get('username'),
 		        'password'  => Input::get('password')
 		    );
 
-		    $user = User::where('student_number',$data['student_number'])
-				->where('password',$data['password'])
+		    $user = User::where('username',$data['username'])
 				->first();
 
 		    // attempt to do the login
 			// Auth::attempt($data)
-		    if($user) {
+		    if(Hash::check($data['password'], $user->password)) {
 
-				//echo $user;
-        		return view('home');
+                Auth::login($user);
+                echo Auth::user()->id;
+        		//return view('home', compact('user'));
 
 		    } else {        
 
@@ -64,5 +67,172 @@ class StudentController extends Controller
 		}
 		
 	}
+
+	public function plan(Request $request)
+    {
+        $id = $request->id;
+        echo $id;
+        $cor = "BS in Computer Science";
+        $course = "\"$cor\"";
+        $courses_taken = "\"csv\\4thYrKomsai3.csv\"";
+        $process = new Process("python python\study_plan.py $course $courses_taken");
+        $process->run();
+
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }
+
+        $output = $process->getOutput();
+        $row = 0;
+        $lines = explode('/', $output);
+        foreach ($lines as $line => $value) {            
+            $val = explode(',', $value);
+            if(sizeof($val)==6){
+                $final[$row][0] = $val[0];
+                $final[$row][1] = $val[1];
+                if(!$val[2] || strlen($val[2])<3){
+                    // GE or PE
+                    $final[$row][2] = strtoupper($val[3]);
+                } else {
+                    // NON-GE
+                    $final[$row][2] = strtoupper($val[2]);
+                }
+                $final[$row][3] = $val[4];
+                $final[$row][4] = $val[5];
+                $row++;
+            }
+        }
+        $midr = 0;
+        $sum1 = 0;
+        $sum2 = 0;
+        $sum3 = 0;
+        $sum4 = 0;
+        $sum5 = 0;
+        $sum6 = 0;
+        $sum7 = 0;
+        $sum8 = 0;
+        $sum9 = 0;
+        foreach($final as $row) {
+            if($row[0]==1 && $row[1]==1 && $row[4] > 0){
+                if(substr_count($row[2], 'PE1')>0 || substr_count($row[2], 'NSTP')>0){
+                    $sum1 = $sum1 + 0;
+                } else {
+                    $sum1 = $sum1 + $row[3];
+                }
+            } else if($row[0]==1 && $row[1]==2 && $row[4] > 0){
+                if(substr_count($row[2], 'PE')>0 || substr_count($row[2], 'NSTP')>0){
+                    $sum2 = $sum2 + 0;
+                } else {
+                    $sum2 = $sum2 + $row[3];
+                }
+            } else if($row[0]==2 && $row[1]==1 && $row[4] > 0){
+                if(substr_count($row[2], 'PE')>0){
+                    $sum3 = $sum3 + 0;
+                } else {
+                    $sum3 = $sum3 + $row[3];
+                }
+            } else if($row[0]==2 && $row[1]==2 && $row[4] > 0){
+                if(substr_count($row[2], 'PE')>0){
+                    $sum4 = $sum4 + 0;
+                } else {
+                    $sum4 = $sum4 + $row[3];
+                }
+            } else if($row[0]==3 && $row[1]==1 && $row[4] > 0){
+                $sum5 = $sum5 + $row[3];
+            } else if($row[0]==3 && $row[1]==2 && $row[4] > 0){
+                $sum6 = $sum6 + $row[3];
+            } else if($row[0]==4 && $row[1]==1 && $row[4] > 0){
+                $sum7 = $sum7 + $row[3];
+            } else if($row[0]==4 && $row[1]==2 && $row[4] > 0){
+                $sum8 = $sum8 + $row[3];
+            }
+
+            if($row[0]==3 && strlen($row[1])>3 && $row[4] > 0){
+                $mid[$midr][0] = $row[2];
+                $mid[$midr][1] = $row[3];
+                $mid[$midr][2] = $row[4];
+                $midr++;  
+                $sum9 = $sum9 + $row[3];
+            }            
+
+        }
+
+        return view('studyplan', compact('final','midr','mid','sum1','sum2','sum3','sum4','sum5','sum6','sum7','sum8','sum9'));
+        
+    }
+
+    public function progress(Request $request)
+    {
+        $id = $request->id;
+        echo $id;
+        $cor = "BS in Computer Science";
+        $course = "\"$cor\"";
+        $courses_taken = "\"csv\\4thYrKomsai3.csv\"";
+        $process = new Process("python python\acad_progress.py $course $courses_taken");
+        $process->run();
+
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }
+
+        $output = $process->getOutput();
+        $ccore = 0;
+        $cah = 0;
+        $cssp = 0;
+        $cmst = 0;
+        $celect = 0;
+        $cpenstp = 0;
+        $lines = explode('/', $output);
+        foreach ($lines as $line) {          
+            $val = explode(',', $line);
+            if(sizeof($val)>1){
+                if((substr_count(strtoupper($val[1]),"CORE")>0) || (substr_count(strtoupper($val[1]),"SERVICE")>0)){
+                    $core[$ccore][0] = strtoupper($val[0]);
+                    $core[$ccore][1] = $val[2];
+                    $ccore++;
+                } else if (substr_count(strtoupper($val[1]),"GE(AH)")>0) {        
+                    $ah[$cah][0] = strtoupper($val[0]);
+                    $ah[$cah][1] = $val[2];
+                    $cah++;
+                } else if (substr_count(strtoupper($val[1]),"GE(MST)")>0) {
+                    $mst[$cmst][0] = strtoupper($val[0]);
+                    $mst[$cmst][1] = $val[2];
+                    $cmst++;
+                } else if (substr_count(strtoupper($val[1]),"GE(SSP)")>0) {
+                    $ssp[$cssp][0] = strtoupper($val[0]);
+                    $ssp[$cssp][1] = $val[2];
+                    $cssp++;
+                } else if (substr_count(strtoupper($val[1]),"ELECTIVE")>0) {
+                    $elect[$celect][0] = strtoupper($val[0]);
+                    $elect[$celect][1] = $val[2];
+                    $celect++;
+                } else if (substr_count(strtoupper($val[1]),"PE")>0||substr_count(strtoupper($val[1]),"NSTP")>0) {
+                    $open[$cpenstp][0] = strtoupper($val[0]);
+                    $open[$cpenstp][1] = $val[2];
+                    $cpenstp++;
+                } 
+            }
+        }
+
+        $process = new Process("python python\courses_counts.py $course $courses_taken");
+        $process->run();
+
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }
+
+        $counts = $process->getOutput();
+        $values = explode(',', $counts);
+
+        $ccore = ($ccore / $values[0]) * 100;
+        $celect = ($celect / $values[1]) * 100;
+        $cah = ($cah / $values[2]) * 100;
+        $cmst = ($cmst / $values[3]) * 100;
+        $cssp = ($cssp / $values[4]) * 100;
+        $cpenstp = ($cpenstp / $values[5]) * 100;
+
+        return view('acadprogress', compact('core','ccore','ah','cah','ssp','cssp','mst','cmst','elect','celect','open','cpenstp','values'));
+    }
+
 
 }

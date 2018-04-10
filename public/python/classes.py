@@ -133,13 +133,13 @@ class Problem:
 
 
 class Student:
-	biodiv = ["bs bio", "bs ph"]
-	cfos = ["bs fisheries"]
-	cm = ["bs accountancy", "bs business administration", "bs management"]
-	dpsm = ["bs appmath", "bs chem", "bs cmsc", "bs stat"]
-	humdiv = ["bs cms", "ba lit"]
-	socscidiv = ["ba cd", "ba hist", "ba polsci (double major)", "ba polsci (single major)", "ba psych", "ba socio", "bs econ"]
-	sotech = ["bs chemical engineering", "bs food technology"]
+	biodiv = ["BS in Biology", "BS in Public Health"]
+	cfos = ["BS in Fisheries"]
+	cm = ["BS in Accountancy", "BS in Business Administration", "BS in Management"]
+	dpsm = ["BS in Applied Mathematics", "BS in Chemistry", "BS in Computer Science", "BS in Statistics"]
+	humdiv = ["BS in Communication and Media Study", "BA in Literature"]
+	socscidiv = ["BA in Community Development", "BA in History", "BA Political Science (double major)", "BA in Political Science (single major)", "BA in Psychology", "BA in Sociology", "BS in Economics"]
+	sotech = ["BS in Chemical Engineering", "BS in Food Technology"]
 	def __init__(self, year,  academicYear, semester, degreeProgram, allCourses, coursesTaken):
 		self.year = year
 		self.academicYear = academicYear
