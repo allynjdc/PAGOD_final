@@ -17,8 +17,10 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
+        'username' => str_random(9),
         'password' => $password ?: $password = bcrypt('secret'),
+        'course' => 'BS in Computer Science',
+        'courses_taken' => '\\csv\\4thYrKomsai3.csv',
         'remember_token' => str_random(10),
     ];
 });

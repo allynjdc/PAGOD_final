@@ -38,17 +38,17 @@
                         <span class="icon-bar"></span>
                     </button>
 
-                    <a href="{{route('home')}}" class="but_color navbar-brand">{{ config('app.name', 'PAGOD') }} </a>
+                    <a href="/home" class="but_color navbar-brand">{{ config('app.name', 'PAGOD') }} </a>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a class="but_color" href="{{route('home')}}" data-toggle="tooltip" data-placement="bottom" title="Home" >
+                            <a class="but_color" href="/home" data-toggle="tooltip" data-placement="bottom" title="Home" >
                                 <span class="glyphicon glyphicon-home"></span>
                             </a>
                         </li>
                         <li>
-                            <a class="but_color" href="{{ route('/logout') }}"
+                            <a class="but_color" href="{{ route('logout') }}"
                                 onclick="event.preventDefault();
                                          document.getElementById('logout-form').submit();">
                                 <span class="glyphicon glyphicon-off"></span>
