@@ -71,7 +71,7 @@ class Problem:
 				output = [elective for elective in available_electives if elective.courseName not in electives_taken]
 				return output
 		except ValueError as e:
-			"""Substring 'ge(' was not found"""
+			"""Substring 'ge(', elective, pe was not found"""
 
 		return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName]
 
