@@ -72,7 +72,7 @@ class StudentController extends Controller
     {
         $id = $request->id;
         echo $id;
-        $cor = "BS in Computer Science";
+        $cor = Auth::user()->course;
         $course = "\"$cor\"";
         $courses_taken = "\"csv\\4thYrKomsai3.csv\"";
         $process = new Process("python python\study_plan.py $course $courses_taken");
@@ -165,7 +165,7 @@ class StudentController extends Controller
     {
         $id = $request->id;
         echo $id;
-        $cor = "BS in Computer Science";
+        $cor = Auth::user()->course;
         $course = "\"$cor\"";
         $courses_taken = "\"csv\\4thYrKomsai3.csv\"";
         $process = new Process("python python\acad_progress.py $course $courses_taken");
