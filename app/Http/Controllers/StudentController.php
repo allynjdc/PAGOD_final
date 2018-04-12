@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
-//use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Routing\Redirector;
 use App\Http\Controllers\Controller;
@@ -29,7 +28,7 @@ class StudentController extends Controller
 		    'username' => 'required|min:9|max:9', 
 		    'password' => 'required|min:3' 
 		);
-
+ 
 		// run the validation rules on the inputs from the form
 		$validator = Validator::make(Input::all(), $rules);
 
@@ -70,11 +69,9 @@ class StudentController extends Controller
 
 	public function plan(Request $request)
     {
-        $id = $request->id;
-        echo $id;
-        $cor = "BS in Computer Science";
+        $cor = Auth::user()->courseName();
         $course = "\"$cor\"";
-        $courses_taken = "\"csv\\4thYrKomsai3.csv\"";
+        $courses_taken = Auth::user()->courses_taken;
         $process = new Process("python python\study_plan.py $course $courses_taken");
         $process->run();
 
@@ -112,6 +109,9 @@ class StudentController extends Controller
         $sum7 = 0;
         $sum8 = 0;
         $sum9 = 0;
+        $sum10 = 0;
+        $sum11 = 0;
+        $has5th = 0;
         foreach($final as $row) {
             if($row[0]==1 && $row[1]==1 && $row[4] > 0){
                 if(substr_count($row[2], 'PE1')>0 || substr_count($row[2], 'NSTP')>0){
@@ -145,6 +145,13 @@ class StudentController extends Controller
                 $sum7 = $sum7 + $row[3];
             } else if($row[0]==4 && $row[1]==2 && $row[4] > 0){
                 $sum8 = $sum8 + $row[3];
+            } else if($row[0]==5 && $row[1]==1){
+                $has5th = $has5th + 1;
+                if($row[4] > 0){
+                    $sum10 = $sum10 + $row[3];
+                }
+            } else if($row[0]==5 && $row[1]==2 && $row[4] > 0){
+                $sum11 = $sum11 + $row[3];
             }
 
             if($row[0]==3 && strlen($row[1])>3 && $row[4] > 0){
@@ -157,17 +164,15 @@ class StudentController extends Controller
 
         }
 
-        return view('studyplan', compact('final','midr','mid','sum1','sum2','sum3','sum4','sum5','sum6','sum7','sum8','sum9'));
+        return view('studyplan', compact('final','midr','mid','sum1','sum2','sum3','sum4','sum5','sum6','sum7','sum8','sum9','sum10','sum11','has5th'));
         
     }
 
     public function progress(Request $request)
     {
-        $id = $request->id;
-        echo $id;
-        $cor = "BS in Computer Science";
+        $cor = Auth::user()->courseName();
         $course = "\"$cor\"";
-        $courses_taken = "\"csv\\4thYrKomsai3.csv\"";
+        $courses_taken = Auth::user()->courses_taken;
         $process = new Process("python python\acad_progress.py $course $courses_taken");
         $process->run();
 
@@ -187,9 +192,15 @@ class StudentController extends Controller
             $val = explode(',', $line);
             if(sizeof($val)>1){
                 if((substr_count(strtoupper($val[1]),"CORE")>0) || (substr_count(strtoupper($val[1]),"SERVICE")>0)){
-                    $core[$ccore][0] = strtoupper($val[0]);
-                    $core[$ccore][1] = $val[2];
-                    $ccore++;
+                    if((substr_count(strtoupper($val[0]),"PE1")>0)){
+                        $open[$cpenstp][0] = strtoupper($val[0]);
+                        $open[$cpenstp][1] = $val[2];
+                        $cpenstp++;
+                    } else {
+                        $core[$ccore][0] = strtoupper($val[0]);
+                        $core[$ccore][1] = $val[2];
+                        $ccore++;
+                    }                    
                 } else if (substr_count(strtoupper($val[1]),"GE(AH)")>0) {        
                     $ah[$cah][0] = strtoupper($val[0]);
                     $ah[$cah][1] = $val[2];
@@ -233,6 +244,16 @@ class StudentController extends Controller
 
         return view('acadprogress', compact('core','ccore','ah','cah','ssp','cssp','mst','cmst','elect','celect','open','cpenstp','values'));
     }
+
+    public function wishlist(Request $request)
+    {
+        return view('addwishlist');
+    }
+
+    public function preference(Request $request)
+    {
+        return view('addpreference');
+    } 
 
 
 }

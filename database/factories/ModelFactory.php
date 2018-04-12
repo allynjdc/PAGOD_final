@@ -21,7 +21,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'profile_picture' => 'images/default-profile-image.png',
         'password' => $password ?: $password = bcrypt('secret'),
         'course' => 'bs cmsc',
-        'courses_taken' => '\\csv\\4thYrKomsai3.csv',
+        'courses_taken' => "\"csv\\\\4thYrKomsai3.csv\"",
         'remember_token' => str_random(10),
     ];
 });

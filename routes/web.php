@@ -24,8 +24,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 Route::get('/studyplan','StudentController@plan');
 Route::get('/acadprogress','StudentController@progress');
-Route::get('/addwishlist','HomeController@wishlist');
-Route::get('/addpreference','HomeController@preference');
+Route::get('/addwishlist','StudentController@wishlist');
+Route::get('/addpreference','StudentController@preference');
 //});
 
 // Route::get('/logout',function(){
