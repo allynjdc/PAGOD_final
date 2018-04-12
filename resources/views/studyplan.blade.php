@@ -353,6 +353,87 @@
 			</table>
 		</div>
 	</div>
+	@if($has5th > 0)
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="table_text"><strong>FIFTH YEAR</strong> <small class="pull-right">A.Y. 2017-2018</small></h4>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-hover">
+				<thead>
+					<tr class="table_text">
+						<th>First Semester</th>
+						<th>Units</th>
+						<th>Completion</th>
+					</tr>
+				</thead>
+				<tbody>
+				@foreach($final as $row)
+					@if($row[0] == 5 && $row[1] == 1)
+						<tr>
+							<td>{{$row[2]}}</td>
+							<td>{{$row[3]}}</td>
+							@if($row[4] > 0)
+							<td><span class="glyphicon glyphicon-ok"></span></td>
+							@else
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+							@endif
+						</tr>
+					@endif
+				@endforeach
+				</tbody>
+				<tfoot>
+					<tr class="bg-success">
+						<td><strong>TOTAL</strong></td>
+						<td>{{$sum10}} units</td>
+						@if($sum10 > 0)
+						<td><span class="glyphicon glyphicon-ok"></span></td>
+						@else
+						<td><span class="glyphicon glyphicon-remove"></span></td>
+						@endif
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-hover">
+				<thead>
+					<tr class="table_text">
+						<th>Second Semester</th>
+						<th>Units</th>
+						<th>Completion</th>
+					</tr>
+				</thead>
+				<tbody>
+				@foreach($final as $row)
+					@if($row[0] == 5 && $row[1] == 2)
+						<tr>
+							<td>{{$row[2]}}</td>
+							<td>{{$row[3]}}</td>
+							@if($row[4] > 0)
+							<td><span class="glyphicon glyphicon-ok"></span></td>
+							@else
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+							@endif
+						</tr>
+					@endif
+				@endforeach
+				</tbody>
+				<tfoot>
+					<tr class="bg-success">
+						<td><strong>TOTAL</strong></td>
+						<td>{{$sum11}} units</td>
+						@if($sum11 > 0)
+						<td><span class="glyphicon glyphicon-ok"></span></td>
+						@else
+						<td><span class="glyphicon glyphicon-remove"></span></td>
+						@endif
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+	@endif
 </div>
 <!-- END Column md 8 -->	
 @endsection
