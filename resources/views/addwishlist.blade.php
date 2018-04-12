@@ -283,3 +283,13 @@
 		});
 	</script>
 @endsection
+
+@push('scripts')
+	<script type="text/javascript" src="{{ asset('js/moment.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/schedule_script.js') }}"></script>
+
+@endpush
+
+@push('styles')
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" rel="stylesheet"/>	
+@endpush

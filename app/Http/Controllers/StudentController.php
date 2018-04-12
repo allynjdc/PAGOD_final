@@ -24,46 +24,46 @@ class StudentController extends Controller
 
 	public function index(){
  
-		$rules = array(
-		    'username' => 'required|min:9|max:9', 
-		    'password' => 'required|min:3' 
-		);
+		// $rules = array(
+		//     'username' => 'required|min:9|max:9', 
+		//     'password' => 'required|min:3' 
+		// );
  
-		// run the validation rules on the inputs from the form
-		$validator = Validator::make(Input::all(), $rules);
+		// // run the validation rules on the inputs from the form
+		// $validator = Validator::make(Input::all(), $rules);
 
-		// if the validator fails, redirect back to the form
-		if($validator->fails()) {
-		    return Redirect::to('/login')
-		        ->withErrors($validator) 
-		        ->withInput(Input::except('password')); 
+		// // if the validator fails, redirect back to the form
+		// if($validator->fails()) {
+		//     return Redirect::to('/login')
+		//         ->withErrors($validator) 
+		//         ->withInput(Input::except('password')); 
 
-		} else {
+		// } else {
 
-		    // create our user data for the authentication
-		    $data = array(
-		        'username' => Input::get('username'),
-		        'password'  => Input::get('password')
-		    );
+		//     // create our user data for the authentication
+		//     $data = array(
+		//         'username' => Input::get('username'),
+		//         'password'  => Input::get('password')
+		//     );
 
-		    $user = User::where('username',$data['username'])
-				->first();
+		//     $user = User::where('username',$data['username'])
+		// 		->first();
 
-		    // attempt to do the login
-			// Auth::attempt($data)
-		    if(Hash::check($data['password'], $user->password)) {
+		//     // attempt to do the login
+		// 	// Auth::attempt($data)
+		//     if(Hash::check($data['password'], $user->password)) {
 
-                Auth::login($user);
-                echo Auth::user()->id;
-        		//return view('home', compact('user'));
+  //               Auth::login($user);
+  //               echo Auth::user()->id;
+  //       		//return view('home', compact('user'));
 
-		    } else {        
+		//     } else {        
 
-		        // validation not successful, send back to form 
-		        return Redirect::to('/login');
+		//         // validation not successful, send back to form 
+		//         return Redirect::to('/login');
 
-		    }
-		}
+		//     }
+		// }
 		
 	}
 

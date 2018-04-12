@@ -16,9 +16,11 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}"/>
     <link rel="stylesheet" href="{{ asset('js/JQS_Scheduler/dist/jquery.schedule.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style_home1.css') }}"/>
+    <script type="text/javascript" src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('css/bootstrap-3.3.7-dist/js/jquery.min.js')}}"></script>
     <script src="{{ asset('js/JQS_Scheduler/dist/jquery.schedule.js') }}"></script>
-    
+    <script type="text/javascript" src="{{ asset('js/moment.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -67,5 +69,6 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    @stack('scripts')
 </body>
 </html>
