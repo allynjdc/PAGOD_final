@@ -22,66 +22,22 @@
     								<div class="panel-heading important">
       									<h4 class="panel-title">
         									<!-- <a data-toggle="collapse" data-parent="#accordion" href="#high">High Priority</a> -->
-        									<a data-toggle="collapse" href="#comply">To Comply (INC)<span class="badge pull-right" id="high_badge">3</span></a>
+        									<a data-toggle="collapse" href="#comply">CORE Courses<span class="badge pull-right" id="high_badge">{{sizeof($core)}}</span></a>
      									</h4>
     								</div>
     								<div id="comply" class="panel-collapse collapse">
       									<div class="panel-body">
+      										@foreach($core as $subj)
       										<div class="priority_entry no_entry">
       											<p>
-      												<b>Eng 10</b>
+      												<b>{{$subj}}</b>
       											</p>
       										</div>
-      										<div class="priority_entry no_entry">
-      											<p>
-      												<b>Hum 1</b>
-      											</p>
-      										</div>
-      										<div class="priority_entry no_entry">
-      											<p>
-      												<b>Soc Sci 1</b>
-      											</p>
-      										</div>
+      										@endforeach
       									</div>
     								</div>
     							</div>
-
-								<!-- 4.0 -->
-  								<div class="panel panel-default">
-    								<div class="panel-heading important">
-      									<h4 class="panel-title">
-        									<!-- <a data-toggle="collapse" data-parent="#accordion" href="#high">High Priority</a> -->
-        									<a class='' data-toggle="collapse" href="#toremove">To Remove (4.0)<span class=" badge pull-right" id="high_badge">1</span></a>
-     									</h4>
-    								</div>
-    								<div id="toremove" class="panel-collapse collapse">
-      									<div class="panel-body">
-      										<div class="priority_entry no_entry">
-      											<p>
-      												<b>Comm 3</b>
-      											</p>
-      										</div>
-      									</div>
-    								</div>
-    							</div>
-
-								<!-- 5.0 -->
-								<div class="panel panel-default">
-    								<div class="panel-heading">
-      									<h4 class="panel-title">
-        									<a data-toggle="collapse" href="#retake">To Retake (5.0)<span class="badge pull-right" id="medium_badge">0</span></a>
-     									</h4>
-    								</div>
-    								<div id="retake" class="panel-collapse collapse">
-      									<div class="panel-body">
-      										<div class="priority_entry no_entry">
-      											<p>
-      												<b>No Subjects</b>
-      											</p>
-      										</div>
-      									</div>
-      								</div>
-								</div>	
+    							
 							</div>				
 					</div>
 				</div>
@@ -102,29 +58,19 @@
     								<div class="panel-heading">
       									<h4 class="panel-title">
         									<!-- <a data-toggle="collapse" data-parent="#accordion" href="#high">High Priority</a> -->
-        									<a data-toggle="collapse" href="#GEah">AH<span class="badge pull-right" id="high_badge">3</span></a>
+        									<a data-toggle="collapse" href="#GEah">AH<span class="badge pull-right" id="high_badge">{{sizeof($ah)}}</span></a>
      									</h4>
     								</div>
     								<div id="GEah" class="panel-collapse collapse">
       									<div class="panel-body">
+      										@foreach($ah as $subj)
       										<div class="priority_entry no_entry">
       											<p>
       												&nbsp;<br/>
-      												<b>Comm 3</b>
+      												<b>{{$subj}}</b>
       											</p>
       										</div>
-      										<div class="priority_entry no_entry">
-      											<p>
-      												&nbsp;<br/>
-      												<b>Lit 2</b>
-      											</p>
-      										</div>
-      										<div class="priority_entry no_entry">
-      											<p>
-      												&nbsp;<br/>
-      												<b>Lit 3</b>
-      											</p>
-      										</div>
+      										@endforeach
       									</div>
     								</div>
     							</div>
@@ -133,29 +79,19 @@
 								<div class="panel panel-default">
     								<div class="panel-heading">
       									<h4 class="panel-title">
-        									<a data-toggle="collapse" href="#GEmst">MST<span class="badge pull-right" id="medium_badge">3</span></a>
+        									<a data-toggle="collapse" href="#GEmst">MST<span class="badge pull-right" id="medium_badge">{{sizeof($mst)}}</span></a>
      									</h4>
     								</div>
     								<div id="GEmst" class="panel-collapse collapse">
       									<div class="panel-body">
+      										@foreach($mst as $subj)
       										<div class="priority_entry no_entry">
       											<p>
       												&nbsp;<br/>
-      												<b>Envi Sci 10</b>
+      												<b>{{$subj}}</b>
       											</p>
       										</div>
-      										<div class="priority_entry no_entry">
-      											<p>
-      												&nbsp;<br/>
-      												<b>Nat Sci 1</b>
-      											</p>
-      										</div>
-      										<div class="priority_entry no_entry">
-      											<p>
-      												&nbsp;<br/>
-      												<b>Nat Sci 2</b>
-      											</p>
-      										</div>
+      										@endforeach
       									</div>
       								</div>
 								</div>
@@ -164,41 +100,19 @@
 								<div class="panel panel-default">
     								<div class="panel-heading">
       									<h4 class="panel-title">
-        									<a data-toggle="collapse" href="#GEssp">SSP<span class="badge pull-right" id="low_badge">5</span></a>
+        									<a data-toggle="collapse" href="#GEssp">SSP<span class="badge pull-right" id="low_badge">{{sizeof($ssp)}}</span></a>
      									</h4>
     								</div>
     								<div id="GEssp" class="panel-collapse collapse">
       									<div class="panel-body">
+      										@foreach($ssp as $subj)
       										<div class="priority_entry no_entry">
       											<p>
       												&nbsp;<br/>
-      												<b>Hist 2</b>
+      												<b>{{$subj}}</b>
       											</p>
       										</div>
-      										<div class="priority_entry no_entry">
-      											<p>
-      												&nbsp;<br/>
-      												<b>Psych 10</b>
-      											</p>
-      										</div>
-      										<div class="priority_entry no_entry">
-      											<p>
-      												&nbsp;<br/>
-      												<b>Soc Sci 1</b>
-      											</p>
-      										</div>
-      										<div class="priority_entry no_entry">
-      											<p>
-      												&nbsp;<br/>
-      												<b>Soc Sci 10</b>
-      											</p>
-      										</div>
-      										<div class="priority_entry no_entry">
-      											<p>
-      												&nbsp;<br/>
-      												<b>Soc Sci 11</b>
-      											</p>
-      										</div>
+      										@endforeach
       									</div>
     								</div>
 								</div>
