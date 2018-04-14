@@ -33,16 +33,23 @@ class Problem:
 	def slotList(self):
 		return list(np.arange(7, 19.25, .25, dtype="double"))
 
+	def removeDigits(self, string):
+		return "".join(i for i in string if not i.isdigit())
+
 	def findSections(self, courseName, classOfferingList):
 		courseName, leclab = courseName.split("-")
+
 		if leclab == "lab":
 			return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName and classoffering.leclab == "lab"]
 		try:
-			if courseName.index("ge(") == 0:
-				courseName = "".join(i for i in courseName if not i.isdigit())
+			# print(courseName.index("elective") == 0)
+			if "ge(" in courseName:
+				courseName = self.removeDigits(courseName)
 				subjectsTaken = [classoffering.courseName for classoffering in self.coursesTaken]
 				return [classoffering for classoffering in createClassesList("../csv/"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
-			if courseName.index("pe") == 0:
+			
+			elif "pe" in courseName:
+				courseName = self.removeDigits(courseName)
 				pe_2_sports = {"badminton": "7", "bowling": "14", "ballroomdance":"26", "basketballwomen":"1", "tabletennis":"10","swimming":"19", "volleyball":"5", "lawntennis":"9", "football":"3", "softball":"4", "popularballroomdance":"26", "internationalfolkdance":"27", "philippinefolkdance":"28", "basketball":"1", "baseball": "23"}
 				pe_3_sports = {"advancedvolleyball": "5", "socialrecreation": "4", "advancedbadminton":"7", "advancedtabletennis": "10", "moderndance": "2", "camping": "6", "jazz": "3", "advancedlawntennis": "9"}
 				pe_2_subjects_to_avoid = []
@@ -64,7 +71,8 @@ class Problem:
 						output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe3")]
 				return output
 
-			if courseName.index("elective") == 0:
+			elif "elective" in courseName:
+				courseName = self.removeDigits(courseName)
 				elective_names = [elective.courseName for elective in self.electiveList]
 				available_electives = [classoffering for classoffering in classOfferingList if classoffering.courseName in elective_names]
 				electives_taken = [course.courseName for course in self.coursesTaken if course.courseType == "elective"]
@@ -72,7 +80,7 @@ class Problem:
 				return output
 		except ValueError as e:
 			"""Substring 'ge(', elective, pe was not found"""
-
+		# print(courseName)
 		return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName]
 
 
