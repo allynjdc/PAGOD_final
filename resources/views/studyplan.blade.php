@@ -21,7 +21,11 @@
 					@if($row[0] == 1 && $row[1] == 1)
 						<tr>
 							<td>{{$row[2]}}</td>
-							<td>{{$row[3]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
 							@if($row[4] == 1)
 							<td><span class="glyphicon glyphicon-ok"></span></td>
 							@else
@@ -58,7 +62,11 @@
 					@if($row[0] == 1 && $row[1] == 2)
 						<tr>
 							<td>{{$row[2]}}</td>
-							<td>{{$row[3]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
 							@if($row[4] == 1)
 							<td><span class="glyphicon glyphicon-ok"></span></td>
 							@else
@@ -100,7 +108,11 @@
 					@if($row[0] == 2 && $row[1] == 1)
 						<tr>
 							<td>{{$row[2]}}</td>
-							<td>{{$row[3]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
 							@if($row[4] == 1)
 							<td><span class="glyphicon glyphicon-ok"></span></td>
 							@else
@@ -137,7 +149,11 @@
 					@if($row[0] == 2 && $row[1] == 2)
 						<tr>
 							<td>{{$row[2]}}</td>
-							<td>{{$row[3]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
 							@if($row[4] == 1)
 							<td><span class="glyphicon glyphicon-ok"></span></td>
 							@else
@@ -179,7 +195,11 @@
 					@if($row[0] == 3 && $row[1] == 1)
 						<tr>
 							<td>{{$row[2]}}</td>
-							<td>{{$row[3]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
 							@if($row[4] == 1)
 							<td><span class="glyphicon glyphicon-ok"></span></td>
 							@else
@@ -215,7 +235,11 @@
 					@if($row[0] == 3 && $row[1] == 2)
 						<tr>
 							<td>{{$row[2]}}</td>
-							<td>{{$row[3]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
 							@if($row[4] > 0)
 							<td><span class="glyphicon glyphicon-ok"></span></td>
 							@else
@@ -251,7 +275,13 @@
 				@foreach($mid as $row)
 						<tr>
 							<td>{{$row[0]}}</td>
-							<td>{{$row[1]}}</td>
+							<td>
+								@if(is_numeric($row[1]))
+									{{$row[1]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span>
+								@endif
+							</td>
 							@if($row[2] > 0)
 							<td><span class="glyphicon glyphicon-ok"></span></td>
 							@else
@@ -292,7 +322,11 @@
 					@if($row[0] == 4 && $row[1] == 1)
 						<tr>
 							<td>{{$row[2]}}</td>
-							<td>{{$row[3]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
 							@if($row[4] > 0)
 							<td><span class="glyphicon glyphicon-ok"></span></td>
 							@else
@@ -329,7 +363,11 @@
 					@if($row[0] == 4 && $row[1] == 2)
 						<tr>
 							<td>{{$row[2]}}</td>
-							<td>{{$row[3]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
 							@if($row[4] > 0)
 							<td><span class="glyphicon glyphicon-ok"></span></td>
 							@else
@@ -372,7 +410,11 @@
 					@if($row[0] == 5 && $row[1] == 1)
 						<tr>
 							<td>{{$row[2]}}</td>
-							<td>{{$row[3]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
 							@if($row[4] > 0)
 							<td><span class="glyphicon glyphicon-ok"></span></td>
 							@else
@@ -409,7 +451,11 @@
 					@if($row[0] == 5 && $row[1] == 2)
 						<tr>
 							<td>{{$row[2]}}</td>
-							<td>{{$row[3]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
 							@if($row[4] > 0)
 							<td><span class="glyphicon glyphicon-ok"></span></td>
 							@else

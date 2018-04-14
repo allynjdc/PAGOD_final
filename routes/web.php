@@ -17,21 +17,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
-//Route::group(['middleware' => ['web']], function(){
+Route::group(['middleware' => ['auth']], function(){
 
 	// route to process the form
-	//Route::post('/home','StudentController@index')->name('login');
-Route::get('/home', 'HomeController@index');
-Route::get('/studyplan','StudentController@plan');
-Route::get('/acadprogress','StudentController@progress');
-Route::get('/addwishlist','StudentController@wishlist');
-Route::get('/addpreference','StudentController@preference');
-//});
-
-// Route::get('/logout',function(){
-// 	Auth::logout();
-// 	return redirect('/'); 
-// }); 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+	Route::get('/home', 'HomeController@index');
+	Route::get('/studyplan','StudentController@plan');
+	Route::get('/acadprogress','StudentController@progress');
+	Route::get('/addwishlist','StudentController@wishlist');
+	Route::get('/addpreference','StudentController@preference');
+});

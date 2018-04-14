@@ -283,3 +283,9 @@
 		});
 	</script>
 @endsection
+
+@push('scripts')
+	<script type="text/javascript" src="{{ asset('js/moment.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/schedule_script.js') }}"></script>
+
+@endpush

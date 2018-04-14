@@ -6,48 +6,49 @@ import neededcourses
 import sys
 
 def getCoursePath(course):
-	if course == "BS in Biology":
-		return "study plans\\bs bio.csv"
-	elif course == "BS in Public Health":
-		return "study plans\\bs ph.csv"
-	elif course == "BS in Fisheries":
-		return "study plans\\bs fisheries.csv"
-	elif course == "BS in Accountancy":
-		return "study plans\\bs accountancy.csv"
-	elif course == "BS in Business Administration":
-		return "study plans\\bs business administration majoy in marketing.csv"
-	elif course == "BS in Management":
-		return "study plans\\bs management.csv"
-	elif course == "BS in Applied Mathematics":
-		return "study plans\\bs appmath.csv"
-	elif course == "BS in Chemistry":
-		return "study plans\\bs chem.csv"
-	elif course == "BS in Computer Science":
-		return "study plans\\bs cmsc.csv"
-	elif course == "BS in Statistics":
-		return "study plans\\bs stat.csv"
-	elif course == "BS in Communication and Media Study":
-		return "study plans\\ba cms.csv"
-	elif course == "BA in Literature":
-		return "study plans\\ba lit.csv"
-	elif course == "BA in Community Development":
-		return "study plans\\ba cd.csv"
-	elif course == "BA in History":
-		return "study plans\\ba hist.csv"
-	elif course == "BA Political Science (double major)":
-		return "study plans\\ba polsci (double major).csv"
-	elif course == "BA in Political Science (single major)":
-		return "study plans\\ba polsci (single major).csv"
-	elif course == "BA in Psychology":
-		return "study plans\\ba psych.csv"
-	elif course == "BA in Sociology":
-		return "study plans\\ba socio.csv"
-	elif course == "BS in Economics":
-		return "study plans\\bs econ.csv"
-	elif course == "BS in Chemical Engineering":
-		return "study plans\\bs chemical engineering.csv"
-	elif course == "BS in Food Technology":
-		return "study plans\\bs food technology.csv"
+	# if course == "BS in Biology":
+	# 	return "study plans\\bs bio.csv"
+	# elif course == "BS in Public Health":
+	# 	return "study plans\\bs ph.csv"
+	# elif course == "BS in Fisheries":
+	# 	return "study plans\\bs fisheries.csv"
+	# elif course == "BS in Accountancy":
+	# 	return "study plans\\bs accountancy.csv"
+	# elif course == "BS in Business Administration":
+	# 	return "study plans\\bs business administration majoy in marketing.csv"
+	# elif course == "BS in Management":
+	# 	return "study plans\\bs management.csv"
+	# elif course == "BS in Applied Mathematics":
+	# 	return "study plans\\bs appmath.csv"
+	# elif course == "BS in Chemistry":
+	# 	return "study plans\\bs chem.csv"
+	# elif course == "BS in Computer Science":
+	# 	return "study plans\\bs cmsc.csv"
+	# elif course == "BS in Statistics":
+	# 	return "study plans\\bs stat.csv"
+	# elif course == "BS in Communication and Media Study":
+	# 	return "study plans\\ba cms.csv"
+	# elif course == "BA in Literature":
+	# 	return "study plans\\ba lit.csv"
+	# elif course == "BA in Community Development":
+	# 	return "study plans\\ba cd.csv"
+	# elif course == "BA in History":
+	# 	return "study plans\\ba hist.csv"
+	# elif course == "BA Political Science (double major)":
+	# 	return "study plans\\ba polsci (double major).csv"
+	# elif course == "BA in Political Science (single major)":
+	# 	return "study plans\\ba polsci (single major).csv"
+	# elif course == "BA in Psychology":
+	# 	return "study plans\\ba psych.csv"
+	# elif course == "BA in Sociology":
+	# 	return "study plans\\ba socio.csv"
+	# elif course == "BS in Economics":
+	# 	return "study plans\\bs econ.csv"
+	# elif course == "BS in Chemical Engineering":
+	# 	return "study plans\\bs chemical engineering.csv"
+	# elif course == "BS in Food Technology":
+	# 	return "study plans\\bs food technology.csv"
+	return "study plans\\"+course+".csv"
 	
 def checkCompletion(taken,subject,subtype):
 	for take in taken:
