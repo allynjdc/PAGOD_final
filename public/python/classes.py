@@ -12,6 +12,7 @@ class Problem:
 		for variable in variables:
 			variable_domain.setdefault(variable, 0)
 			classOfferingList = createClassesList("../csv/data.csv")
+			classOfferingList = [classoffering for classoffering in classOfferingList if (classoffering.year == "2016-2017" and classoffering.semester == "1")]
 			variable_domain[variable] = self.findSections(variable, classOfferingList)
 		self.variable_domain = variable_domain
 
@@ -41,13 +42,11 @@ class Problem:
 
 		if leclab == "lab":
 			return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName and classoffering.leclab == "lab"]
-		try:
-			# print(courseName.index("elective") == 0)
+		else:
 			if "ge(" in courseName:
 				courseName = self.removeDigits(courseName)
 				subjectsTaken = [classoffering.courseName for classoffering in self.coursesTaken]
 				return [classoffering for classoffering in createClassesList("../csv/"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
-			
 			elif "pe" in courseName:
 				courseName = self.removeDigits(courseName)
 				pe_2_sports = {"badminton": "7", "bowling": "14", "ballroomdance":"26", "basketballwomen":"1", "tabletennis":"10","swimming":"19", "volleyball":"5", "lawntennis":"9", "football":"3", "softball":"4", "popularballroomdance":"26", "internationalfolkdance":"27", "philippinefolkdance":"28", "basketball":"1", "baseball": "23"}
@@ -78,9 +77,6 @@ class Problem:
 				electives_taken = [course.courseName for course in self.coursesTaken if course.courseType == "elective"]
 				output = [elective for elective in available_electives if elective.courseName not in electives_taken]
 				return output
-		except ValueError as e:
-			"""Substring 'ge(', elective, pe was not found"""
-		# print(courseName)
 		return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName]
 
 
@@ -220,7 +216,7 @@ class ClassOffering:
 		self.sessions = sessions
 
 	def displayClassOffering(self):
-		print(self.courseName, "Section", self.section, self.instructor, self.leclab)
+		print(self.year, self.semester, self.courseName, "Section", self.section, self.instructor, self.leclab)
 		for session in self.sessions:
 			session.displaySession()
 

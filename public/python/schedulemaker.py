@@ -31,7 +31,6 @@ def initbacktracking(coursesToTake, coursesTaken, electiveList):
 				pe_cnt += 1
 	problem = classes.Problem(coursenamesToTake, coursesTaken, electiveList)
 	assignment = {}
-	print(problem.variable_domain)
 	for key in problem.variable_domain.keys():
 		assignment.setdefault(key, None)
 	# print(assignment)
@@ -64,7 +63,7 @@ if __name__ == "__main__":
 		classes.Subject("4", "1", "cmsc142", "core", "3", "lec"),
 		classes.Subject("4", "1", "cmsc198.1", "core", "2", "lec"),
 		classes.Subject("4", "1", "cmsc192", "core",  "1", "lec"),
-		classes.Subject("4", "1", "", "pe", "3", "lec"),
+		classes.Subject("4", "1", "", "elective", "3", "lec"),
 		classes.Subject("4", "1", "", "elective", "3", "lec"),
 		classes.Subject("1", "1", "", "ge(ah)", "3", "lec")
 	]
