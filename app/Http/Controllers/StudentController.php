@@ -82,6 +82,8 @@ class StudentController extends Controller
 
         $output = $process->getOutput();
         $row = 0;
+
+        // CONVERTING THE SINGLE STRING RESULT FROM PYTHON INTO 2-D ARRAY
         $lines = explode('/', $output);
         foreach ($lines as $line => $value) {            
             $val = explode(',', $value);
@@ -100,6 +102,8 @@ class StudentController extends Controller
                 $row++;
             }
         }
+
+        // COUNT ONLY THE SUM OF UNITS PER SEMS
         $midr = 0;
         $sum1 = 0;
         $sum2 = 0;
@@ -155,6 +159,7 @@ class StudentController extends Controller
                 $sum11 = $sum11 + $row[3];
             }
 
+            // IF MAY MIDYEAR
             if($row[0]==3 && strlen($row[1])>3 && $row[4] > 0){
                 $mid[$midr][0] = $row[2];
                 $mid[$midr][1] = $row[3];
@@ -165,6 +170,7 @@ class StudentController extends Controller
 
         }
 
+        // RETURN THE PAGE VIEW
         return view('studyplan', compact('final','midr','mid','sum1','sum2','sum3','sum4','sum5','sum6','sum7','sum8','sum9','sum10','sum11','has5th'));
         
     }
@@ -181,9 +187,11 @@ class StudentController extends Controller
             throw new ProcessFailedException($process);
         }
 
+        // CONVERTING THE SINGLE STRING RESULT FROM PYTHON INTO 2-D ARRAY 
+        // AND SEPARATING COURSES TAKEN BY COURSETYPES
         $output = $process->getOutput();
         $ccore = 0;
-        $cah = 0;
+        $cah = 0; 
         $cssp = 0;
         $cmst = 0;
         $celect = 0;
@@ -233,6 +241,7 @@ class StudentController extends Controller
             throw new ProcessFailedException($process);
         }
 
+        // AND COUNTING THE NUMBER OF COURSES TAKEN BY COURSETYPES
         $counts = $process->getOutput();
         $values = explode(',', $counts);
 
@@ -258,6 +267,7 @@ class StudentController extends Controller
             throw new ProcessFailedException($process);
         }
 
+        // SEPARATING THE SINGLE STRING RESULT FROM PYTHON ACCODING TO COURSETYPES
         $output = $process->getOutput();
         $subjType = explode('/', $output);
 
@@ -277,9 +287,12 @@ class StudentController extends Controller
             throw new ProcessFailedException($process);
         }
 
+        // SEPARATING THE SINGLE STRING RESULT FROM PYTHON
+        // EXTRACTING ONLY THE PRECEEDING SEMESTER
         $output = $process->getOutput();
         $row = 0;
         $lines = explode('/', $output);
+
 
         //echo $output;
         return view('addpreference', compact('ah','mst','ssp','core'));

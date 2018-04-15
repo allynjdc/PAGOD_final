@@ -71,12 +71,27 @@
 		height: 300px;
 	}
 
+	.panel-profile-index-home {
+		height: 250px;
+	}
+
 	.img-dp-index {
 		box-sizing: border-box;
 		z-index: 5;
 		margin: auto;
 		width: 100px;
 		left: -90px;
+		position: relative;
+		transform: translate(0, -40%);
+		margin-bottom: -120px;
+	}
+
+	.img-dp-index-home {
+		box-sizing: border-box;
+		z-index: 5;
+		margin: auto;
+		width: 100px;
+		left: -200px;
 		position: relative;
 		transform: translate(0, -40%);
 		margin-bottom: -120px;
