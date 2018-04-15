@@ -84,6 +84,7 @@ class StudentController extends Controller
         $row = 0;
 
         // CONVERTING THE SINGLE STRING RESULT FROM PYTHON INTO 2-D ARRAY
+        // final[x][0] year; final[x][1] sem; final[x][2] subject; final[x][3] units; final[x][4] complete or not
         $lines = explode('/', $output);
         foreach ($lines as $line => $value) {            
             $val = explode(',', $value);
@@ -291,11 +292,81 @@ class StudentController extends Controller
         // EXTRACTING ONLY THE PRECEEDING SEMESTER
         $output = $process->getOutput();
         $row = 0;
-        $lines = explode('/', $output);
 
+        // CONVERTING THE SINGLE STRING RESULT FROM PYTHON INTO 2-D ARRAY
+        // final[x][0] year; final[x][1] sem; final[x][2] subject; final[x][3] units; final[x][4] complete or not
+        $lines = explode('/', $output);
+        foreach ($lines as $line => $value) {            
+            $val = explode(',', $value);
+            if(sizeof($val)==6){
+                $final[$row][0] = $val[0];
+                $final[$row][1] = $val[1];
+                if(!$val[2] || strlen($val[2])<3){
+                    // GE or PE
+                    $final[$row][2] = strtoupper($val[3]);
+                } else {
+                    // NON-GE
+                    $final[$row][2] = strtoupper($val[2]);
+                }
+                $final[$row][3] = $val[4];
+                $final[$row][4] = $val[5];
+                $row++;
+            }
+        }
+
+        foreach($final as $subj){
+            if($subj[2] == strtoupper($core[0])){
+                $year = $subj[0];
+                $sem = $subj[1];
+            }
+        }
+
+        $row=0;
+        foreach($final as $subj){
+            if($subj[0] == $year and $subj[1] == $sem){
+                $sfinal[$row][0] = $subj[0];
+                $sfinal[$row][1] = $subj[1];
+                $sfinal[$row][2] = $subj[2];
+                $sfinal[$row][3] = $subj[3];
+                $sfinal[$row][4] = $subj[4];
+                $row++;
+            }
+        }
+
+        // COUNT ONLY THE SUM OF UNITS PER SEMS
+        $sum1 = 0;
+        foreach($sfinal as $row) {
+            if($row[0]==1 && $row[1]==1 && $row[4] > 0){
+                if(substr_count($row[2], 'PE1')>0 || substr_count($row[2], 'NSTP')>0){
+                    $sum1 = $sum1 + 0;
+                } else {
+                    $sum1 = $sum1 + $row[3];
+                }
+            } else if($row[0]==1 && $row[1]==2 && $row[4] > 0){
+                if(substr_count($row[2], 'PE')>0 || substr_count($row[2], 'NSTP')>0){
+                    $sum1 = $sum1 + 0;
+                } else {
+                    $sum1 = $sum1 + $row[3];
+                }
+            } else if($row[0]==2 && $row[1]==1 && $row[4] > 0){
+                if(substr_count($row[2], 'PE')>0){
+                    $sum1 = $sum1 + 0;
+                } else {
+                    $sum1 = $sum1 + $row[3];
+                }
+            } else if($row[0]==2 && $row[1]==2 && $row[4] > 0){
+                if(substr_count($row[2], 'PE')>0){
+                    $sum1 = $sum1 + 0;
+                } else {
+                    $sum1 = $sum1 + $row[3];
+                }
+            } else {
+                $sum1 = $sum1 + $row[3];
+            }   
+        }         
 
         //echo $output;
-        return view('addpreference', compact('ah','mst','ssp','core'));
+        return view('addpreference', compact('ah','mst','ssp','core','year','sem','sfinal','sum1'));
     } 
 
     public function wishlist(Request $request)
