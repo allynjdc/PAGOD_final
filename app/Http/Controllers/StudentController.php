@@ -248,7 +248,7 @@ class StudentController extends Controller
 
     public function preference(Request $request)
     {
-        $cor = Auth::user()->courseName();
+        $cor = Auth::user()->course;
         $course = "\"$cor\"";
         $courses_taken = Auth::user()->courses_taken;
         $process = new Process("python python\preference.py $course $courses_taken");
@@ -269,6 +269,17 @@ class StudentController extends Controller
         array_pop($mst);
         array_pop($ssp);
         array_pop($core);
+
+        $process = new Process("python python\study_plan.py $course $courses_taken");
+        $process->run();
+
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }
+
+        $output = $process->getOutput();
+        $row = 0;
+        $lines = explode('/', $output);
 
         //echo $output;
         return view('addpreference', compact('ah','mst','ssp','core'));
