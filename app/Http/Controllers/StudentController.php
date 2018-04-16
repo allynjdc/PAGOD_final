@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Http\Request; 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
@@ -82,6 +82,9 @@ class StudentController extends Controller
 
         $output = $process->getOutput();
         $row = 0;
+
+        // CONVERTING THE SINGLE STRING RESULT FROM PYTHON INTO 2-D ARRAY
+        // final[x][0] year; final[x][1] sem; final[x][2] subject; final[x][3] units; final[x][4] complete or not
         $lines = explode('/', $output);
         foreach ($lines as $line => $value) {            
             $val = explode(',', $value);
@@ -100,6 +103,8 @@ class StudentController extends Controller
                 $row++;
             }
         }
+
+        // COUNT ONLY THE SUM OF UNITS PER SEMS
         $midr = 0;
         $sum1 = 0;
         $sum2 = 0;
@@ -155,6 +160,7 @@ class StudentController extends Controller
                 $sum11 = $sum11 + $row[3];
             }
 
+            // IF MAY MIDYEAR
             if($row[0]==3 && strlen($row[1])>3 && $row[4] > 0){
                 $mid[$midr][0] = $row[2];
                 $mid[$midr][1] = $row[3];
@@ -165,6 +171,7 @@ class StudentController extends Controller
 
         }
 
+        // RETURN THE PAGE VIEW
         return view('studyplan', compact('final','midr','mid','sum1','sum2','sum3','sum4','sum5','sum6','sum7','sum8','sum9','sum10','sum11','has5th'));
         
     }
@@ -181,9 +188,11 @@ class StudentController extends Controller
             throw new ProcessFailedException($process);
         }
 
+        // CONVERTING THE SINGLE STRING RESULT FROM PYTHON INTO 2-D ARRAY 
+        // AND SEPARATING COURSES TAKEN BY COURSETYPES
         $output = $process->getOutput();
         $ccore = 0;
-        $cah = 0;
+        $cah = 0; 
         $cssp = 0;
         $cmst = 0;
         $celect = 0;
@@ -233,6 +242,7 @@ class StudentController extends Controller
             throw new ProcessFailedException($process);
         }
 
+        // AND COUNTING THE NUMBER OF COURSES TAKEN BY COURSETYPES
         $counts = $process->getOutput();
         $values = explode(',', $counts);
 
@@ -246,15 +256,122 @@ class StudentController extends Controller
         return view('acadprogress', compact('core','ccore','ah','cah','ssp','cssp','mst','cmst','elect','celect','open','cpenstp','values'));
     }
 
+    public function preference(Request $request)
+    {
+        $cor = Auth::user()->course;
+        $course = "\"$cor\"";
+        $courses_taken = Auth::user()->courses_taken;
+        $process = new Process("python python\preference.py $course $courses_taken");
+        $process->run();
+
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }
+
+        // SEPARATING THE SINGLE STRING RESULT FROM PYTHON ACCODING TO COURSETYPES
+        $output = $process->getOutput();
+        $subjType = explode('/', $output);
+
+        $ah = explode(",", $subjType[0]);
+        $mst = explode(",", $subjType[1]);
+        $ssp = explode(",", $subjType[2]);
+        $core = explode(",", $subjType[3]);
+        array_pop($ah);
+        array_pop($mst);
+        array_pop($ssp);
+        array_pop($core);
+
+        $process = new Process("python python\study_plan.py $course $courses_taken");
+        $process->run();
+
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }
+
+        // SEPARATING THE SINGLE STRING RESULT FROM PYTHON
+        // EXTRACTING ONLY THE PRECEEDING SEMESTER
+        $output = $process->getOutput();
+        $row = 0;
+
+        // CONVERTING THE SINGLE STRING RESULT FROM PYTHON INTO 2-D ARRAY
+        // final[x][0] year; final[x][1] sem; final[x][2] subject; final[x][3] units; final[x][4] complete or not
+        $lines = explode('/', $output);
+        foreach ($lines as $line => $value) {            
+            $val = explode(',', $value);
+            if(sizeof($val)==6){
+                $final[$row][0] = $val[0];
+                $final[$row][1] = $val[1];
+                if(!$val[2] || strlen($val[2])<3){
+                    // GE or PE
+                    $final[$row][2] = strtoupper($val[3]);
+                } else {
+                    // NON-GE
+                    $final[$row][2] = strtoupper($val[2]);
+                }
+                $final[$row][3] = $val[4];
+                $final[$row][4] = $val[5];
+                $row++;
+            }
+        }
+
+        foreach($final as $subj){
+            if($subj[2] == strtoupper($core[0])){
+                $year = $subj[0];
+                $sem = $subj[1];
+            }
+        }
+
+        $row=0;
+        foreach($final as $subj){
+            if($subj[0] == $year and $subj[1] == $sem){
+                $sfinal[$row][0] = $subj[0];
+                $sfinal[$row][1] = $subj[1];
+                $sfinal[$row][2] = $subj[2];
+                $sfinal[$row][3] = $subj[3];
+                $sfinal[$row][4] = $subj[4];
+                $row++;
+            }
+        }
+
+        // COUNT ONLY THE SUM OF UNITS PER SEMS
+        $sum1 = 0;
+        foreach($sfinal as $row) {
+            if($row[0]==1 && $row[1]==1 && $row[4] > 0){
+                if(substr_count($row[2], 'PE1')>0 || substr_count($row[2], 'NSTP')>0){
+                    $sum1 = $sum1 + 0;
+                } else {
+                    $sum1 = $sum1 + $row[3];
+                }
+            } else if($row[0]==1 && $row[1]==2 && $row[4] > 0){
+                if(substr_count($row[2], 'PE')>0 || substr_count($row[2], 'NSTP')>0){
+                    $sum1 = $sum1 + 0;
+                } else {
+                    $sum1 = $sum1 + $row[3];
+                }
+            } else if($row[0]==2 && $row[1]==1 && $row[4] > 0){
+                if(substr_count($row[2], 'PE')>0){
+                    $sum1 = $sum1 + 0;
+                } else {
+                    $sum1 = $sum1 + $row[3];
+                }
+            } else if($row[0]==2 && $row[1]==2 && $row[4] > 0){
+                if(substr_count($row[2], 'PE')>0){
+                    $sum1 = $sum1 + 0;
+                } else {
+                    $sum1 = $sum1 + $row[3];
+                }
+            } else {
+                $sum1 = $sum1 + $row[3];
+            }   
+        }         
+
+        //echo $output;
+        return view('addpreference', compact('ah','mst','ssp','core','year','sem','sfinal','sum1'));
+    } 
+
     public function wishlist(Request $request)
     {
         return view('addwishlist');
     }
-
-    public function preference(Request $request)
-    {
-        return view('addpreference');
-    } 
-
 
 }

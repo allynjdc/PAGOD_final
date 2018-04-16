@@ -61,7 +61,7 @@ def getGEAH(taken):
 	for take in taken:
 		if take.courseType == "ge(ah)":
 			AH.append(take.courseName)
-	return AH
+	return AH 
 
 def getGESSP(taken):
 	SSP = []
