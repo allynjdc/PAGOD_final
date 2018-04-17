@@ -51,6 +51,7 @@
                         <li>
                             <a class="but_color" href="/home" data-toggle="tooltip" data-placement="bottom" title="Home" >
                                 <span class="glyphicon glyphicon-home"></span>
+                                Home
                             </a>
                         </li>
                         <li>
@@ -58,6 +59,7 @@
                                 onclick="event.preventDefault();
                                          document.getElementById('logout-form').submit();">
                                 <span class="glyphicon glyphicon-off"></span>
+                                Logout
                             </a>
 
                             <form class="but_color" id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

@@ -2,6 +2,9 @@
 import csv
 import classes
 import numpy as np
+import json
+from json import JSONEncoder
+import sys
 
 def initbacktracking(coursesToTake, coursesTaken, electiveList):
 	coursenamesToTake = []
@@ -55,8 +58,14 @@ def backtracking(assignment, problem):
 			assignment[var] = classoffering
 	return None
 
+class MyEncoder(JSONEncoder):
+	def default(self, o):
+		return o.__dict__
+
 if __name__ == "__main__":
-	student = classes.Student(3, "2016-2017", 2, "bs cmsc", classes.createSubjectList("../csv/3rdYrKomsai.csv"))
+	course = sys.argv[1]
+	csvpath = sys.argv[2]
+	student = classes.Student(3, "2016-2017", 2, course, classes.createSubjectList(csvpath))
 	coursesToTake = [
 		classes.Subject("4", "1", "cmsc137", "core", "3", "lec"),
 		classes.Subject("4", "1", "cmsc137", "core", "", "lab"),
@@ -68,8 +77,10 @@ if __name__ == "__main__":
 		classes.Subject("1", "1", "", "ge(ah)", "3", "lec")
 	]
 	assignment = initbacktracking(coursesToTake, student.coursesTaken, student.electiveList)
+
 	try:
 		for key in assignment.keys():
-			assignment[key].displayClassOffering()
+			assignment[key] = MyEncoder().encode(assignment[key])
 	except Exception as e:
 		print("No schedule was made")
+	print(json.dumps(assignment))

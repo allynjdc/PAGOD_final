@@ -20,9 +20,10 @@ Auth::routes();
 Route::group(['middleware' => ['auth']], function(){
 
 	// route to process the form
-	Route::get('/home', 'HomeController@index');
-	Route::get('/studyplan','StudentController@plan');
-	Route::get('/acadprogress','StudentController@progress');
-	Route::get('/addwishlist','StudentController@wishlist');
-	Route::get('/addpreference','StudentController@preference');
+	Route::get('/home', 'HomeController@index')->name('home');
+	Route::get('/studyplan','StudentController@plan')->name('studyplan');
+	Route::get('/acadprogress','StudentController@progress')->name('acadprogress');
+	Route::get('/addwishlist','StudentController@wishlist')->name('addwishlist');
+	Route::get('/addpreference','StudentController@preference')->name('addpreference');
+	Route::post('/generateschedule', 'StudentController@generateSchedule')->name('generateschedule');
 });

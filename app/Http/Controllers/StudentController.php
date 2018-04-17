@@ -374,4 +374,21 @@ class StudentController extends Controller
         return view('addwishlist');
     }
 
+    public function generateSchedule(Request $request)
+    {
+        $cor = Auth::user()->course;
+        $course = "\"$cor\"";
+        $courses_taken = Auth::user()->courses_taken;
+        $process = new Process("python python\schedulemaker.py $course $courses_taken");
+        $process->run();
+
+        $process->run();
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }
+        // print($process->getOutput());
+        // echo dump(json_decode($process->getOutput(), true));
+        return json_decode($process->getOutput(), true);
+        // return "HELLO";
+    }
 }
