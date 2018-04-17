@@ -112,7 +112,7 @@ function generateSchedule(e){
 						days[i] = returnIndex(days[i]);
 					}
 					var subject = {
-						courseName: course["courseName"],
+						courseName: course["courseName"].toUpperCase(),
 						leclab: course["leclab"],
 						units: course["units"],
 						days: days,
