@@ -1,12 +1,11 @@
 #!/usr/bin/python
-import csv
 import classes
-import numpy as np
 import json
 from json import JSONEncoder
+import sectioning
 import sys
 
-def initbacktracking(coursesToTake, coursesTaken, electiveList):
+def variableCourses(coursesToTake):
 	coursenamesToTake = []
 	ge_ah_cnt = 1
 	ge_mst_cnt = 1
@@ -32,22 +31,26 @@ def initbacktracking(coursesToTake, coursesTaken, electiveList):
 			elif course.courseType == "pe":
 				coursenamesToTake.append(course.courseType+str(pe_cnt)+"-"+course.leclab)
 				pe_cnt += 1
+	return coursenamesToTake
+
+def initbacktracking(coursesToTake, coursesTaken, electiveList):
+	coursenamesToTake = variableCourses(coursesToTake)
 	problem = classes.Problem(coursenamesToTake, coursesTaken, electiveList)
 	assignment = {}
 	for key in problem.variable_domain.keys():
 		assignment.setdefault(key, None)
-	# print(assignment)
+	# print(problem.variable_domain)
 	assignment = backtracking(assignment, problem)
 	return assignment
 
 def backtracking(assignment, problem):
-	if problem.checkCompleteness(assignment):
+	if sectioning.checkCompleteness(assignment):
 		return assignment
-	var = problem.selectUnassignedVariable(assignment)
+	var = sectioning.selectUnassignedVariable(assignment)
 	for value in problem.variable_domain[var]:
 		temp = assignment
 		temp[var] = value
-		if not problem.checkListConflict(temp):
+		if not sectioning.checkListConflict(temp):
 			assignment[var] = value
 			result = backtracking(assignment, problem)
 			if result != None:
@@ -58,13 +61,17 @@ def backtracking(assignment, problem):
 			assignment[var] = classoffering
 	return None
 
+
 class MyEncoder(JSONEncoder):
 	def default(self, o):
 		return o.__dict__
 
+
 if __name__ == "__main__":
 	course = sys.argv[1]
 	csvpath = sys.argv[2]
+	# course = "bs cmsc"
+	# csvpath = "../csv/4thYrKomsai3.csv"
 	student = classes.Student(3, "2016-2017", 2, course, classes.createSubjectList(csvpath))
 	coursesToTake = [
 		classes.Subject("4", "1", "cmsc137", "core", "3", "lec"),
