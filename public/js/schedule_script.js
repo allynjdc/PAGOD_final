@@ -1,3 +1,9 @@
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN' : $('input[name="_token"]').val()
+    }
+});
+
 $(document).ready(function(){
 	$(document).on("click", "#add_constraint", addConstraint);
 	$(document).on("click", "#edit_constraint", editConstraint);
@@ -20,7 +26,7 @@ function Subject(){
 	this.end_time = null;
 	// monday is first day
 	this.days = [];
-	this.courseType = null;
+	// this.courseType = null;
 	this.units = 0
 	this.lecLab = null;
 	this.courseName = null;
@@ -36,9 +42,9 @@ function Subject(){
 		this.units = units;
 	}
 
-	this.setCourseType = function(type){
-		this.courseType = type;
-	}
+	// this.setCourseType = function(type){
+	// 	this.courseType = type;
+	// }
 
 	this.setTime = function(start_time, end_time){
 		this.start_time = start_time;
@@ -49,21 +55,39 @@ function Subject(){
 		this.courseName = courseName;
 	}
 
-	// this.makeDOMObject = function(){
-	// 	content_name = this.courseName.toLowerCase();
-	// 	content_name = content_name.replace(" ", "-");
-	// 	// a = '<a href="#0"><em class="event-name">' + this.courseName + '-' + this.lecLab + '</em></a>'
-	// 	// newLi = '<li class="single-event" data-start="' + this.start_time + '" data-end = "' + this.end_time + '" data-content="event-' + content_name+ '">' + a  + '</li>'
-	// 	newLi = "<li class='single-event' data-start='"+this.start_time+"' data-end='"+this.end_time+"' data-content='event-"+content_name+"'>"+
-	// 				"<a href='#0'>"+
-	// 					"<em class='event-name'>"+this.courseName+" - "+this.lecLab+"</em>"+
-	// 				"</a>"+
-	// 			"</li>";
-	// 	return newLi;
-	// }
+}
+
+function returnIndex(day){
+	var days = ["M", "T", "W", "Th", "F", "S"]
+	return days.indexOf(day)
+}
+
+function convertToTime(decimalTime){
+	var stringTime = "";
+	var hourPart = Math.floor(decimalTime);
+	var minutePart = decimalTime % 1;
+	var timeOfDay = "am";
+	if (hourPart - 12 > 0){
+		stringTime += (hourPart - 12);
+		timeOfDay = "pm";
+	}else{
+		stringTime += hourPart;
+		timeOfDay = "am";
+	}
+	if ((stringTime+"").length < 2){
+		stringTime = "0"+stringTime;
+	}
+	stringTime += ":";
+	minutePart = minutePart * 60;
+	if ((minutePart+"").length < 2){
+		minutePart = minutePart + "0";
+	}
+	stringTime += (minutePart + timeOfDay);
+	return stringTime;
 }
 
 function generateSchedule(e){
+	e.preventDefault();
 	if(e.target.id == "generate_btn"){
 		if($(".no_entry").length == 3){
 			$("#generate-warning-modal").modal("show");
@@ -71,87 +95,120 @@ function generateSchedule(e){
 		}
 		// console.log("from if clause: "+e.target.id);
 	}
-	subjectArray = [
-		{
-			courseName: "CMSC 197",
-			start_time: "8:30am",
-			end_time: "10am",
-			days: [0, 3],
-			courseType: "core",
-			units: 3,
-			lecLab: "lec"
-		},
-		{
-			courseName: "CMSC 152",
-			start_time: "2:30pm",
-			end_time: "4pm",
-			days: [0, 3],
-			courseType: "core",
-			units: 3,
-			lecLab: "lec"
-		},
-		{
-			courseName: "CMSC 170",
-			start_time: "8:30am",
-			end_time: "10am",
-			days: [1, 4],
-			courseType: "core",
-			units: 3,
-			lecLab: "lec"
-		},
-		{
-			courseName: "CMSC 198.2",
-			start_time: "1pm",
-			end_time: "12pm",
-			days: [1, 4],
-			courseType: "core",
-			units: 2,
-			lecLab: "lec"
-		},
-		{
-			courseName: "PI 100",
-			start_time: "2:30pm",
-			end_time: "4pm",
-			days: [1, 4],
-			courseType: "service",
-			units: 3,
-			lecLab: "lec"
-		},
-		{
-			courseName: "CMSC 197",
-			start_time: "9am",
-			end_time: "12pm",
-			days: [2],
-			courseType: "core",
-			units: 3,
-			lecLab: "lec"
-		}
-	];
-	subjObjList = [];
-	for (var i = subjectArray.length - 1; i >= 0; i--) {
-		subjObj = new Subject();
-		subjObj.setCourseName(subjectArray[i].courseName);
-		subjObj.setTime(subjectArray[i].start_time, subjectArray[i].end_time);
-		subjObj.setDays(subjectArray[i].days);
-		subjObj.setCourseType(subjectArray[i].courseType);
-		subjObj.setUnits(subjectArray[i].units);
-		subjObj.setLecLab(subjectArray[i].lecLab);
-		subjObjList.push(subjObj);
-	}
-
-	for (var i = subjObjList.length - 1; i >= 0; i--) {
-		subjectDays = subjObjList[i].days;
-		for (var j = subjectDays.length - 1; j >= 0; j--) {
-			$("#schedule-loading").jqs('import',[
-				{
-					day: subjectDays[j],
-					periods: [
-						[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName]
-					]
+	$.ajax({
+		method: 'POST',
+		url: "/generateschedule",
+		processData: false,
+		contentType: false,
+		success:function(data){
+			var subjectArray = [];
+			$.each(data, function(key, course){
+				course = JSON.parse(course);
+				for (var i = course["sessions"].length - 1; i >= 0; i--) {
+					var days = course["sessions"][i]["days"].split(" ");
+					var start = course["sessions"][i]["start"];
+					var end = course["sessions"][i]["end"];
+					for (var i = days.length - 1; i >= 0; i--) {
+						days[i] = returnIndex(days[i]);
+					}
+					var subject = {
+						courseName: course["courseName"].toUpperCase(),
+						leclab: course["leclab"],
+						units: course["units"],
+						days: days,
+						start_time: convertToTime(start),
+						end_time: convertToTime(end)
+					}
+					subjectArray.push(subject);
 				}
-			]);
+			});
+			console.log(subjectArray);
+			// subjectArray = [
+			// 	{
+			// 		courseName: "CMSC 197",
+			// 		start_time: "8:30am",
+			// 		end_time: "10am",
+			// 		days: [0, 3],
+			// 		courseType: "core",
+			// 		units: 3,
+			// 		lecLab: "lec"
+			// 	},
+			// 	{
+			// 		courseName: "CMSC 152",
+			// 		start_time: "2:30pm",
+			// 		end_time: "4pm",
+			// 		days: [0, 3],
+			// 		courseType: "core",
+			// 		units: 3,
+			// 		lecLab: "lec"
+			// 	},
+			// 	{
+			// 		courseName: "CMSC 170",
+			// 		start_time: "8:30am",
+			// 		end_time: "10am",
+			// 		days: [1, 4],
+			// 		courseType: "core",
+			// 		units: 3,
+			// 		lecLab: "lec"
+			// 	},
+			// 	{
+			// 		courseName: "CMSC 198.2",
+			// 		start_time: "1pm",
+			// 		end_time: "12pm",
+			// 		days: [1, 4],
+			// 		courseType: "core",
+			// 		units: 2,
+			// 		lecLab: "lec"
+			// 	},
+			// 	{
+			// 		courseName: "PI 100",
+			// 		start_time: "2:30pm",
+			// 		end_time: "4pm",
+			// 		days: [1, 4],
+			// 		courseType: "service",
+			// 		units: 3,
+			// 		lecLab: "lec"
+			// 	},
+			// 	{
+			// 		courseName: "CMSC 197",
+			// 		start_time: "9am",
+			// 		end_time: "12pm",
+			// 		days: [2],
+			// 		courseType: "core",
+			// 		units: 3,
+			// 		lecLab: "lec"
+			// 	}
+			// ];
+			subjObjList = [];
+			for (var i = subjectArray.length - 1; i >= 0; i--) {
+				subjObj = new Subject();
+				subjObj.setCourseName(subjectArray[i].courseName);
+				subjObj.setTime(subjectArray[i].start_time, subjectArray[i].end_time);
+				subjObj.setDays(subjectArray[i].days);
+				// subjObj.setCourseType(subjectArray[i].courseType);
+				subjObj.setUnits(subjectArray[i].units);
+				subjObj.setLecLab(subjectArray[i].lecLab);
+				subjObjList.push(subjObj);
+			}
+
+			for (var i = subjObjList.length - 1; i >= 0; i--) {
+				subjectDays = subjObjList[i].days;
+				for (var j = subjectDays.length - 1; j >= 0; j--) {
+					$("#schedule-loading").jqs('import',[
+						{
+							day: subjectDays[j],
+							periods: [
+								[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName]
+							]
+						}
+					]);
+				}
+			}
+		},
+		error:function(error){
+			console.log(error.responseText);
 		}
-	}
+	});
 }
 
 function hideEditModal(){

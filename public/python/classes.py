@@ -11,7 +11,7 @@ class Problem:
 		self.electiveList = electiveList
 		for variable in variables:
 			variable_domain.setdefault(variable, 0)
-			classOfferingList = createClassesList("../csv/data.csv")
+			classOfferingList = createClassesList("csv\\data.csv")
 			classOfferingList = [classoffering for classoffering in classOfferingList if (classoffering.year == "2016-2017" and classoffering.semester == "1")]
 			variable_domain[variable] = self.findSections(variable, classOfferingList)
 		self.variable_domain = variable_domain
@@ -46,7 +46,7 @@ class Problem:
 			if "ge(" in courseName:
 				courseName = self.removeDigits(courseName)
 				subjectsTaken = [classoffering.courseName for classoffering in self.coursesTaken]
-				return [classoffering for classoffering in createClassesList("../csv/"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
+				return [classoffering for classoffering in createClassesList("csv\\"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
 			elif "pe" in courseName:
 				courseName = self.removeDigits(courseName)
 				pe_2_sports = {"badminton": "7", "bowling": "14", "ballroomdance":"26", "basketballwomen":"1", "tabletennis":"10","swimming":"19", "volleyball":"5", "lawntennis":"9", "football":"3", "softball":"4", "popularballroomdance":"26", "internationalfolkdance":"27", "philippinefolkdance":"28", "basketball":"1", "baseball": "23"}
@@ -161,9 +161,9 @@ class Student:
 		self.academicYear = academicYear
 		self.semester = semester
 		self.degreeProgram = degreeProgram
-		self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
+		self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
 		self.coursesTaken = coursesTaken
-		self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
+		self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
 		if degreeProgram in Student.biodiv:
 			self.department = "bio div"
 			self.campus = "miagao"
