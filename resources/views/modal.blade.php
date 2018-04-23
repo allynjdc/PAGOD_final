@@ -113,7 +113,7 @@
   							<div id="editcourserestriction" class="tab-pane fade in active">
   								<div class="input-group bootstrap-timepicker timepicker btn_logged">
 									<div class="input-group-btn">
-										<button data-constraint="mustnothave" type="button" class="btn btn-primary dropdown-toggle edit-constraint-btn" data-toggle="dropdown">Must Not Have <span class="caret"></span></button>
+										<button data-constraint="mustnothave" type="button" class="btn but_color dropdown-toggle edit-constraint-btn" data-toggle="dropdown">Must Not Have <span class="caret"></span></button>
 										<ul class="dropdown-menu" role="menu">
 											<li role="presentation">
 												<a class="edit-constraint-item constraint-item" href="javascript:void(0)">Must Have</a>
@@ -154,7 +154,7 @@
 							</div> -->
 						</div>
 						<hr />
-						<button id="edit_constraint" type="submit" class="btn btn-primary btn_logged">EDIT</button>
+						<button id="edit_constraint" type="submit" class="btn but_color btn_logged">EDIT</button>
 			    		<button type="button" class="btn btn-default btn_logged" data-dismiss="modal">Close</button>
 			    	</form>
 			    </div>
@@ -176,9 +176,26 @@
 				</div>
 				<div class="modal-footer">
 					<button id="generate_schedule" type="button" class="btn btn-warning" data-dismiss="modal">GENERATE</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-default btn_logged" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- SCHEDULE GENERATE ERROR MODAL END -->
+
+	<!-- LOADING MODAL -->
+	<div id="loading-modal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="text-center"> LOADING . . .</h4>
+				</div>
+				<div class="modal-body">
+					<div class="progress">
+						<div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- LOADING MODAL END -->

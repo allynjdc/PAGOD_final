@@ -91,6 +91,7 @@ function generateSchedule(e){
 		}
 		// console.log("from if clause: "+e.target.id);
 	}
+	$("#loading-modal").modal();
 	$.ajax({
 		method: 'POST',
 		url: "/generateschedule",
@@ -143,9 +144,11 @@ function generateSchedule(e){
 					]);
 				}
 			}
+			$("#loading-modal").modal("hide");
 		},
 		error:function(error){
 			console.log(error.responseText);
+			$("#loading-modal").modal("hide");
 		}
 	});
 }
