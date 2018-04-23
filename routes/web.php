@@ -25,4 +25,5 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::get('/acadprogress','StudentController@progress');
 	Route::get('/addwishlist','StudentController@wishlist');
 	Route::get('/addpreference','StudentController@preference');
+	Route::get('/submitpreference','StudentController@submitpreference');
 });
