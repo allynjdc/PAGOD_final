@@ -42,10 +42,6 @@ function Subject(){
 		this.units = units;
 	}
 
-	// this.setCourseType = function(type){
-	// 	this.courseType = type;
-	// }
-
 	this.setTime = function(start_time, end_time){
 		this.start_time = start_time;
 		this.end_time = end_time;
@@ -95,6 +91,7 @@ function generateSchedule(e){
 		}
 		// console.log("from if clause: "+e.target.id);
 	}
+	$("#loading-modal").modal();
 	$.ajax({
 		method: 'POST',
 		url: "/generateschedule",
@@ -123,69 +120,12 @@ function generateSchedule(e){
 				}
 			});
 			console.log(subjectArray);
-			// subjectArray = [
-			// 	{
-			// 		courseName: "CMSC 197",
-			// 		start_time: "8:30am",
-			// 		end_time: "10am",
-			// 		days: [0, 3],
-			// 		courseType: "core",
-			// 		units: 3,
-			// 		lecLab: "lec"
-			// 	},
-			// 	{
-			// 		courseName: "CMSC 152",
-			// 		start_time: "2:30pm",
-			// 		end_time: "4pm",
-			// 		days: [0, 3],
-			// 		courseType: "core",
-			// 		units: 3,
-			// 		lecLab: "lec"
-			// 	},
-			// 	{
-			// 		courseName: "CMSC 170",
-			// 		start_time: "8:30am",
-			// 		end_time: "10am",
-			// 		days: [1, 4],
-			// 		courseType: "core",
-			// 		units: 3,
-			// 		lecLab: "lec"
-			// 	},
-			// 	{
-			// 		courseName: "CMSC 198.2",
-			// 		start_time: "1pm",
-			// 		end_time: "12pm",
-			// 		days: [1, 4],
-			// 		courseType: "core",
-			// 		units: 2,
-			// 		lecLab: "lec"
-			// 	},
-			// 	{
-			// 		courseName: "PI 100",
-			// 		start_time: "2:30pm",
-			// 		end_time: "4pm",
-			// 		days: [1, 4],
-			// 		courseType: "service",
-			// 		units: 3,
-			// 		lecLab: "lec"
-			// 	},
-			// 	{
-			// 		courseName: "CMSC 197",
-			// 		start_time: "9am",
-			// 		end_time: "12pm",
-			// 		days: [2],
-			// 		courseType: "core",
-			// 		units: 3,
-			// 		lecLab: "lec"
-			// 	}
-			// ];
 			subjObjList = [];
 			for (var i = subjectArray.length - 1; i >= 0; i--) {
 				subjObj = new Subject();
 				subjObj.setCourseName(subjectArray[i].courseName);
 				subjObj.setTime(subjectArray[i].start_time, subjectArray[i].end_time);
 				subjObj.setDays(subjectArray[i].days);
-				// subjObj.setCourseType(subjectArray[i].courseType);
 				subjObj.setUnits(subjectArray[i].units);
 				subjObj.setLecLab(subjectArray[i].lecLab);
 				subjObjList.push(subjObj);
@@ -204,9 +144,11 @@ function generateSchedule(e){
 					]);
 				}
 			}
+			$("#loading-modal").modal("hide");
 		},
 		error:function(error){
 			console.log(error.responseText);
+			$("#loading-modal").modal("hide");
 		}
 	});
 }
@@ -448,6 +390,8 @@ function addConstraintReset(){
 		$("#addcourserestriction").addClass("in");
 	}
 	$("#addconstraint").modal('hide');
+	$('body').removeClass('modal-open');
+	$('.modal-backdrop').remove();
 }
 
 function removeConstraint(){
