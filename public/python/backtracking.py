@@ -31,7 +31,6 @@ def variableCourses(coursesToTake):
 			elif course.courseType == "pe":
 				coursenamesToTake.append(course.courseType+str(pe_cnt)+"-"+course.leclab)
 				pe_cnt += 1
-	print(coursenamesToTake)
 	return coursenamesToTake
 
 def initbacktracking(coursesToTake, coursesTaken, electiveList):

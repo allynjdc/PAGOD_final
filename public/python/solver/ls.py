@@ -53,9 +53,11 @@ class LocalSearchSolver:
 		neighbor_count = 0
 		legal_neighbor_count = 0
 		while True:
-			print('Restart #%d' % restart)
+			if config.explain:
+				print('Restart #%d' % restart)
 			if restart == config.max_restarts:
-				print('Restart limit reached')
+				if config.explain:
+					print('Restart limit reached')
 				break
 
 			self.local_search()
@@ -67,7 +69,8 @@ class LocalSearchSolver:
 			legal_neighbor_count += self.legal_neighbor_count
 
 			if state.score == config.best_possible_score:
-				print('Found best possible solution:',state.solution)
+				if config.explain:
+					print('Found best possible solution:',state.solution)
 				break
 
 			if config.respawn_solution == 'last':
@@ -82,11 +85,12 @@ class LocalSearchSolver:
 			restart += 1
 
 		best_state = config.best_fn(solutions,key=lambda state: state.score)
-		print('Restarts:',len(iterations))
-		print('Total iterations:',sum(iterations))
-		print('Total neighbors:',neighbor_count)
-		print('Total legal neighbors:',legal_neighbor_count)
-		print('Best score:',best_state.score)
+		if config.explain:
+			print('Restarts:',len(iterations))
+			print('Total iterations:',sum(iterations))
+			print('Total neighbors:',neighbor_count)
+			print('Total legal neighbors:',legal_neighbor_count)
+			print('Best score:',best_state.score)
 		self.solutions = [best_state.solution]
 
 	def local_search(self):
@@ -102,25 +106,30 @@ class LocalSearchSolver:
 		legal_neighbor_count = 0
 		while True:
 			if iteration > config.max_iterations:
-				print('Iteration: %d -- LIMIT REACHED' % iteration)
+				if config.explain:
+					print('Iteration: %d -- LIMIT REACHED' % iteration)
 				break
 
-			print(iteration,str(state.score).ljust(5),state.solution)
+			if config.explain:
+				print(iteration,str(state.score).ljust(5),state.solution)
 
 			# Neighbors
 			neighbors = config.neighborhood_fn(state)
-			print('\t %d neighbors' % len(neighbors))
+			if config.explain:
+				print('\t %d neighbors' % len(neighbors))
 			for neighbor in neighbors:
 				neighbor.score = config.objective_fn(neighbor)
 			neighbor_count += len(neighbors)
 
 			# Legal Neighbors
 			legal_neighbors = config.legal_neighbor_fn(state,neighbors)
-			print('\t %d legal neighbors' % len(legal_neighbors))
+			if config.explain:
+				print('\t %d legal neighbors' % len(legal_neighbors))
 			legal_neighbor_count += len(legal_neighbors)
 
 			if len(legal_neighbors) == 0:
-				print('No legal neighbors = LOCAL OPTIMUM FOUND -- STOP')
+				if config.explain:
+					print('No legal neighbors = LOCAL OPTIMUM FOUND -- STOP')
 				break
 
 			# Select legal neighbor
@@ -133,7 +142,8 @@ class LocalSearchSolver:
 				flat_count = 0
 
 			if flat_count == config.max_flat_iterations:
-				print('STUCK ON PLATEAU FOR %d iterations -- STOP' % flat_count)
+				if config.explain:
+					print('STUCK ON PLATEAU FOR %d iterations -- STOP' % flat_count)
 				break
 
 			# Make neighbor the current solution
@@ -141,7 +151,8 @@ class LocalSearchSolver:
 			iteration += 1
 
 			if state.score == config.best_possible_score:
-				print('Found best possible solution:',state.solution)
+				if config.explain:
+					print('Found best possible solution:',state.solution)
 				break
 				
 
@@ -166,10 +177,12 @@ class StochasticLocalSearchSolver(LocalSearchSolver):
 		best_state = state
 		while True:
 			if iteration > config.max_iterations:
-				print('Iteration: %d -- LIMIT REACHED' % iteration)
+				if config.explain:
+					print('Iteration: %d -- LIMIT REACHED' % iteration)
 				break
 
-			print(iteration,str(state.score).ljust(5),state.solution)
+			if config.explain:
+				print(iteration,str(state.score).ljust(5),state.solution)
 
 			legal_neighbor = None
 			for i in range(config.max_neighbor_try):
@@ -178,7 +191,8 @@ class StochasticLocalSearchSolver(LocalSearchSolver):
 				if neighbor.solution == state.solution:
 					continue # skip if same solution
 				
-				print('\t',i+1,str(neighbor.score).ljust(5),neighbor.solution)
+				if config.explain:
+					print('\t',i+1,str(neighbor.score).ljust(5),neighbor.solution)
 				neighbor_count += 1
 				if config.compare_fn(state,neighbor):
 					legal_neighbor = neighbor
@@ -186,7 +200,8 @@ class StochasticLocalSearchSolver(LocalSearchSolver):
 					break
 
 			if legal_neighbor is None:
-				print('No legal neighbor found after %d tries -- LOCAL OPTIMUM FOUND' % config.max_neighbor_try)
+				if config.explain:
+					print('No legal neighbor found after %d tries -- LOCAL OPTIMUM FOUND' % config.max_neighbor_try)
 				break
 
 			# Plateau detection: same score = flat
@@ -196,7 +211,8 @@ class StochasticLocalSearchSolver(LocalSearchSolver):
 				flat_count = 0
 
 			if flat_count == config.max_flat_iterations:
-				print('STUCK ON PLATEAU FOR %d iterations -- STOP' % flat_count)
+				if config.explain:
+					print('STUCK ON PLATEAU FOR %d iterations -- STOP' % flat_count)
 				break
 
 			# Make neighbor the current solution
@@ -209,7 +225,8 @@ class StochasticLocalSearchSolver(LocalSearchSolver):
 				best_state = state
 				
 			if state.score == config.best_possible_score:
-				print('Found best possible solution:',state.solution)
+				if config.explain:
+					print('Found best possible solution:',state.solution)
 				break
 				
 

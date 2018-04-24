@@ -379,9 +379,8 @@ class StudentController extends Controller
         $cor = Auth::user()->course;
         $course = "\"$cor\"";
         $courses_taken = Auth::user()->courses_taken;
-        $process = new Process("python python\backtracking.py $course $courses_taken");
-        $process->run();
-
+        // $process = new Process("python python\backtracking.py $course $courses_taken");
+        $process = new Process("python python\localsearch.py $course $courses_taken");
         $process->run();
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);

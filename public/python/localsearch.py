@@ -30,12 +30,24 @@ def hill_walking_config(config,reverse):
 		config.legal_neighbor_fn = non_decreasing
 		config.selection_fn = select_max
 
+def hill_climbing_config(config,reverse):
+	if reverse: # downhill
+		config.legal_neighbor_fn = strictly_decreasing
+		config.selection_fn = select_min
+	else: # uphill
+		config.legal_neighbor_fn = strictly_increasing
+		config.selection_fn = select_max
+
+class MyEncoder(JSONEncoder):
+	def default(self, o):
+		return o.__dict__
+
 def initls(coursesToTake, coursesTaken, electiveList):
 	variables = variableCourses(coursesToTake)
 
 	domain = {}
-	# classOfferingList = classes.createClassesList("csv\\data.csv")
-	classOfferingList = classes.createClassesList("../csv/data.csv")
+	classOfferingList = classes.createClassesList("csv\\data.csv")
+	# classOfferingList = classes.createClassesList("../csv/data.csv")
 	classOfferingList = [classoffering for classoffering in classOfferingList if (classoffering.year == "2016-2017" and classoffering.semester == "1")]
 
 	for var in variables:
@@ -58,11 +70,14 @@ def initls(coursesToTake, coursesTaken, electiveList):
 	config.initial_solution = 'random'
 	config.respawn_solution = 'random'
 	config.neighborhood_fn = change_upto_two_values
+	config.explain = False
 	reverse = True
-	hill_walking_config(config,reverse)
+	hill_climbing_config(config,reverse)
 	solver = LocalSearchSolver(problem,config)
 	solver.solve()
-	display_solutions(problem, solver)
+	# display_solutions(problem, solver)
+
+	return solver.solutions
 
 def solution_format(problem, solution):
 
@@ -84,10 +99,10 @@ def solution_format(problem, solution):
 	return "".join(output)
 
 if __name__ == "__main__":
-	# course = sys.argv[1]
-	# csvpath = sys.argv[2]
-	course = "bs cmsc"
-	csvpath = "../csv/4thYrKomsai3.csv"
+	course = sys.argv[1]
+	csvpath = sys.argv[2]
+	# course = "bs cmsc"
+	# csvpath = "../csv/4thYrKomsai3.csv"
 	student = classes.Student(3, "2016-2017", 2, course, classes.createSubjectList(csvpath))
 	coursesToTake = [
 		classes.Subject("4", "1", "cmsc137", "core", "3", "lec"),
@@ -100,11 +115,11 @@ if __name__ == "__main__":
 		classes.Subject("1", "1", "", "ge(ah)", "3", "lec")
 	]
 
-	initls(coursesToTake, student.coursesTaken, student.electiveList)
-
+	assignment = initls(coursesToTake, student.coursesTaken, student.electiveList)
+	# print(MyEncoder())
 	# try:
 	# 	for key in assignment.keys():
 	# 		assignment[key] = MyEncoder().encode(assignment[key])
 	# except Exception as e:
 	# 	print("No schedule was made")
-	# print(json.dumps(assignment))
+	print(json.dumps(assignment, cls=MyEncoder))
