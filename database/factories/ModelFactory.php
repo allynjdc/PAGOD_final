@@ -22,6 +22,9 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'password' => $password ?: $password = bcrypt('secret'),
         'course' => 'bs cmsc',
         'courses_taken' => "\"csv\\\\4thYrKomsai3.csv\"",
+        'preferences' => "\"preferences\\\\4thYrKomsai3.csv\"",
+        'constraints' => "\"contraints\\\\4thYrKomsai3.csv\"",
+        'schedule' => "\"schedule\\\\4thYrKomsai3.csv\"",
         'remember_token' => str_random(10),
     ];
 });
