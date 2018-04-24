@@ -25,6 +25,6 @@ class NoConflictsConstraint(Constraint):
 	def test(self, solution):
 		values = self.get_assigned_values(solution)
 		if len(values) == len(self.variables):
-			return sectioning.checkListConflict(solution)
+			return not sectioning.checkListConflict(solution)
 		else:
 			return True
