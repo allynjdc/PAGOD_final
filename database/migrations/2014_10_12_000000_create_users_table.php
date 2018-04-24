@@ -21,6 +21,9 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('course');
             $table->string('courses_taken');
+            $table->string('preferences');
+            $table->string('constraints');
+            $table->string('schedule');
             $table->rememberToken();
             $table->timestamps();
         });

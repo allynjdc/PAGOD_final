@@ -321,6 +321,7 @@ class StudentController extends Controller
             }
         }
 
+        // EXTRACTING ALL THE SUBJECT DETAILS OF THE NEXT SEMESTER
         $row=0;
         foreach($final as $subj){
             if($subj[0] == $year and $subj[1] == $sem){
@@ -365,9 +366,21 @@ class StudentController extends Controller
             }   
         }         
 
+        $con = 0;
         //echo $output;
-        return view('addpreference', compact('ah','mst','ssp','core','year','sem','sfinal','sum1'));
+        return view('addpreference', compact('ah','mst','ssp','core','year','sem','sfinal','sum1','con'));
     } 
+
+    public function submitpreference(Request $request){
+        $year = Input::get('year');
+        $sem = Input::get('sem');
+        $con = Input::get('subject_count');
+
+        for($i=1;$i<=$con;$i++){
+            echo Input::get("subject_".(string)$i); 
+        }
+        
+    }
 
     public function wishlist(Request $request)
     {

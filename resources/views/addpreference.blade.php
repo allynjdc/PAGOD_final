@@ -139,8 +139,8 @@
 						<h4><strong>FOURTH YEAR</strong> <!-- <small class="pull-right">A.Y. 2017-2018</small> --></h4>
 					@endif
 				</div>
-				<div class="table-responsive">
-					<form role="form" method="POST" action="{{ route('login') }}">
+				<form role="form" method="GET" action="/submitpreference">
+				<div class="table-responsive">					
 	                                 {{ csrf_field() }}
 						<table class="table table-hover">
 
@@ -159,17 +159,26 @@
 								@foreach($sfinal as $subj)
 								<tr>
 									@if(substr_count(strtoupper($subj[2]),"PE")>0||substr_count(strtoupper($subj[2]),"GE")>0||substr_count(strtoupper($subj[2]),"ELECTIVE")>0)
-										<td><input type="text" name="{{$subj[2]}}" class="form-control" placeholder="{{$subj[2]}}" /> </td>
+										<td><input type="text" name="subject_{{$con = $con+1}}" class="form-control" placeholder="{{$subj[2]}}" /> </td>
 										<td>{{$subj[3]}}</td>
 									@else
 										<td>{{$subj[2]}}</td>
 										<td>{{$subj[3]}}</td>
 									@endif
-									<td>
-										<a href='#remove' data-toggle='modal' class='anchor_color'><span class="glyphicon glyphicon-remove"></span></a>
-									</td>
+										<td>
+											<a href='#remove' data-toggle='modal' class='anchor_color'><span class="glyphicon glyphicon-remove"></span></a>
+										</td>
 								</tr>
 								@endforeach
+								<tr>
+									<td><input type="hidden" name="subject_count" class="form-control" value="{{$con}}" /> 
+									</td>
+									<td><input type="hidden" name="year" class="form-control" value="{{$year}}" /> 
+									</td>
+									<td><input type="hidden" name="sem" class="form-control" value="{{$sem}}" /> 
+									</td>
+								</tr>
+								
 								<!-- <tr>
 									<td>
 										<div class="dropdown">
@@ -198,13 +207,14 @@
 								</tr>
 							</tfoot>
 						</table>
-					</form>
+					
 				</div>
 				<div>
 					<div class="btn-group btn_logged pull-right">
-						<a class="btn but_color" href="/addwishlist"> Send Preference </a>
+						<button class="btn but_color"> Send Preference </button>
 					</div>
 				</div>
+				</form>
 			</div>
 		</div>
 		<!-- END Column md 8 -->

@@ -6,7 +6,7 @@ import neededcourses
 import study_plan as stp
 import acad_progress 
 import sys
-
+ 
 def remainAH(gelist,taken):
 	AH = []
 	for ge in gelist:
