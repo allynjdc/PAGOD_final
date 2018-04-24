@@ -32,11 +32,11 @@ class Student:
 		self.academicYear = academicYear
 		self.semester = semester
 		self.degreeProgram = degreeProgram
-		self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
-		# self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
+		# self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
+		self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
 		self.coursesTaken = coursesTaken
-		self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
-		# self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
+		# self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
+		self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
 		if degreeProgram in Student.biodiv:
 			self.department = "bio div"
 			self.campus = "miagao"
