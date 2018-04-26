@@ -61,11 +61,9 @@ def backtracking(assignment, problem):
 			assignment[var] = classoffering
 	return None
 
-
 class MyEncoder(JSONEncoder):
 	def default(self, o):
 		return o.__dict__
-
 
 if __name__ == "__main__":
 	course = sys.argv[1]

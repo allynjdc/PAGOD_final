@@ -22,17 +22,17 @@ def listOfSlots():
 def removeDigits(string):
 	return "".join(i for i in string if not i.isdigit())
 
-def findSections(courseName, classOfferingList, electiveList, coursesTaken):
+def findSections(courseName, classOfferingList, electiveList, coursesTaken, campus="Miagao"):
 	courseName, leclab = courseName.split("-")
 
 	if leclab == "lab":
-		return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName and classoffering.leclab == "lab"]
+		return [classoffering for classoffering in classOfferingList if (courseName == classoffering.courseName and classoffering.leclab == "lab" and classoffering.campus==campus)]
 	else:
 		if "ge(" in courseName:
 			courseName = removeDigits(courseName)
 			subjectsTaken = [classoffering.courseName for classoffering in coursesTaken]
-			# return [classoffering for classoffering in classes.createClassesList("../csv/"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
-			return [classoffering for classoffering in classes.createClassesList("csv\\"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
+			return [classoffering for classoffering in classes.createClassesList("../csv/"+courseName+".csv") if (classoffering.courseName not in subjectsTaken and classoffering.campus==campus)]
+			# return [classoffering for classoffering in classes.createClassesList("csv\\"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
 		elif "pe" in courseName:
 			courseName = removeDigits(courseName)
 			pe_2_sports = {"badminton": "7", "bowling": "14", "ballroomdance":"26", "basketballwomen":"1", "tabletennis":"10","swimming":"19", "volleyball":"5", "lawntennis":"9", "football":"3", "softball":"4", "popularballroomdance":"26", "internationalfolkdance":"27", "philippinefolkdance":"28", "basketball":"1", "baseball": "23"}
@@ -45,25 +45,25 @@ def findSections(courseName, classOfferingList, electiveList, coursesTaken):
 						pe_2_subjects_to_avoid.append(pe_2_sports[course.courseName])
 					elif course.courseName in pe_3_sports.keys():
 						pe_3_subjects_to_avoid.append(pe_3_sports[course.courseName])
-			output = [classoffering for classoffering in classOfferingList if classoffering.courseName == "pe2" or classoffering.courseName == "pe3"]
+			output = [classoffering for classoffering in classOfferingList if (classoffering.courseName == "pe2" or classoffering.courseName == "pe3" and classoffering.campus==campus)]
 			if len(pe_2_subjects_to_avoid) != 0:
 				for sec in pe_2_subjects_to_avoid:
 					regex = sec+".+"
-					output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe2")]
+					output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe2"  and classoffering.campus==campus)]
 			if len(pe_3_subjects_to_avoid) != 0:
 				for sec in pe_3_subjects_to_avoid:
 					regex = sec+".+"
-					output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe3")]
+					output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe3"  and classoffering.campus==campus)]
 			return output
 
 		elif "elective" in courseName:
 			courseName = removeDigits(courseName)
 			elective_names = [elective.courseName for elective in electiveList]
-			available_electives = [classoffering for classoffering in classOfferingList if classoffering.courseName in elective_names]
+			available_electives = [classoffering for classoffering in classOfferingList if (classoffering.courseName in elective_names  and classoffering.campus==campus)]
 			electives_taken = [course.courseName for course in coursesTaken if course.courseType == "elective"]
 			output = [elective for elective in available_electives if elective.courseName not in electives_taken]
 			return output
-	return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName and classoffering.leclab == "lec"]
+	return [classoffering for classoffering in classOfferingList if (courseName == classoffering.courseName and classoffering.leclab == "lec" and classoffering.campus==campus)]
 
 
 def findDayIndices(slotList, start, end, day):

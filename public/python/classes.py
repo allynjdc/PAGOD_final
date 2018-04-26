@@ -32,35 +32,35 @@ class Student:
 		self.academicYear = academicYear
 		self.semester = semester
 		self.degreeProgram = degreeProgram
-		self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
-		# self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
+		# self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
+		self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
 		self.coursesTaken = coursesTaken
-		self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
-		# self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
+		# self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
+		self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
 		if degreeProgram in Student.biodiv:
 			self.department = "bio div"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 		elif degreeProgram in Student.cfos:
 			self.department = "cfos"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 		elif degreeProgram in Student.cm:
 			self.department = "CM"
-			self.campus = "iloilocity"
+			self.campus = "Iloilo City"
 		elif degreeProgram in Student.dpsm:
 			self.department = "dpsm"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 		elif degreeProgram in Student.chem:
 			self.department = "chem"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 		elif degreeProgram in Student.humdiv:
 			self.department = "hum div"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 		elif degreeProgram in Student.socscidiv:
 			self.department = "socsci div"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 		elif degreeProgram in Student.sotech:
 			self.department = "sotech"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 
 class Subject:
 	def __init__(self, year, semester, courseName, courseType, units, leclab):
@@ -222,3 +222,32 @@ def createClassOffering(classitem):
 
 	classoffering.setSessions(sessions)
 	return classoffering
+
+class ConstraintCSV:
+	def __init__(self, meeting_time, no_class, musthave, mustnothave, subject, days, start, end, priority):
+		self.meeting_time = int(meeting_time)
+		self.no_class = int(no_class)
+		self.musthave = int(musthave)
+		self.mustnothave = int(mustnothave)
+		self.subject = subject
+		self.days = days.upper()
+		self.start = start
+		self.end = end
+		self.priority = priority
+
+def createConstraintsList(pathname):
+	ifile, reader = csvReader(pathname)
+	constraints = []
+	rownum = 1
+	for row in reader:
+		if rownum == 1:
+			rownum += 1
+			continue
+		conattrib = []
+		for col in row:
+			attribute = col.strip().lower()
+			conattrib.append(attribute)
+		constraint = ConstraintCSV(conattrib[0], conattrib[1], conattrib[2], conattrib[3], conattrib[4], conattrib[5], conattrib[6], conattrib[7], conattrib[8])
+		constraints.append(constraint)
+	ifile.close()
+	return constraints

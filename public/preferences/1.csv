@@ -1,0 +1,9 @@
+year,semester,courseName,courseType,units,leclab
+4, 1, cmsc137, core, 3, lec
+4, 1, cmsc137, core, , lab
+4, 1, cmsc142, core, 3, lec
+4, 1, cmsc198.1, core, 2, lec
+4, 1, cmsc192, core,  1, lec
+4, 1, , elective, 3, lec
+4, 1, , elective, 3, lec
+1, 1, , ge(ah), 3, lec
