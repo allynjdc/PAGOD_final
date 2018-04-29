@@ -1,13 +1,13 @@
 	<!--- MODAL ADD CONSTRAINTS -->
 	<div id="addconstraint" class="modal fade" role="dialog" >
-		<div class="modal-dialog">
+		<div class="modal-dialog"> 
 		  	<div class="modal-content ">
 		  		<div class="modal-header">
 		  			<button type="button" class="close" data-dismiss="modal">&times;</button>
 		  			<h4>NEW CONSTRAINT</h4>
 		  		</div>
 			    <div class="modal-body">
-			    	<form action="" method="POST">
+			    	<form action="" method="GET">
 				    	<div class="priority_options">
 				        	<p> 
 				        		Priority: 
@@ -39,6 +39,7 @@
 									<input name="course" type="text" class="form-control input-small">
 						        </div>
   							</div>
+
   							<div id="addmeetingtime" class="tab-pane fade">
 								<div class="input-group bootstrap-timepicker timepicker btn_logged">
 									<span class="input-group-addon">Start Time: </span>
