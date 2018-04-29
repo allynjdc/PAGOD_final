@@ -1,0 +1,11 @@
+year,semester,courseName,type,units,lec/lab
+3,2,ENG10,service,3,lec
+3,2,CMSC124,core,3,lec
+3,2,CMSC124,core,,lab
+3,2,CMSC125,core,3,lec
+3,2,CMSC125,core,,lab
+3,2,CMSC129,core,3,lec
+3,2,CMSC129,core,,lab
+3,2,CMSC132,core,3,lec
+3,2,CMSC126,core,3,lec
+3,2,CMSC126,core,,lab
