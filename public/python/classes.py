@@ -32,11 +32,13 @@ class Student:
 		self.academicYear = academicYear
 		self.semester = semester
 		self.degreeProgram = degreeProgram
-		# self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
-		self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
+		############################################
+		self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
+		# self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
 		self.coursesTaken = coursesTaken
-		# self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
-		self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
+		self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
+		# self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
+		############################################
 		if degreeProgram in Student.biodiv:
 			self.department = "bio div"
 			self.campus = "Miagao"
@@ -128,6 +130,33 @@ def csvReader(pathname):
 	reader = csv.reader(ifile)
 
 	return ifile, reader
+
+def csvWriter(pathname, assignment):
+	ifile = open(pathname, "w", newline='')
+	writer = csv.writer(ifile, delimiter=",")
+	# print(type(assignment[0]), assignment[0])
+	assignment = assignment[0]
+	for key in assignment.keys():
+		classoffering = assignment[key]
+		s_output = ""
+		for index in range(0,len(classoffering["sessions"])):
+			session_output = ""
+			if index != 0:
+				session_output = "|"
+			session = classoffering["sessions"][index]
+			session_output += (session["room"]+","+session["days"]+","+str(session["start"])+","+str(session["end"]))
+			s_output += session_output
+		writer.writerow(
+				[classoffering["year"],
+				classoffering["semester"],
+				classoffering["courseName"],
+				classoffering["campus"],
+				classoffering["leclab"],
+				classoffering["section"],
+				classoffering["units"],
+				classoffering["instructor"],
+				s_output]
+			)
 
 def createSubjectList(pathname):
 	ifile, reader = csvReader(pathname)

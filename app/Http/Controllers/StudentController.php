@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
@@ -407,7 +408,69 @@ class StudentController extends Controller
 
     public function wishlist(Request $request)
     {
-        return view('addwishlist');
+        $constraintspath = public_path("constraints/".Auth::user()->id.".csv");
+        $handle = fopen($constraintspath, "r");
+        $header = true;
+        $constraintHigh = array();
+        $constraintLow = array();
+        $constraintMed = array();
+        while($csvLine = fgetcsv($handle, ",")){
+            if ($header){
+                $header = false;
+            }else{
+                $text = "";
+                $constraint_type = "";
+                $musthave = "";
+                $course = $csvLine[4];
+                $days = $csvLine[5];
+                $priority = "high";
+                $start = $csvLine[6];
+                $end = $csvLine[7];
+                if ($csvLine[8] == "M"){
+                    $priority = "medium";
+                }else if ($csvLine[8] == "L"){
+                    $priority = "low";
+                }
+                if ($csvLine[0] || $csvLine[1]){
+                    $constraint_type = "meeting_time";
+                    $text = "Classes must start from ".$start." to ".$end;
+                    if ($csvLine[1]){
+                        $start = "8:00 AM";
+                        $end = "8:00 AM";
+                        $text = "No Classes";
+                    }
+                    $text .= " on ".str_replace(" ", ", ", $days);
+                }else if ($csvLine[2] || $csvLine[3]) {
+                    $constraint_type = "courserestriction";
+                    $musthave = "musthave";
+                    $text = "Must Have ";
+                    if($csvLine[3]){
+                        $musthave = "mustnothave";
+                        $text = "Must Not Have ";
+                    }
+                    $text .= strtoupper($course);
+                }
+                $constraint = array(
+                    "constraint_type" => $constraint_type,
+                    "priority" => $priority,
+                    "musthave" => $musthave,
+                    "start_time" => $start,
+                    "end_time" => $end,
+                    "course" => $course,
+                    "days" => $days,
+                    "text" => $text
+                );
+                if ($priority == "high"){
+                    array_push($constraintHigh, $constraint);
+                }else if($priority == "medium"){
+                    array_push($constraintMed, $constraint);
+                }else if($priority == "low"){
+                    array_push($constraintLow, $constraint);
+                }
+            }
+        }
+        // var_dump($constraintHigh[0]["constraint_type"], $constraintLow, $constraintMed);
+        return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed'));
     }
 
     public function generateSchedule(Request $request)
@@ -415,16 +478,33 @@ class StudentController extends Controller
         $cor = Auth::user()->course;
         $course = "\"$cor\"";
         $courses_taken = Auth::user()->courses_taken;
+        $constraintspath = Auth::user()->constraints;
+        $preferencespath = Auth::user()->preferences;
         // $process = new Process("python python\backtracking.py $course $courses_taken");
-        $process = new Process("python python\localsearch.py $course $courses_taken");
+        unlink(public_path("schedule/".Auth::user()->id.".csv"));
+        $schedulepath = "\"schedule\\\\".Auth::user()->id.".csv\"";
+        $process = new Process("python python\localsearch.py $course $courses_taken $constraintspath $preferencespath $schedulepath");
         $process->run();
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
-        // print($process->getOutput());
-        // echo dump(json_decode($process->getOutput(), true));
+        $newschedpath = $process->getOutput();
+        Auth::user()->update([
+            'schedule' => $newschedpath
+        ]);
+        return "OK";
+        // return json_decode($process->getOutput(), true);
+    }
+
+    public function acquireSchedule(Request $request)
+    {
+        $schedulepath = Auth::user()->schedule;
+        $process = new Process("python python\acquire_schedule.py $schedulepath");
+        $process->run();
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }
         return json_decode($process->getOutput(), true);
-        // return "HELLO";
     }
 
     public function saveFile($Array_data,$type){

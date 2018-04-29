@@ -31,8 +31,10 @@ def findSections(courseName, classOfferingList, electiveList, coursesTaken, camp
 		if "ge(" in courseName:
 			courseName = removeDigits(courseName)
 			subjectsTaken = [classoffering.courseName for classoffering in coursesTaken]
-			return [classoffering for classoffering in classes.createClassesList("../csv/"+courseName+".csv") if (classoffering.courseName not in subjectsTaken and classoffering.campus==campus)]
-			# return [classoffering for classoffering in classes.createClassesList("csv\\"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
+			############################################
+			# return [classoffering for classoffering in classes.createClassesList("../csv/"+courseName+".csv") if (classoffering.courseName not in subjectsTaken and classoffering.campus==campus)]
+			return [classoffering for classoffering in classes.createClassesList("csv\\"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
+			############################################
 		elif "pe" in courseName:
 			courseName = removeDigits(courseName)
 			pe_2_sports = {"badminton": "7", "bowling": "14", "ballroomdance":"26", "basketballwomen":"1", "tabletennis":"10","swimming":"19", "volleyball":"5", "lawntennis":"9", "football":"3", "softball":"4", "popularballroomdance":"26", "internationalfolkdance":"27", "philippinefolkdance":"28", "basketball":"1", "baseball": "23"}

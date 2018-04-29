@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('js/LoadingModal/css/jquery.loadingModal.css') }}">
+@endpush
+
 @push('header_scripts')
 <script src=" {{ asset('js/schedule_script.js') }} "></script>
 @endpush
@@ -26,16 +30,26 @@
     								<div class="panel-heading">
       									<h4 class="panel-title">
         									<!-- <a data-toggle="collapse" data-parent="#accordion" href="#high">High Priority</a> -->
-        									<a data-toggle="collapse" href="#high">High Priority<span class="badge pull-right" id="high_badge">0</span></a>
+        									<a data-toggle="collapse" data-target="#high">High Priority<span class="badge pull-right" id="high_badge">{{count($constraintHigh)}}</span></a>
      									</h4>
     								</div>
-    								<div id="high" class="panel-collapse collapse">
+    								<div id="high" class="panel-collapse collapse @if(count($constraintHigh) >= 1) in @endif">
       									<div class="panel-body">
-      										<div class="priority_entry no_entry">
-      											<p>
-      												<b>No Constraints</b>
-      											</p>
-      										</div>
+                          @forelse($constraintHigh as $key=>$constraint)
+                          <div class="priority_entry" id="high_{{$key+1}}">
+                            <p>
+                              <b>{{ $constraint["text"] }}</b>
+                              <a class="remove-constraint" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>
+                              <a class="edit-constraint" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>
+                            </p>
+                          </div>
+                          @empty
+                          <div class="priority_entry no_entry">
+                            <p>
+                              <b>No Constraints</b>
+                            </p>
+                          </div>
+                          @endforelse
       									</div>
     								</div>
     							</div>
@@ -43,16 +57,26 @@
 								<div class="panel panel-default">
     								<div class="panel-heading">
       									<h4 class="panel-title">
-        									<a data-toggle="collapse" href="#medium">Medium Priority<span class="badge pull-right" id="medium_badge">0</span></a>
+        									<a data-toggle="collapse" data-target="#medium">Medium Priority<span class="badge pull-right" id="medium_badge">{{count($constraintMed)}}</span></a>
      									</h4>
     								</div>
-    								<div id="medium" class="panel-collapse collapse">
+    								<div id="medium" class="panel-collapse collapse @if(count($constraintMed) >= 1) in @endif">
       									<div class="panel-body">
-      										<div class="priority_entry no_entry">
-      											<p>
-      												<b>No Constraints</b>
-      											</p>
-      										</div>
+      										@forelse($constraintMed as $key=>$constraint)
+                          <div class="priority_entry" id="medium_{{$key+1}}">
+                            <p>
+                              <b>{{ $constraint["text"] }}</b>
+                              <a class="remove-constraint" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>
+                              <a class="edit-constraint" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>
+                            </p>
+                          </div>
+                          @empty
+                          <div class="priority_entry no_entry">
+                            <p>
+                              <b>No Constraints</b>
+                            </p>
+                          </div>
+                          @endforelse
       									</div>
       								</div>
 								</div>
@@ -60,16 +84,26 @@
 								<div class="panel panel-default">
     								<div class="panel-heading">
       									<h4 class="panel-title">
-        									<a data-toggle="collapse" href="#low">Low Priority<span class="badge pull-right" id="low_badge">0</span></a>
+        									<a data-toggle="collapse" data-target="#low">Low Priority<span class="badge pull-right" id="low_badge">{{count($constraintLow)}}</span></a>
      									</h4>
     								</div>
-    								<div id="low" class="panel-collapse collapse">
+    								<div id="low" class="panel-collapse collapse @if(count($constraintLow) >= 1) in @endif">
       									<div class="panel-body">
-      										<div class="priority_entry no_entry">
-      											<p>
-      												<b>No Constraints</b>
-      											</p>
-      										</div>
+      										@forelse($constraintLow as $key=>$constraint)
+                          <div class="priority_entry" id="low_{{$key+1}}">
+                            <p>
+                              <b>{{ $constraint["text"] }}</b>
+                              <a class="remove-constraint" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>
+                              <a class="edit-constraint" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>
+                            </p>
+                          </div>
+                          @empty
+                          <div class="priority_entry no_entry">
+                            <p>
+                              <b>No Constraints</b>
+                            </p>
+                          </div>
+                          @endforelse
       									</div>
     								</div>
 								</div>

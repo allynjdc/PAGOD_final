@@ -63,8 +63,6 @@
             <p> <br> CALCABEN - ICAY &copy; 2017 </p>
         </div>
 
-        <script type="text/javascript" src="{{ asset('js/jquery.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/materialize.min.js') }}"></script>
         <script type="text/javascript">
             $(".has-error").click(function(){
                 $(this).removeClass("has-error");
