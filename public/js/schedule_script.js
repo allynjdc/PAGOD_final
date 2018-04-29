@@ -306,6 +306,7 @@ function editModalOpen(){
 	var start_time = $(this).parent().parent().data("start_time");
 	var end_time = $(this).parent().parent().data("end_time");
 	var days = $(this).parent().parent().data("days");
+	console.log(days);
 	$("#edit_constraint").attr("data-constraint", $(this).parent().parent().data("id"));
 	$("#edit_constraint").attr("data-prev-priority", priority);
 	if(constraint_type == "meetingtime"){
@@ -474,6 +475,7 @@ function addConstraint(e){
 		course: $("#addcourserestriction > div > input:text[name=course]").val(),
 		days: selected
 	};
+	console.log(constraintObject);
 	var newDiv = '<div class="priority_entry" id="'+$("input:radio[name=add_priority]:checked").val()+'_'+(constraint_num)+'">'+
 					'<p>'+
 						'<b>'+text+'</b>'+
@@ -488,7 +490,6 @@ function addConstraint(e){
 		$(priority_value+" > .panel-body").append(newDiv);
 		$(priority_value+"_badge").html($(priority_value+" > .panel-body > .priority_entry").length);
 	}
-	console.log($(priority_value+" > .panel-body > .priority_entry:last-child"));
 	$(priority_value+" > .panel-body > .priority_entry:last-child").data(constraintObject);
 	$(priority_value).addClass("in");
 	addConstraintReset();

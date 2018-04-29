@@ -43,6 +43,21 @@
                               <a class="edit-constraint" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>
                             </p>
                           </div>
+                          <script type="text/javascript">
+                            var days = "{{$constraint['days']}}".split(" ");
+                            var constraintObject = {
+                              id: "high_{{$key+1}}",
+                              constraint_type: "{{$constraint["constraint_type"]}}",
+                              priority: "{{$constraint['priority']}}",
+                              musthave: "{{$constraint['musthave']}}",
+                              start_time: "{{$constraint['start_time']}}",
+                              end_time: "{{$constraint['end_time']}}",
+                              course: "{{$constraint['course']}}".toUpperCase(),
+                              days: days
+                            };
+                            console.log(constraintObject);
+                            $("#high_{{$key+1}}").data(constraintObject);
+                          </script>
                           @empty
                           <div class="priority_entry no_entry">
                             <p>
@@ -70,6 +85,21 @@
                               <a class="edit-constraint" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>
                             </p>
                           </div>
+                          <script type="text/javascript">
+                            var days = "{{$constraint['days']}}".split(" ");
+                            var constraintObject = {
+                              id: "medium_{{$key+1}}",
+                              constraint_type: "{{$constraint["constraint_type"]}}",
+                              priority: "{{$constraint['priority']}}",
+                              musthave: "{{$constraint['musthave']}}",
+                              start_time: "{{$constraint['start_time']}}",
+                              end_time: "{{$constraint['end_time']}}",
+                              course: "{{$constraint['course']}}".toUpperCase(),
+                              days: days
+                            };
+                            console.log(constraintObject);
+                            $("#medium_{{$key+1}}").data(constraintObject);
+                          </script>
                           @empty
                           <div class="priority_entry no_entry">
                             <p>
@@ -97,6 +127,21 @@
                               <a class="edit-constraint" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>
                             </p>
                           </div>
+                          <script type="text/javascript">
+                            var days = "{{$constraint['days']}}".split(" ");
+                            var constraintObject = {
+                              id: "low_{{$key+1}}",
+                              constraint_type: "{{$constraint["constraint_type"]}}",
+                              priority: "{{$constraint['priority']}}",
+                              musthave: "{{$constraint['musthave']}}",
+                              start_time: "{{$constraint['start_time']}}",
+                              end_time: "{{$constraint['end_time']}}",
+                              course: "{{$constraint['course']}}".toUpperCase(),
+                              days: days
+                            };
+                            console.log(constraintObject);
+                            $("#low_{{$key+1}}").data(constraintObject);
+                          </script>
                           @empty
                           <div class="priority_entry no_entry">
                             <p>

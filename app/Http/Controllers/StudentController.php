@@ -12,7 +12,6 @@ use Illuminate\Routing\Redirector;
 //use App\Http\Controllers\Controller;
 //use Illuminate\Log\Writer;
 //use App\Http\Controllers\Writer;
-use Illuminate\Support\Collection;
 use Carbon\Carbon;
 use App\User;
 use Session;
@@ -432,7 +431,7 @@ class StudentController extends Controller
                     $priority = "low";
                 }
                 if ($csvLine[0] || $csvLine[1]){
-                    $constraint_type = "meeting_time";
+                    $constraint_type = "meetingtime";
                     $text = "Classes must start from ".$start." to ".$end;
                     if ($csvLine[1]){
                         $start = "8:00 AM";
