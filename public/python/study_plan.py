@@ -138,4 +138,5 @@ if __name__ == '__main__':
 				print(0)
 		else:
 			print(1)
+		print(","+subject.leclab)
 		print("/")

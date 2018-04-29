@@ -30,13 +30,59 @@ def hill_walking_config(config,reverse):
 		config.legal_neighbor_fn = non_decreasing
 		config.selection_fn = select_max
 
-def initls(coursesToTake, coursesTaken, electiveList):
+def hill_climbing_config(config,reverse):
+	if reverse: # downhill
+		config.legal_neighbor_fn = strictly_decreasing
+		config.selection_fn = select_min
+	else: # uphill
+		config.legal_neighbor_fn = strictly_increasing
+		config.selection_fn = select_max
+
+def softConstraintList(softconstraints, variables):
+	constraints = []
+	for const in softconstraints:
+		penalty = 15
+		if const.priority == "M":
+			penalty = 10
+		elif const.priority == "L":
+			penalty = 5
+		if const.meeting_time:
+			days = const.days.split(" ")
+			c = NoClassOnTime(variables,days,const.start, const.end)
+			c.name = 'No Class On Time: '+const.days+" "+const.start+" "+const.end
+			c.penalty = penalty
+			constraints.append(c)
+		elif const.no_class:
+			days = const.days.split(" ")
+			c = NoClassOnDayConstraint(variables, days)
+			c.name = 'No Class On: '+const.days
+			c.penalty = penalty
+			constraints.append(c)
+		elif const.musthave:
+			c = MustHaveConstraint(variables, const.subject)
+			c.name = 'Must Have: '+const.subject
+			c.penalty = penalty
+			constraints.append(c)
+		elif const.mustnothave:
+			c = MustNotHaveConstraint(variables, const.subject)
+			c.name = 'Must Not Have: '+const.subject
+			c.penalty = penalty
+			constraints.append(c)
+
+	return constraints
+
+
+class MyEncoder(JSONEncoder):
+	def default(self, o):
+		return o.__dict__
+
+def initls(coursesToTake, coursesTaken, electiveList, softconstraints,  campus="Miagao"):
 	variables = variableCourses(coursesToTake)
 
 	domain = {}
 	# classOfferingList = classes.createClassesList("csv\\data.csv")
 	classOfferingList = classes.createClassesList("../csv/data.csv")
-	classOfferingList = [classoffering for classoffering in classOfferingList if (classoffering.year == "2016-2017" and classoffering.semester == "1")]
+	classOfferingList = [classoffering for classoffering in classOfferingList if (classoffering.year == "2016-2017" and classoffering.semester == "1" and classoffering.campus==campus)]
 
 	for var in variables:
 		domain[var] = sectioning.findSections(var, classOfferingList, electiveList, coursesTaken)	
@@ -46,6 +92,8 @@ def initls(coursesToTake, coursesTaken, electiveList):
 	c.name = 'No Conflicts'
 	c.penalty = float('inf')
 	constraints.append(c)
+
+	constraints = constraints + softConstraintList(softconstraints, variables)
 
 	problem = Problem(variables, domain, constraints, electiveList)
 	problem.name = 'Local Search - Timetabling'
@@ -58,14 +106,17 @@ def initls(coursesToTake, coursesTaken, electiveList):
 	config.initial_solution = 'random'
 	config.respawn_solution = 'random'
 	config.neighborhood_fn = change_upto_two_values
+	# config.explain = False
+	config.explain = True
 	reverse = True
-	hill_walking_config(config,reverse)
+	hill_climbing_config(config,reverse)
 	solver = LocalSearchSolver(problem,config)
 	solver.solve()
 	display_solutions(problem, solver)
 
-def solution_format(problem, solution):
+	return solver.solutions
 
+def solution_format(problem, solution):
 	assigned_subjects = {}
 	for var in problem.variables:
 		assigned_subjects[var] = solution[var]
@@ -86,25 +137,20 @@ def solution_format(problem, solution):
 if __name__ == "__main__":
 	# course = sys.argv[1]
 	# csvpath = sys.argv[2]
+	# constraintspath = sys.argv[3]
+	# preferencesPath = sys.argv[4]
 	course = "bs cmsc"
 	csvpath = "../csv/4thYrKomsai3.csv"
+	constraintspath = "../constraints/1.csv"
+	preferencesPath = "../preferences/1.csv"
 	student = classes.Student(3, "2016-2017", 2, course, classes.createSubjectList(csvpath))
-	coursesToTake = [
-		classes.Subject("4", "1", "cmsc137", "core", "3", "lec"),
-		classes.Subject("4", "1", "cmsc137", "core", "", "lab"),
-		classes.Subject("4", "1", "cmsc142", "core", "3", "lec"),
-		classes.Subject("4", "1", "cmsc198.1", "core", "2", "lec"),
-		classes.Subject("4", "1", "cmsc192", "core",  "1", "lec"),
-		classes.Subject("4", "1", "", "elective", "3", "lec"),
-		classes.Subject("4", "1", "", "elective", "3", "lec"),
-		classes.Subject("1", "1", "", "ge(ah)", "3", "lec")
-	]
-
-	initls(coursesToTake, student.coursesTaken, student.electiveList)
-
+	coursesToTake = classes.createSubjectList(preferencesPath)
+	softconstraints = classes.createConstraintsList(constraintspath)
+	assignment = initls(coursesToTake, student.coursesTaken, student.electiveList, softconstraints, student.campus)
+	# print(MyEncoder())
 	# try:
 	# 	for key in assignment.keys():
 	# 		assignment[key] = MyEncoder().encode(assignment[key])
 	# except Exception as e:
 	# 	print("No schedule was made")
-	# print(json.dumps(assignment))
+	print(json.dumps(assignment, cls=MyEncoder))

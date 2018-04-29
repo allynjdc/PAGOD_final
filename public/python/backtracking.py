@@ -31,7 +31,6 @@ def variableCourses(coursesToTake):
 			elif course.courseType == "pe":
 				coursenamesToTake.append(course.courseType+str(pe_cnt)+"-"+course.leclab)
 				pe_cnt += 1
-	print(coursenamesToTake)
 	return coursenamesToTake
 
 def initbacktracking(coursesToTake, coursesTaken, electiveList):
@@ -62,11 +61,9 @@ def backtracking(assignment, problem):
 			assignment[var] = classoffering
 	return None
 
-
 class MyEncoder(JSONEncoder):
 	def default(self, o):
 		return o.__dict__
-
 
 if __name__ == "__main__":
 	course = sys.argv[1]

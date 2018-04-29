@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Routing\Redirector;
-use App\Http\Controllers\Controller;
-use Illuminate\Log\Writer;
+//use App\Http\Controllers\Controller;
+//use Illuminate\Log\Writer;
+//use App\Http\Controllers\Writer;
+use Illuminate\Support\Collection;
 use Carbon\Carbon;
 use App\User;
 use Session;
@@ -295,11 +297,11 @@ class StudentController extends Controller
         $row = 0;
 
         // CONVERTING THE SINGLE STRING RESULT FROM PYTHON INTO 2-D ARRAY
-        // final[x][0] year; final[x][1] sem; final[x][2] subject; final[x][3] units; final[x][4] complete or not
+        // final[x][0] year; final[x][1] sem; final[x][2] subject; final[x][3] type; final[x][4] units; final[x][5] complete or not; final[x][6] lec/lab
         $lines = explode('/', $output);
         foreach ($lines as $line => $value) {            
             $val = explode(',', $value);
-            if(sizeof($val)==6){
+            if(sizeof($val)==7){
                 $final[$row][0] = $val[0];
                 $final[$row][1] = $val[1];
                 if(!$val[2] || strlen($val[2])<3){
@@ -309,8 +311,10 @@ class StudentController extends Controller
                     // NON-GE
                     $final[$row][2] = strtoupper($val[2]);
                 }
-                $final[$row][3] = $val[4];
-                $final[$row][4] = $val[5];
+                $final[$row][3] = $val[3];
+                $final[$row][4] = $val[4];
+                $final[$row][5] = $val[5];
+                $final[$row][6] = $val[6];
                 $row++;
             }
         }
@@ -331,6 +335,8 @@ class StudentController extends Controller
                 $sfinal[$row][2] = $subj[2];
                 $sfinal[$row][3] = $subj[3];
                 $sfinal[$row][4] = $subj[4];
+                $sfinal[$row][5] = $subj[5];
+                $sfinal[$row][6] = $subj[6];
                 $row++;
             }
         }
@@ -338,32 +344,32 @@ class StudentController extends Controller
         // COUNT ONLY THE SUM OF UNITS PER SEMS
         $sum1 = 0;
         foreach($sfinal as $row) {
-            if($row[0]==1 && $row[1]==1 && $row[4] > 0){
+            if($row[0]==1 && $row[1]==1 && $row[5] > 0){
                 if(substr_count($row[2], 'PE1')>0 || substr_count($row[2], 'NSTP')>0){
                     $sum1 = $sum1 + 0;
                 } else {
-                    $sum1 = $sum1 + $row[3];
+                    $sum1 = $sum1 + $row[4];
                 }
-            } else if($row[0]==1 && $row[1]==2 && $row[4] > 0){
+            } else if($row[0]==1 && $row[1]==2 && $row[5] > 0){
                 if(substr_count($row[2], 'PE')>0 || substr_count($row[2], 'NSTP')>0){
                     $sum1 = $sum1 + 0;
                 } else {
-                    $sum1 = $sum1 + $row[3];
+                    $sum1 = $sum1 + $row[4];
                 }
-            } else if($row[0]==2 && $row[1]==1 && $row[4] > 0){
+            } else if($row[0]==2 && $row[1]==1 && $row[5] > 0){
                 if(substr_count($row[2], 'PE')>0){
                     $sum1 = $sum1 + 0;
                 } else {
-                    $sum1 = $sum1 + $row[3];
+                    $sum1 = $sum1 + $row[4];
                 }
-            } else if($row[0]==2 && $row[1]==2 && $row[4] > 0){
+            } else if($row[0]==2 && $row[1]==2 && $row[5] > 0){
                 if(substr_count($row[2], 'PE')>0){
                     $sum1 = $sum1 + 0;
                 } else {
-                    $sum1 = $sum1 + $row[3];
+                    $sum1 = $sum1 + $row[4];
                 }
             } else {
-                $sum1 = $sum1 + $row[3];
+                $sum1 = $sum1 + $row[4];
             }   
         }         
 
@@ -377,11 +383,25 @@ class StudentController extends Controller
         $sem = Input::get('sem');
         $con = Input::get('subject_count');
 
+        $subjs = array();
         for($i=1;$i<=$con;$i++){
-            echo Input::get("subject_".(string)$i); 
+            //array_push($subjs, Input::get("subject_".(string)$i)); 
+            // echo Input::get("subject_".(string)$i);
+            // echo ", ";
+            // echo Input::get("type_".(string)$i);
+            // echo ", ";
+            // echo Input::get("unit_".(string)$i);
+            // echo ", ";
+            // echo Input::get("leclab_".(string)$i);
+            // echo " -- ";
+            array_push($subjs,array($year,$sem,Input::get("subject_".(string)$i),Input::get("type_".(string)$i),Input::get("unit_".(string)$i),Input::get("leclab_".(string)$i)));
+            // foreach($samp as $s){
+            //     echo $s.", ";
+            // }
+            // echo " -- ";
         }
 
-        return $this->saveFile();
+        return $this->saveFile($subjs,"preferences");
 
     }
 
@@ -395,9 +415,8 @@ class StudentController extends Controller
         $cor = Auth::user()->course;
         $course = "\"$cor\"";
         $courses_taken = Auth::user()->courses_taken;
-        $process = new Process("python python\backtracking.py $course $courses_taken");
-        $process->run();
-
+        // $process = new Process("python python\backtracking.py $course $courses_taken");
+        $process = new Process("python python\localsearch.py $course $courses_taken");
         $process->run();
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
@@ -408,34 +427,31 @@ class StudentController extends Controller
         // return "HELLO";
     }
 
-    public function saveFile(){
+    public function saveFile($Array_data,$type){
         $userid = Auth::user()->id;
         $filename = $userid.".csv";
 
-        $selected_array = array('header:col1','header:col2', 'header:col3');
+        if(substr_count($type, "preferences")>0){
+            // PREFERENCES
+            $selected_array = array('year','semester','courseName','type','units','lec/lab');
+            $output = fopen('preferences/'.$filename, 'w') ;//or die('Cannot open file:  '.$filename);
+        } else {
+            // CONSTRAINTS
+            $selected_array = array('meeting_time','no_class','musthave','mustnothave','subject','days','start','end','priority');
+            $output = fopen('constraints/'.$filename, 'w') ;//or die('Cannot open file:  '.$filename);
+        }
+        
+        fputcsv($output, $selected_array); 
 
-        $Array_data = array(
-            array('row1:col1','row1:col2', 'row1:col3'),
-            array('row2:col1','row2:col2', 'row2:col3'),
-            array('row3:col1','row3:col2', 'row3:col3'),
-        );
-
-        // header('Content-Type: text/csv; charset=utf-8');
-        // Header('Content-Type: application/force-download');
-        // header('Content-Disposition: attachment; filename='.$filename.'');
-        // // create a file pointer connected to the output stream
-        // $output = fopen('php://output', 'w');
-        // fputcsv($output, $selected_array);
-        // foreach ($Array_data as $row){
-        //     fputcsv($output, $row);
-        // }
-        // fclose($output);
-        // $output->file('csv')->move('preferences',$filename);
-
-        $csv = Writer::createFromPath('preferences/'.$filename.'\'');
-        //$csv = Writer::createFromFileObject(new SplTempFileObject());
-        $csv->insertOne($selected_array);
-        $csv->insertAll($Array_data); 
-        $csv->save('preferences/'.$filename.'\'');   
+        if(sizeof($Array_data) > 1) {
+            foreach ($Array_data as $row){
+                fputcsv($output, $row);
+            } 
+        } else {
+            fputcsv($output, $Array_data);
+        }  
+        
+        fclose($output);
+        return Redirect::to('addwishlist');
     }
 }

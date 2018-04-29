@@ -63,7 +63,7 @@ function convertToTime(decimalTime){
 	var hourPart = Math.floor(decimalTime);
 	var minutePart = decimalTime % 1;
 	var timeOfDay = "am";
-	if (hourPart - 12 > 0){
+	if (hourPart - 12 >= 0){
 		stringTime += (hourPart - 12);
 		timeOfDay = "pm";
 	}else{
@@ -99,12 +99,13 @@ function generateSchedule(e){
 		contentType: false,
 		success:function(data){
 			var subjectArray = [];
-			$.each(data, function(key, course){
-				course = JSON.parse(course);
+			$.each(data[0], function(key, course){
+				// course = JSON.parse(course);
 				for (var i = course["sessions"].length - 1; i >= 0; i--) {
 					var days = course["sessions"][i]["days"].split(" ");
 					var start = course["sessions"][i]["start"];
 					var end = course["sessions"][i]["end"];
+					console.log(end)
 					for (var i = days.length - 1; i >= 0; i--) {
 						days[i] = returnIndex(days[i]);
 					}

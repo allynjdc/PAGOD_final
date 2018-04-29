@@ -160,10 +160,18 @@
 								<tr>
 									@if(substr_count(strtoupper($subj[2]),"PE")>0||substr_count(strtoupper($subj[2]),"GE")>0||substr_count(strtoupper($subj[2]),"ELECTIVE")>0)
 										<td><input type="text" name="subject_{{$con = $con+1}}" class="form-control" placeholder="{{$subj[2]}}" /> </td>
-										<td>{{$subj[3]}}</td>
+										<td>{{$subj[4]}}
+											<input type="hidden" name="unit_{{$con}}" class="form-control" value="{{$subj[4]}}"/>
+											<input type="hidden" name="type_{{$con}}" class="form-control" value="{{$subj[3]}}" />
+											<input type="hidden" name="leclab_{{$con}}" class="form-control" value="{{$subj[6]}}" />
+										</td>
 									@else
-										<td>{{$subj[2]}}</td>
-										<td>{{$subj[3]}}</td>
+										<td>{{$subj[2]}} <input type="hidden" name="subject_{{$con = $con+1}}" class="form-control" value="{{$subj[2]}}"/> </td>
+										<td>{{$subj[4]}}
+											<input type="hidden" name="unit_{{$con}}" class="form-control" value="{{$subj[4]}}" />
+											<input type="hidden" name="type_{{$con}}" class="form-control" value="{{$subj[3]}}" />
+											<input type="hidden" name="leclab_{{$con}}" class="form-control" value="{{$subj[6]}}" />
+										</td>
 									@endif
 										<td>
 											<a href='#remove' data-toggle='modal' class='anchor_color'><span class="glyphicon glyphicon-remove"></span></a>
