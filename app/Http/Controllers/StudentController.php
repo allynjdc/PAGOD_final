@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Routing\Redirector;
 use App\Http\Controllers\Controller;
+use Illuminate\Log\Writer;
 use Carbon\Carbon;
 use App\User;
 use Session;
@@ -379,7 +380,9 @@ class StudentController extends Controller
         for($i=1;$i<=$con;$i++){
             echo Input::get("subject_".(string)$i); 
         }
-        
+
+        return $this->saveFile();
+
     }
 
     public function wishlist(Request $request)
@@ -403,5 +406,36 @@ class StudentController extends Controller
         // echo dump(json_decode($process->getOutput(), true));
         return json_decode($process->getOutput(), true);
         // return "HELLO";
+    }
+
+    public function saveFile(){
+        $userid = Auth::user()->id;
+        $filename = $userid.".csv";
+
+        $selected_array = array('header:col1','header:col2', 'header:col3');
+
+        $Array_data = array(
+            array('row1:col1','row1:col2', 'row1:col3'),
+            array('row2:col1','row2:col2', 'row2:col3'),
+            array('row3:col1','row3:col2', 'row3:col3'),
+        );
+
+        // header('Content-Type: text/csv; charset=utf-8');
+        // Header('Content-Type: application/force-download');
+        // header('Content-Disposition: attachment; filename='.$filename.'');
+        // // create a file pointer connected to the output stream
+        // $output = fopen('php://output', 'w');
+        // fputcsv($output, $selected_array);
+        // foreach ($Array_data as $row){
+        //     fputcsv($output, $row);
+        // }
+        // fclose($output);
+        // $output->file('csv')->move('preferences',$filename);
+
+        $csv = Writer::createFromPath('preferences/'.$filename.'\'');
+        //$csv = Writer::createFromFileObject(new SplTempFileObject());
+        $csv->insertOne($selected_array);
+        $csv->insertAll($Array_data); 
+        $csv->save('preferences/'.$filename.'\'');   
     }
 }
