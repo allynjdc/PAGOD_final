@@ -19,25 +19,25 @@
     <link type="text/css" href="{{ asset('css/bootstrap-3.3.7-dist/css/bootstrap-datetimepicker.min.css') }}" />
     
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('css/bootstrap-3.3.7-dist/js/jquery.min.js')}}"></script>
     <script src="{{ asset('css/bootstrap-3.3.7-dist/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/moment.js') }}"></script>
     <script src="{{ asset('js/JQS_Scheduler/dist/jquery.schedule.js') }}"></script>
     <script type="text/javascript" src="{{ asset('css/bootstrap-3.3.7-dist/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{  asset('js/LoadingModal/js/jquery.loadingModal.js') }}"></script>
     @stack('header_scripts')
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
      @stack('styles')
-
 </head>
 <body>
     <div id="app">
         <nav class="navbar but_color navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <button id="menu" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>

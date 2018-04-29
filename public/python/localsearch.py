@@ -80,8 +80,10 @@ def initls(coursesToTake, coursesTaken, electiveList, softconstraints,  campus="
 	variables = variableCourses(coursesToTake)
 
 	domain = {}
-	# classOfferingList = classes.createClassesList("csv\\data.csv")
-	classOfferingList = classes.createClassesList("../csv/data.csv")
+	############################################
+	classOfferingList = classes.createClassesList("csv\\data.csv")
+	# classOfferingList = classes.createClassesList("../csv/data.csv")
+	############################################
 	classOfferingList = [classoffering for classoffering in classOfferingList if (classoffering.year == "2016-2017" and classoffering.semester == "1" and classoffering.campus==campus)]
 
 	for var in variables:
@@ -106,13 +108,17 @@ def initls(coursesToTake, coursesTaken, electiveList, softconstraints,  campus="
 	config.initial_solution = 'random'
 	config.respawn_solution = 'random'
 	config.neighborhood_fn = change_upto_two_values
-	# config.explain = False
-	config.explain = True
+	############################################
+	config.explain = False
+	# config.explain = True
+	############################################
 	reverse = True
 	hill_climbing_config(config,reverse)
 	solver = LocalSearchSolver(problem,config)
 	solver.solve()
-	display_solutions(problem, solver)
+	############################################
+	# display_solutions(problem, solver)
+	############################################
 
 	return solver.solutions
 
@@ -135,22 +141,25 @@ def solution_format(problem, solution):
 	return "".join(output)
 
 if __name__ == "__main__":
-	# course = sys.argv[1]
-	# csvpath = sys.argv[2]
-	# constraintspath = sys.argv[3]
-	# preferencesPath = sys.argv[4]
-	course = "bs cmsc"
-	csvpath = "../csv/4thYrKomsai3.csv"
-	constraintspath = "../constraints/1.csv"
-	preferencesPath = "../preferences/1.csv"
+	course = sys.argv[1]
+	csvpath = sys.argv[2]
+	constraintspath = sys.argv[3]
+	preferencesPath = sys.argv[4]
+	schedulePath = sys.argv[5]
+	############################################
+	# course = "bs cmsc"
+	# csvpath = "../csv/4thYrKomsai3.csv"
+	# constraintspath = "../constraints/1.csv"
+	# preferencesPath = "../preferences/1.csv"
+	# schedulePath = "../schedule/1.csv"
+	############################################
 	student = classes.Student(3, "2016-2017", 2, course, classes.createSubjectList(csvpath))
 	coursesToTake = classes.createSubjectList(preferencesPath)
 	softconstraints = classes.createConstraintsList(constraintspath)
 	assignment = initls(coursesToTake, student.coursesTaken, student.electiveList, softconstraints, student.campus)
-	# print(MyEncoder())
-	# try:
-	# 	for key in assignment.keys():
-	# 		assignment[key] = MyEncoder().encode(assignment[key])
-	# except Exception as e:
-	# 	print("No schedule was made")
-	print(json.dumps(assignment, cls=MyEncoder))
+	# print(MyEncoder().encode(assignment))
+	assignment = MyEncoder().encode(assignment)
+	assignment = json.loads(assignment)
+	classes.csvWriter(schedulePath, assignment)
+	print(schedulePath)
+	# print(json.dumps(assignment, cls=MyEncoder))

@@ -199,3 +199,19 @@
 		</div>
 	</div>
 	<!-- LOADING MODAL END -->
+
+	<!-- ERROR LOADING MODAL -->
+	<div id="error-modal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4><span class="glyphicon glyphicon-remove-circle"></span> GENERATE SCHEDULE</h4>
+				</div>
+				<div class="modal-body">
+					Something went wrong in creating your schedule. Please try again.
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- LOADING MODAL END -->
