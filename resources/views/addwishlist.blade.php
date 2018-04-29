@@ -55,7 +55,6 @@
                               course: "{{$constraint['course']}}".toUpperCase(),
                               days: days
                             };
-                            console.log(constraintObject);
                             $("#high_{{$key+1}}").data(constraintObject);
                           </script>
                           @empty
@@ -97,7 +96,6 @@
                               course: "{{$constraint['course']}}".toUpperCase(),
                               days: days
                             };
-                            console.log(constraintObject);
                             $("#medium_{{$key+1}}").data(constraintObject);
                           </script>
                           @empty
@@ -139,7 +137,6 @@
                               course: "{{$constraint['course']}}".toUpperCase(),
                               days: days
                             };
-                            console.log(constraintObject);
                             $("#low_{{$key+1}}").data(constraintObject);
                           </script>
                           @empty

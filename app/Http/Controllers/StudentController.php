@@ -470,6 +470,7 @@ class StudentController extends Controller
             }
         }
         // var_dump($constraintHigh[0]["constraint_type"], $constraintLow, $constraintMed);
+        fclose($handle);
         return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed'));
     }
 
@@ -505,6 +506,28 @@ class StudentController extends Controller
             throw new ProcessFailedException($process);
         }
         return json_decode($process->getOutput(), true);
+    }
+
+    public function saveConstraints(Request $request)
+    {
+        $array_data = array();
+        foreach ($request->constraints as $key => $constraint) {
+            $row = array($constraint['meeting_time'],$constraint['no_class'],$constraint['musthave'],$constraint['mustnothave'],$constraint['subject'],$constraint['days'],$constraint['start'],$constraint['end'],$constraint['priority']);
+            array_push($array_data, $row);
+        }
+        $filename = "constraints/".Auth::user()->id.".csv";
+        $selected_array = array('meeting_time','no_class','musthave','mustnothave','subject','days','start','end','priority');
+        $output = fopen($filename, 'w');
+        fputcsv($output, $selected_array);
+        if(sizeof($array_data) > 1) {
+            foreach ($array_data as $row){
+                fputcsv($output, $row);
+            } 
+        } else {
+            fputcsv($output, $array_data);
+        }
+        fclose($output);
+        return "OK";
     }
 
     public function saveFile($Array_data,$type){

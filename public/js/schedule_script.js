@@ -27,7 +27,69 @@ $(document).ready(function(){
 	        $(elementName).collapse({toggle: false});
 	    }
 	});
+	setInterval(saveConstraints, 2500);
 });
+
+function saveConstraints(){
+	var constraint_entries = $(".priority_entry:not(.no_entry)");
+	var constraints = [];
+	$.each(constraint_entries, function(key, entry){
+		// console.log($(entry).data("constraint_type"));
+		var constraint_type = $(entry).data("constraint_type");
+		var musthave = 0;
+		var mustnothave = 0;
+		var no_class = 0;
+		var meeting_time = 0;
+		var subject = "";
+		var days = "";
+		var start = "";
+		var end = "";
+		var priority = $(entry).data("priority")[0].toUpperCase();
+		if (constraint_type == "meetingtime"){
+			if ($(entry).data("start_time") == $(entry).data("end_time")){
+				no_class = 1;
+			}else{
+				meeting_time = 1;
+				start = $(entry).data("start_time");
+				end = $(entry).data("end_time");
+			}
+			days = $(entry).data("days").join(" ");
+		}else{
+			if ($(entry).data("musthave") == "musthave"){
+				musthave = 1;
+				mustnothave = 0;
+			}else{
+				mustnothave = 1;
+				musthave = 0;
+			}
+			subject = $(entry).data("course");
+		}
+		var constraint = {
+			meeting_time: meeting_time,
+			no_class: no_class,
+			musthave: musthave,
+			mustnothave: mustnothave,
+			subject: subject,
+			days: days,
+			start: start,
+			end: end,
+			priority: priority,
+		}
+		constraints.push(constraint);
+	});
+	$.ajax({
+		method: 'POST',
+		url: '/saveconstraints',
+		data: {constraints: constraints},
+		dataType: 'json',
+		success: function(data){
+			console.log(data);
+		},
+		error: function(data){
+			console.log(data.responseText);
+		}
+	});
+}
 
 function Subject(){
 	this.start_time = null;
@@ -140,7 +202,7 @@ function showAndGenerate(e){
 						{
 							day: subjectDays[j],
 							periods: [
-								[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName]
+								[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName+" - "+subjObjList[i].leclab]
 							]
 						}
 					]);

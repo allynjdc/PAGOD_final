@@ -20,8 +20,8 @@ Auth::routes();
 Route::group(['middleware' => ['auth']], function(){
 
 	// route to process the form
-	Route::get('/submitpreference','StudentController@submitpreference');
-
+	Route::get('/submitpreference','StudentController@submitpreference')->name('submitpreference');
+	Route::post('/saveconstraints', 'StudentController@saveConstraints')->name('saveconstraints');
 	Route::get('/home', 'HomeController@index')->name('home');
 	Route::get('/studyplan','StudentController@plan')->name('studyplan');
 	Route::get('/acadprogress','StudentController@progress')->name('acadprogress');
