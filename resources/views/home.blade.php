@@ -7,6 +7,12 @@
 		<div class="row">
 			<!-- Column md 4 -->
 			<div class="col-xs-12 col-md-6 col-md-offset-3 right_side">
+
+			<div id="app">
+		        @include('flash_message')
+		    </div>
+
+
 				<!-- STUDENT INFORMATION -->
 				<div class="panel panel-default panel-shadow panel-profile-index-home panel-profile-index-home">
 					<div class="panel-body">

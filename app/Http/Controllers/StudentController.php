@@ -532,6 +532,7 @@ class StudentController extends Controller
         }  
         
         fclose($output);
-        return Redirect::to('addwishlist');
+
+        return Redirect::to('home')->with('success','Preferences created successfully!');
     }
 }
