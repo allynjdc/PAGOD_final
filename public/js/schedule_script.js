@@ -313,7 +313,6 @@ function generateSchedule(e){
 					var days = course["sessions"][i]["days"].split(" ");
 					var start = course["sessions"][i]["start"];
 					var end = course["sessions"][i]["end"];
-					console.log(end)
 					for (var i = days.length - 1; i >= 0; i--) {
 						days[i] = returnIndex(days[i]);
 					}
@@ -351,13 +350,14 @@ function generateSchedule(e){
 						{
 							day: subjectDays[j],
 							periods: [
-								[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName]
+								[subjObjList[i].start_time, subjObjList[i].end_time, (subjObjList[i].courseName+" - "+subjObjList[i].leclab).toUpperCase()]
 							]
 						}
 					]);
 				}
 			}
 			$('body').loadingModal('hide');
+			$("#success-modal").modal();
 		},
 		error:function(error){
 			console.log(error.responseText);

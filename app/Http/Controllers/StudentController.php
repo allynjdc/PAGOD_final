@@ -365,8 +365,6 @@ class StudentController extends Controller
     public function wishlist(Request $request)
     {
         $constraintspath = public_path("constraints/".Auth::user()->id.".csv");
-        $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
-        $schedule = array();
         $handle = fopen($constraintspath, "r");
         $header = true;
         $constraintHigh = array();
@@ -427,16 +425,82 @@ class StudentController extends Controller
                 }
             }
         }
-        // var_dump($constraintHigh[0]["constraint_type"], $constraintLow, $constraintMed);
         fclose($handle);
-        // if(File::exists($schedulepath)){
-        //     $shandle = fopen($schedulepath, "r");
-        //     while($csvLine = fgetcsv($shandle, ",")){
 
-        //     }
-        // }
-        return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed'));
+        $schedule = array();
+        $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
+        if(file_exists($schedulepath)){
+            $handle = fopen($schedulepath, "r");
+            while($csvLine = fgetcsv($handle, ",")){
+                $year = $csvLine[0];
+                $semester = $csvLine[1];
+                $course = $csvLine[2];
+                $campus = $csvLine[3];
+                $leclab = $csvLine[4];
+                $section = $csvLine[5];
+                $units = $csvLine[6];
+                $instructor = $csvLine[7];
+                $sessions = explode("|", $csvLine[8]);
+                $array_sessions = array();
+                foreach ($sessions as $key => $session) {
+                    $session = explode(",", $session);
+                    $room = $session[0];
+                    $days = explode(" ",$session[1]);
+                    foreach ($days as $key => $day) {
+                        $days[$key] = $this->returnIndex($day);
+                    }
+                    $start = $this->convertToTime($session[2]);
+                    $end = $this->convertToTime($session[3]);
+                    array_push($array_sessions, array(
+                        "room" => $room,
+                        "days" => $days,
+                        "start" => $start,
+                        "end" => $end
+                    ));
+                }
+                $subject = array(
+                    "coursename" => $course,
+                    "units" => $units,
+                    "leclab" => $leclab,
+                    "section" => $section,
+                    "instructor" => $instructor,
+                    "sessions" => $array_sessions
+                );
+                array_push($schedule, $subject);
+            }
+            fclose($handle);
+        }
+        return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed', 'schedule'));
     }
+
+    public function returnIndex($day){
+        $days = ["M", "T", "W", "Th", "F", "S"];
+        return array_search($day, $days);
+    }
+
+    public function convertToTime($decimalTime){
+    $stringTime = "";
+    $hourPart = floor($decimalTime);
+    $minutePart = $decimalTime - $hourPart;
+    $timeOfDay = "am";
+    if ($hourPart - 12 >= 0){
+        $stringTime .= ($hourPart - 12);
+        $timeOfDay = "pm";
+    }else{
+        $stringTime .= $hourPart;
+        $timeOfDay = "am";
+    }
+    if (strlen($stringTime) < 2){
+        $stringTime = "0".$stringTime;
+    }
+    $stringTime .= ":";
+    $minutePart = $minutePart * 60;
+    if (strlen($minutePart."") < 2){
+        $minutePart = $minutePart . "0";
+    }
+    $stringTime .= ($minutePart . $timeOfDay);
+    return $stringTime;
+}
 
     public function generateSchedule(Request $request)
     {
