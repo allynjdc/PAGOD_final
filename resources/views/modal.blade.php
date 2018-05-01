@@ -54,11 +54,11 @@
 						        	<small><b>NOTE: </b>Inputting the SAME VALUES for START and END TIME will mean that there should be no class on chosen days.</small>
 						        </div>
 						        <div>
-						        	<label class="checkbox-inline"><input type="checkbox" name="days" value="MON">MON</label>
-									<label class="checkbox-inline"><input type="checkbox" name="days" value="TUE">TUE</label>
-									<label class="checkbox-inline"><input type="checkbox" name="days" value="WED">WED</label>
-									<label class="checkbox-inline"><input type="checkbox" name="days" value="THUR">THUR</label>
-									<label class="checkbox-inline"><input type="checkbox" name="days" value="FRI">FRI</label>
+						        	<label class="checkbox-inline"><input type="checkbox" name="days" value="M">MON</label>
+									<label class="checkbox-inline"><input type="checkbox" name="days" value="T">TUE</label>
+									<label class="checkbox-inline"><input type="checkbox" name="days" value="W">WED</label>
+									<label class="checkbox-inline"><input type="checkbox" name="days" value="Th">THUR</label>
+									<label class="checkbox-inline"><input type="checkbox" name="days" value="F">FRI</label>
 						        </div>
   							</div>
 						</div>
@@ -141,11 +141,11 @@
 						        	<small><b>NOTE: </b>Inputting the SAME VALUES for START and END TIME will mean that there should be no class on chosen days.</small>
 						        </div>
 						        <div>
-	    							<label class="checkbox-inline"><input type="checkbox" name="days" value="MON">MON</label>
-									<label class="checkbox-inline"><input type="checkbox" name="days" value="TUE">TUE</label>
-									<label class="checkbox-inline"><input type="checkbox" name="days" value="WED">WED</label>
-									<label class="checkbox-inline"><input type="checkbox" name="days" value="THUR">THUR</label>
-									<label class="checkbox-inline"><input type="checkbox" name="days" value="FRI">FRI</label>
+	    							<label class="checkbox-inline"><input type="checkbox" name="days" value="M">MON</label>
+									<label class="checkbox-inline"><input type="checkbox" name="days" value="T">TUE</label>
+									<label class="checkbox-inline"><input type="checkbox" name="days" value="W">WED</label>
+									<label class="checkbox-inline"><input type="checkbox" name="days" value="Th">THUR</label>
+									<label class="checkbox-inline"><input type="checkbox" name="days" value="F">FRI</label>
 						        </div>
 							</div><!-- 
 							<div id="scheduleflow" class="tab-pane fade">

@@ -22,12 +22,73 @@ $(document).ready(function(){
     $(document).on('click','a[data-toggle="collapse"]',function(e) {
     	var elementName = $(this).attr("data-target");
     	var isExpanded = $(elementName).attr("aria-expanded");
-    	console.log(isExpanded);
 	    if( isExpanded ) {
 	        $(elementName).collapse({toggle: false});
 	    }
 	});
 });
+
+function saveConstraints(){
+	var constraint_entries = $(".priority_entry:not(.no_entry)");
+	var constraints = [];
+	$.each(constraint_entries, function(key, entry){
+		// console.log($(entry).data("constraint_type"));
+		var constraint_type = $(entry).data("constraint_type");
+		var musthave = 0;
+		var mustnothave = 0;
+		var no_class = 0;
+		var meeting_time = 0;
+		var subject = "";
+		var days = "";
+		var start = "";
+		var end = "";
+		var priority = $(entry).data("priority")[0].toUpperCase();
+		if (constraint_type == "meetingtime"){
+			if ($(entry).data("start_time") == $(entry).data("end_time")){
+				no_class = 1;
+			}else{
+				meeting_time = 1;
+				start = $(entry).data("start_time");
+				end = $(entry).data("end_time");
+			}
+			days = $(entry).data("days").join(" ");
+		}else{
+			if ($(entry).data("musthave") == "musthave"){
+				musthave = 1;
+				mustnothave = 0;
+			}else{
+				mustnothave = 1;
+				musthave = 0;
+			}
+			subject = $(entry).data("course");
+		}
+		var constraint = {
+			meeting_time: meeting_time,
+			no_class: no_class,
+			musthave: musthave,
+			mustnothave: mustnothave,
+			subject: subject,
+			days: days,
+			start: start,
+			end: end,
+			priority: priority,
+		}
+		constraints.push(constraint);
+	});
+	console.log(constraints);
+	$.ajax({
+		method: 'POST',
+		url: '/saveconstraints',
+		data: {constraints: constraints},
+		dataType: 'json',
+		success: function(data){
+			console.log(data);
+		},
+		error: function(data){
+			console.log(data.responseText);
+		}
+	});
+}
 
 function Subject(){
 	this.start_time = null;
@@ -105,7 +166,7 @@ function showAndGenerate(e){
 					var days = course["sessions"][i]["days"].split(" ");
 					var start = course["sessions"][i]["start"];
 					var end = course["sessions"][i]["end"];
-					console.log(end)
+					console.log(end);
 					for (var i = days.length - 1; i >= 0; i--) {
 						days[i] = returnIndex(days[i]);
 					}
@@ -140,7 +201,7 @@ function showAndGenerate(e){
 						{
 							day: subjectDays[j],
 							periods: [
-								[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName]
+								[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName+" - "+subjObjList[i].leclab]
 							]
 						}
 					]);
@@ -344,6 +405,8 @@ function editConstraint(e){
 	var musthave = "";
 	var start_time = "";
 	var end_time = "";
+	var course = $("#editcourserestriction > div > input:text[name=edit_course]").val();
+	console.log(course);
 	if($("#edit_tabs > .active").attr("data-tab") == "editcourserestriction"){
 		constraint_type = "courserestriction";
 		text = "Must Not Have"
@@ -381,7 +444,7 @@ function editConstraint(e){
 		musthave: musthave,
 		start_time: start_time,
 		end_time: end_time,
-		course: $("#addcourserestriction > div > input:text[name=edit_course]").val(),
+		course: course,
 		days: selected
 	};
 	var priority_value = $("input:radio[name=edit_priority]:checked").val();
@@ -418,8 +481,13 @@ function editConstraint(e){
 		}
 
 		$("#"+priority_value).addClass("in");
+	}else{
+		$("#"+div_id).data(constraintObject);
 	}
 	$("#editconstraint").modal('hide');
+	saveConstraints();
+	$('body').removeClass('modal-open');
+	$('.modal-backdrop').remove();
 }
 
 function addConstraint(e){
@@ -474,6 +542,7 @@ function addConstraint(e){
 		course: $("#addcourserestriction > div > input:text[name=course]").val(),
 		days: selected
 	};
+	console.log(constraintObject);
 	var newDiv = '<div class="priority_entry" id="'+$("input:radio[name=add_priority]:checked").val()+'_'+(constraint_num)+'">'+
 					'<p>'+
 						'<b>'+text+'</b>'+
@@ -488,7 +557,6 @@ function addConstraint(e){
 		$(priority_value+" > .panel-body").append(newDiv);
 		$(priority_value+"_badge").html($(priority_value+" > .panel-body > .priority_entry").length);
 	}
-	console.log($(priority_value+" > .panel-body > .priority_entry:last-child"));
 	$(priority_value+" > .panel-body > .priority_entry:last-child").data(constraintObject);
 	$(priority_value).addClass("in");
 	addConstraintReset();
@@ -512,6 +580,7 @@ function addConstraintReset(){
 	$("#addconstraint").modal('hide');
 	$('body').removeClass('modal-open');
 	$('.modal-backdrop').remove();
+	saveConstraints();
 }
 
 function removeConstraint(){
@@ -527,4 +596,5 @@ function removeConstraint(){
 				'</div>'
 			);
 	}
+	saveConstraints();
 }
