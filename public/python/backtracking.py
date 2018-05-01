@@ -14,7 +14,17 @@ def variableCourses(coursesToTake):
 	pe_cnt = 1
 	for course in coursesToTake:
 		if course.courseName != "":
-			coursenamesToTake.append(course.courseName+"-"+course.leclab)
+			multiple_topics = ["cmsc197", "stat197", "cd168", "econ198", "psych195"]				
+			applied_chem = "chem181"
+			if course.courseType == "elective" and (course.courseName in multiple_topics or course.courseName == applied_chem):
+				if course.courseName == applied_chem:
+					coursenamesToTake.append(course.courseName+"-lec")
+					coursenamesToTake.append(course.courseName+"-lab")
+				elif course.courseName in multiple_topics:
+					coursenamesToTake.append(course.courseName+"_"+str(elective_cnt)+"-"+course.leclab)
+					elective_cnt += 1
+			else:
+				coursenamesToTake.append(course.courseName+"-"+course.leclab)
 		else:
 			if course.courseType == "ge(ah)":
 				coursenamesToTake.append(course.courseType+str(ge_ah_cnt)+"-"+course.leclab)

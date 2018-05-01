@@ -9,10 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Routing\Redirector;
-//use App\Http\Controllers\Controller;
-//use Illuminate\Log\Writer;
-//use App\Http\Controllers\Writer;
-//use Illuminate\Support\Collection;
+use Bc\Background\BackgroundProcess;
 use Carbon\Carbon;
 use App\User;
 use Session;
@@ -27,47 +24,6 @@ class StudentController extends Controller
 {
 
 	public function index(){
- 
-		// $rules = array(
-		//     'username' => 'required|min:9|max:9', 
-		//     'password' => 'required|min:3' 
-		// );
- 
-		// // run the validation rules on the inputs from the form
-		// $validator = Validator::make(Input::all(), $rules);
-
-		// // if the validator fails, redirect back to the form
-		// if($validator->fails()) {
-		//     return Redirect::to('/login')
-		//         ->withErrors($validator) 
-		//         ->withInput(Input::except('password')); 
-
-		// } else {
-
-		//     // create our user data for the authentication
-		//     $data = array(
-		//         'username' => Input::get('username'),
-		//         'password'  => Input::get('password')
-		//     );
-
-		//     $user = User::where('username',$data['username'])
-		// 		->first();
-
-		//     // attempt to do the login
-		// 	// Auth::attempt($data)
-		//     if(Hash::check($data['password'], $user->password)) {
-
-  //               Auth::login($user);
-  //               echo Auth::user()->id;
-  //       		//return view('home', compact('user'));
-
-		//     } else {        
-
-		//         // validation not successful, send back to form 
-		//         return Redirect::to('/login');
-
-		//     }
-		// }
 		
 	}
 
@@ -476,7 +432,7 @@ class StudentController extends Controller
         // if(File::exists($schedulepath)){
         //     $shandle = fopen($schedulepath, "r");
         //     while($csvLine = fgetcsv($shandle, ",")){
-                
+
         //     }
         // }
         return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed'));
@@ -489,20 +445,20 @@ class StudentController extends Controller
         $courses_taken = Auth::user()->courses_taken;
         $constraintspath = Auth::user()->constraints;
         $preferencespath = Auth::user()->preferences;
-        // $process = new Process("python python\backtracking.py $course $courses_taken");
-        unlink(public_path("schedule/".Auth::user()->id.".csv"));
+        if (file_exists(public_path("schedule/".Auth::user()->id.".csv"))){
+            unlink(public_path("schedule/".Auth::user()->id.".csv"));
+        }
         $schedulepath = "\"schedule\\\\".Auth::user()->id.".csv\"";
         $process = new Process("python python\localsearch.py $course $courses_taken $constraintspath $preferencespath $schedulepath");
         $process->run();
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
-        $newschedpath = $process->getOutput();
         Auth::user()->update([
-            'schedule' => $newschedpath
+            'schedule' => $schedulepath
         ]);
-        return "OK";
-        // return json_decode($process->getOutput(), true);
+        // return "OK";
+        return json_decode($process->getOutput(), true);
     }
 
     public function acquireSchedule(Request $request)

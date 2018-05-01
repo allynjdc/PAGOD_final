@@ -76,27 +76,25 @@ class MyEncoder(JSONEncoder):
 	def default(self, o):
 		return o.__dict__
 
-def initls(coursesToTake, coursesTaken, electiveList, softconstraints,  campus="Miagao"):
+def initls(coursesToTake, coursesTaken, electiveList, softconstraints, campus="Miagao"):
 	variables = variableCourses(coursesToTake)
-
 	domain = {}
 	############################################
 	classOfferingList = classes.createClassesList("csv\\data.csv")
 	# classOfferingList = classes.createClassesList("../csv/data.csv")
 	############################################
-	classOfferingList = [classoffering for classoffering in classOfferingList if (classoffering.year == "2016-2017" and classoffering.semester == "1" and classoffering.campus==campus)]
+	semester = coursesToTake[0].semester
+	classOfferingList = [classoffering for classoffering in classOfferingList if (classoffering.semester == semester and classoffering.campus==campus)]
 
 	for var in variables:
-		domain[var] = sectioning.findSections(var, classOfferingList, electiveList, coursesTaken)	
+		domain[var] = sectioning.findSections(var, classOfferingList, electiveList, coursesTaken, campus)
 	constraints = []
-
 	c = NoConflictsConstraint(variables)
 	c.name = 'No Conflicts'
 	c.penalty = float('inf')
 	constraints.append(c)
 
 	constraints = constraints + softConstraintList(softconstraints, variables)
-
 	problem = Problem(variables, domain, constraints, electiveList)
 	problem.name = 'Local Search - Timetabling'
 	problem.solution_format = solution_format
@@ -159,7 +157,7 @@ if __name__ == "__main__":
 	assignment = initls(coursesToTake, student.coursesTaken, student.electiveList, softconstraints, student.campus)
 	# print(MyEncoder().encode(assignment))
 	assignment = MyEncoder().encode(assignment)
+	print(json.dumps(assignment, cls=MyEncoder))
 	assignment = json.loads(assignment)
 	classes.csvWriter(schedulePath, assignment)
 	# print(schedulePath)
-	# print(json.dumps(assignment, cls=MyEncoder))

@@ -8,7 +8,7 @@ $(document).ready(function(){
 	$(document).on("click", "#add_constraint", addConstraint);
 	$(document).on("click", "#edit_constraint", editConstraint);
     $(document).on("click", "#generate_btn", generateSchedule);
-    $(document).on("click", "#generate_schedule", showAndGenerate);
+    $(document).on("click", "#generate_schedule", generateSchedule);
 	$(document).on("click", ".remove-constraint", removeConstraint);
 	$(document).on("click", ".edit-constraint", editModalOpen);
     $(document).on("click", ".constraint-item", changeBtnName);
@@ -95,7 +95,7 @@ function Subject(){
 	this.end_time = null;
 	// monday is first day
 	this.days = [];
-	// this.courseType = null;
+	this.section = null;
 	this.units = 0
 	this.lecLab = null;
 	this.courseName = null;
@@ -123,6 +123,10 @@ function Subject(){
 
 	this.setInstructor = function(instructor){
 		this.instructor = instructor;
+	}
+
+	this.setSection = function(section){
+		this.section = section;
 	}
 }
 
@@ -155,10 +159,72 @@ function convertToTime(decimalTime){
 	return stringTime;
 }
 
-function showAndGenerate(e){
-	e.preventDefault();
-	$.when(generateSchedule, setInterval(showSchedule, 5000)).done(
-		function(data){
+// function showAndGenerate(e){
+// 	e.preventDefault();
+// 	$.when(generateSchedule, setInterval(showSchedule, 5000)).done(
+// 		function(data){
+// 			var subjectArray = [];
+// 			$.each(data[0], function(key, course){
+// 				// course = JSON.parse(course);
+// 				for (var i = course["sessions"].length - 1; i >= 0; i--) {
+// 					var days = course["sessions"][i]["days"].split(" ");
+// 					var start = course["sessions"][i]["start"];
+// 					var end = course["sessions"][i]["end"];
+// 					console.log(end);
+// 					for (var i = days.length - 1; i >= 0; i--) {
+// 						days[i] = returnIndex(days[i]);
+// 					}
+// 					var subject = {
+// 						courseName: course["courseName"].toUpperCase(),
+// 						leclab: course["leclab"],
+// 						units: course["units"],
+// 						days: days,
+// 						start_time: convertToTime(start),
+// 						end_time: convertToTime(end),
+// 						instructor: course["instructor"]
+// 					}
+// 					subjectArray.push(subject);
+// 				}
+// 			});
+// 			subjObjList = [];
+// 			for (var i = subjectArray.length - 1; i >= 0; i--) {
+// 				subjObj = new Subject();
+// 				subjObj.setCourseName(subjectArray[i].courseName);
+// 				subjObj.setTime(subjectArray[i].start_time, subjectArray[i].end_time);
+// 				subjObj.setDays(subjectArray[i].days);
+// 				subjObj.setUnits(subjectArray[i].units);
+// 				subjObj.setLecLab(subjectArray[i].lecLab);
+// 				subjObj.setInstructor(subjectArray[i].instructor)
+// 				subjObjList.push(subjObj);
+// 			}
+
+// 			for (var i = subjObjList.length - 1; i >= 0; i--) {
+// 				subjectDays = subjObjList[i].days;
+// 				for (var j = subjectDays.length - 1; j >= 0; j--) {
+// 					$("#schedule-loading").jqs('import',[
+// 						{
+// 							day: subjectDays[j],
+// 							periods: [
+// 								[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName+" - "+subjObjList[i].leclab]
+// 							]
+// 						}
+// 					]);
+// 				}
+// 			}
+// 			$('body').loadingModal('hide');
+// 		}
+// 	);
+// }
+
+function showSchedule(){
+	// e.preventDefault();
+	loadingSchedModal();
+	$.ajax({
+		method: 'GET',
+		url: "/acquireschedule",
+		processData: false,
+		contentType: false,
+		success: function(data){
 			var subjectArray = [];
 			$.each(data[0], function(key, course){
 				// course = JSON.parse(course);
@@ -166,7 +232,7 @@ function showAndGenerate(e){
 					var days = course["sessions"][i]["days"].split(" ");
 					var start = course["sessions"][i]["start"];
 					var end = course["sessions"][i]["end"];
-					console.log(end);
+					console.log(end)
 					for (var i = days.length - 1; i >= 0; i--) {
 						days[i] = returnIndex(days[i]);
 					}
@@ -174,6 +240,7 @@ function showAndGenerate(e){
 						courseName: course["courseName"].toUpperCase(),
 						leclab: course["leclab"],
 						units: course["units"],
+						section: course["section"],
 						days: days,
 						start_time: convertToTime(start),
 						end_time: convertToTime(end),
@@ -182,6 +249,7 @@ function showAndGenerate(e){
 					subjectArray.push(subject);
 				}
 			});
+			console.log(subjectArray);
 			subjObjList = [];
 			for (var i = subjectArray.length - 1; i >= 0; i--) {
 				subjObj = new Subject();
@@ -190,7 +258,8 @@ function showAndGenerate(e){
 				subjObj.setDays(subjectArray[i].days);
 				subjObj.setUnits(subjectArray[i].units);
 				subjObj.setLecLab(subjectArray[i].lecLab);
-				subjObj.setInstructor(subjectArray[i].instructor)
+				subjObj.setInstructor(subjectArray[i].instructor);
+				subjObj.setSection(subjectArray[i].section);
 				subjObjList.push(subjObj);
 			}
 
@@ -201,81 +270,18 @@ function showAndGenerate(e){
 						{
 							day: subjectDays[j],
 							periods: [
-								[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName+" - "+subjObjList[i].leclab]
+								[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName]
 							]
 						}
 					]);
 				}
 			}
 			$('body').loadingModal('hide');
-		}
-	);
-}
-
-function showSchedule(e){
-	// e.preventDefault();
-	loadingSchedModal();
-	$.ajax({
-		method: 'GET',
-		url: "/acquireschedule",
-		processData: false,
-		contentType: false,
-		// success: function(data){
-		// 	var subjectArray = [];
-		// 	$.each(data[0], function(key, course){
-		// 		// course = JSON.parse(course);
-		// 		for (var i = course["sessions"].length - 1; i >= 0; i--) {
-		// 			var days = course["sessions"][i]["days"].split(" ");
-		// 			var start = course["sessions"][i]["start"];
-		// 			var end = course["sessions"][i]["end"];
-		// 			console.log(end)
-		// 			for (var i = days.length - 1; i >= 0; i--) {
-		// 				days[i] = returnIndex(days[i]);
-		// 			}
-		// 			var subject = {
-		// 				courseName: course["courseName"].toUpperCase(),
-		// 				leclab: course["leclab"],
-		// 				units: course["units"],
-		// 				days: days,
-		// 				start_time: convertToTime(start),
-		// 				end_time: convertToTime(end),
-		// 				instructor: course["instructor"]
-		// 			}
-		// 			subjectArray.push(subject);
-		// 		}
-		// 	});
-		// 	console.log(subjectArray);
-		// 	subjObjList = [];
-		// 	for (var i = subjectArray.length - 1; i >= 0; i--) {
-		// 		subjObj = new Subject();
-		// 		subjObj.setCourseName(subjectArray[i].courseName);
-		// 		subjObj.setTime(subjectArray[i].start_time, subjectArray[i].end_time);
-		// 		subjObj.setDays(subjectArray[i].days);
-		// 		subjObj.setUnits(subjectArray[i].units);
-		// 		subjObj.setLecLab(subjectArray[i].lecLab);
-		// 		subjObj.setInstructor(subjectArray[i].instructor)
-		// 		subjObjList.push(subjObj);
-		// 	}
-
-		// 	for (var i = subjObjList.length - 1; i >= 0; i--) {
-		// 		subjectDays = subjObjList[i].days;
-		// 		for (var j = subjectDays.length - 1; j >= 0; j--) {
-		// 			$("#schedule-loading").jqs('import',[
-		// 				{
-		// 					day: subjectDays[j],
-		// 					periods: [
-		// 						[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName]
-		// 					]
-		// 				}
-		// 			]);
-		// 		}
-		// 	}
-		// 	$('body').loadingModal('hide');
-		// },
+		},
 		error:function(data){
-			console.log(error.responseText);
-			// $('body').loadingModal('hide');
+			console.log(data.responseText);
 			$("#error-modal").modal();
+			$('body').loadingModal('hide');
 		},
 		complete:function(){
 			clearInterval(showSchedule);
@@ -290,7 +296,6 @@ function generateSchedule(e){
 			$("#generate-warning-modal").modal("show");
 			return false;
 		}
-		// console.log("from if clause: "+e.target.id);
 	}
 	calculateModal();
 	$.ajax({
@@ -298,9 +303,62 @@ function generateSchedule(e){
 		url: "/generateschedule",
 		processData: false,
 		contentType: false,
-		// success:function(data){
-		// 	$('body').loadingModal('hide');
-		// },
+		success:function(data){
+			$('body').loadingModal('animation', 'fadingCircle').loadingModal('backgroundColor', 'rgb(178,48,46)').loadingModal('text','Your schedule is now generated.\nPlease wait while your schedule is being loaded.');
+			// showSchedule();
+			data = JSON.parse(data)[0];
+			var subjectArray = [];
+			$.each(data, function(key, course){
+				for (var i = course["sessions"].length - 1; i >= 0; i--) {
+					var days = course["sessions"][i]["days"].split(" ");
+					var start = course["sessions"][i]["start"];
+					var end = course["sessions"][i]["end"];
+					console.log(end)
+					for (var i = days.length - 1; i >= 0; i--) {
+						days[i] = returnIndex(days[i]);
+					}
+					var subject = {
+						courseName: course["courseName"].toUpperCase(),
+						leclab: course["leclab"],
+						units: course["units"],
+						section: course["section"],
+						days: days,
+						start_time: convertToTime(start),
+						end_time: convertToTime(end),
+						instructor: course["instructor"]
+					}
+					subjectArray.push(subject);
+				}
+			});
+			console.log(subjectArray);
+			subjObjList = [];
+			for (var i = subjectArray.length - 1; i >= 0; i--) {
+				subjObj = new Subject();
+				subjObj.setCourseName(subjectArray[i].courseName);
+				subjObj.setTime(subjectArray[i].start_time, subjectArray[i].end_time);
+				subjObj.setDays(subjectArray[i].days);
+				subjObj.setUnits(subjectArray[i].units);
+				subjObj.setLecLab(subjectArray[i].lecLab);
+				subjObj.setInstructor(subjectArray[i].instructor);
+				subjObj.setSection(subjectArray[i].section);
+				subjObjList.push(subjObj);
+			}
+
+			for (var i = subjObjList.length - 1; i >= 0; i--) {
+				subjectDays = subjObjList[i].days;
+				for (var j = subjectDays.length - 1; j >= 0; j--) {
+					$("#schedule-loading").jqs('import',[
+						{
+							day: subjectDays[j],
+							periods: [
+								[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName]
+							]
+						}
+					]);
+				}
+			}
+			$('body').loadingModal('hide');
+		},
 		error:function(error){
 			console.log(error.responseText);
 			$('body').loadingModal('hide');
@@ -325,7 +383,7 @@ function calculateModal(){
 function loadingSchedModal(){
 	$('body').loadingModal({
 		position: 'auto',
-		text: 'Loading your schedule...\nThis may take a while',
+		text: 'Your schedule is now generated.\nPlease wait while your schedule is being loaded.',
 		color: '#fff',
 		opacity: '0.7',
 		backgroundColor: 'rgb(178,48,46)',
