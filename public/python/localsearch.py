@@ -161,5 +161,5 @@ if __name__ == "__main__":
 	assignment = MyEncoder().encode(assignment)
 	assignment = json.loads(assignment)
 	classes.csvWriter(schedulePath, assignment)
-	print(schedulePath)
+	# print(schedulePath)
 	# print(json.dumps(assignment, cls=MyEncoder))

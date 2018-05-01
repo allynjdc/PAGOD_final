@@ -409,6 +409,8 @@ class StudentController extends Controller
     public function wishlist(Request $request)
     {
         $constraintspath = public_path("constraints/".Auth::user()->id.".csv");
+        $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
+        $schedule = array();
         $handle = fopen($constraintspath, "r");
         $header = true;
         $constraintHigh = array();
@@ -471,6 +473,12 @@ class StudentController extends Controller
         }
         // var_dump($constraintHigh[0]["constraint_type"], $constraintLow, $constraintMed);
         fclose($handle);
+        // if(File::exists($schedulepath)){
+        //     $shandle = fopen($schedulepath, "r");
+        //     while($csvLine = fgetcsv($shandle, ",")){
+                
+        //     }
+        // }
         return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed'));
     }
 

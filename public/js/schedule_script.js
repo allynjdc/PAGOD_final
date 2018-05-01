@@ -22,12 +22,10 @@ $(document).ready(function(){
     $(document).on('click','a[data-toggle="collapse"]',function(e) {
     	var elementName = $(this).attr("data-target");
     	var isExpanded = $(elementName).attr("aria-expanded");
-    	console.log(isExpanded);
 	    if( isExpanded ) {
 	        $(elementName).collapse({toggle: false});
 	    }
 	});
-	setInterval(saveConstraints, 2500);
 });
 
 function saveConstraints(){
@@ -77,6 +75,7 @@ function saveConstraints(){
 		}
 		constraints.push(constraint);
 	});
+	console.log(constraints);
 	$.ajax({
 		method: 'POST',
 		url: '/saveconstraints',
@@ -167,7 +166,7 @@ function showAndGenerate(e){
 					var days = course["sessions"][i]["days"].split(" ");
 					var start = course["sessions"][i]["start"];
 					var end = course["sessions"][i]["end"];
-					console.log(end)
+					console.log(end);
 					for (var i = days.length - 1; i >= 0; i--) {
 						days[i] = returnIndex(days[i]);
 					}
@@ -368,7 +367,6 @@ function editModalOpen(){
 	var start_time = $(this).parent().parent().data("start_time");
 	var end_time = $(this).parent().parent().data("end_time");
 	var days = $(this).parent().parent().data("days");
-	console.log(days);
 	$("#edit_constraint").attr("data-constraint", $(this).parent().parent().data("id"));
 	$("#edit_constraint").attr("data-prev-priority", priority);
 	if(constraint_type == "meetingtime"){
@@ -407,6 +405,8 @@ function editConstraint(e){
 	var musthave = "";
 	var start_time = "";
 	var end_time = "";
+	var course = $("#editcourserestriction > div > input:text[name=edit_course]").val();
+	console.log(course);
 	if($("#edit_tabs > .active").attr("data-tab") == "editcourserestriction"){
 		constraint_type = "courserestriction";
 		text = "Must Not Have"
@@ -444,7 +444,7 @@ function editConstraint(e){
 		musthave: musthave,
 		start_time: start_time,
 		end_time: end_time,
-		course: $("#addcourserestriction > div > input:text[name=edit_course]").val(),
+		course: course,
 		days: selected
 	};
 	var priority_value = $("input:radio[name=edit_priority]:checked").val();
@@ -481,8 +481,13 @@ function editConstraint(e){
 		}
 
 		$("#"+priority_value).addClass("in");
+	}else{
+		$("#"+div_id).data(constraintObject);
 	}
 	$("#editconstraint").modal('hide');
+	saveConstraints();
+	$('body').removeClass('modal-open');
+	$('.modal-backdrop').remove();
 }
 
 function addConstraint(e){
@@ -575,6 +580,7 @@ function addConstraintReset(){
 	$("#addconstraint").modal('hide');
 	$('body').removeClass('modal-open');
 	$('.modal-backdrop').remove();
+	saveConstraints();
 }
 
 function removeConstraint(){
@@ -590,4 +596,5 @@ function removeConstraint(){
 				'</div>'
 			);
 	}
+	saveConstraints();
 }
