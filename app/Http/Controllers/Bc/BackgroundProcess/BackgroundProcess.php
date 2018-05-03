@@ -1,6 +1,6 @@
 <?php
 
-namespace Bc\BackgroundProcess;
+namespace App\Http\Controllers\Bc\BackgroundProcess;
 
 class BackgroundProcess
 {

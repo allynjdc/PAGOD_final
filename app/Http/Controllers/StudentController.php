@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Routing\Redirector;
-use Bc\Background\BackgroundProcess;
+use App\Http\Controllers\Bc\BackgroundProcess\BackgroundProcess;
 use Carbon\Carbon;
 use App\User;
 use Session;
@@ -431,7 +431,6 @@ class StudentController extends Controller
             // }
 
         }
-        fclose($handle);
 
         $schedule = array();
         $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
@@ -515,31 +514,35 @@ class StudentController extends Controller
         $courses_taken = Auth::user()->courses_taken;
         $constraintspath = Auth::user()->constraints;
         $preferencespath = Auth::user()->preferences;
+        $schedulepath = "\"schedule\\\\".Auth::user()->id.".csv\"";
+        Auth::user()->update([
+            'schedule' => $schedulepath
+        ]);
         if (file_exists(public_path("schedule/".Auth::user()->id.".csv"))){
             unlink(public_path("schedule/".Auth::user()->id.".csv"));
         }
-        $schedulepath = "\"schedule\\\\".Auth::user()->id.".csv\"";
         $process = new Process("python python\localsearch.py $course $courses_taken $constraintspath $preferencespath $schedulepath");
         $process->run();
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
-        Auth::user()->update([
-            'schedule' => $schedulepath
-        ]);
         // return "OK";
-        return json_decode($process->getOutput(), true);
+        // return json_decode($process->getOutput(), true);
+        return "local search is now being run.";
     }
 
     public function acquireSchedule(Request $request)
     {
         $schedulepath = Auth::user()->schedule;
-        $process = new Process("python python\acquire_schedule.py $schedulepath");
-        $process->run();
-        if(!$process->isSuccessful()){
-            throw new ProcessFailedException($process);
+        if (file_exists(public_path("schedule/".Auth::user()->id.".csv"))){
+            $process = new Process("python python\acquire_schedule.py $schedulepath");
+            $process->run();
+            if(!$process->isSuccessful()){
+                throw new ProcessFailedException($process);
+            }
+            return json_decode($process->getOutput(), true);
         }
-        return json_decode($process->getOutput(), true);
+        return "NONE";
     }
 
     public function saveConstraints(Request $request)
@@ -561,7 +564,6 @@ class StudentController extends Controller
             fputcsv($output, $array_data);
         }
         fclose($output);
-        return "OK";
     }
 
     public function saveFile($Array_data,$type){

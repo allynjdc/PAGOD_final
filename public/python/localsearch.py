@@ -157,7 +157,6 @@ if __name__ == "__main__":
 	assignment = initls(coursesToTake, student.coursesTaken, student.electiveList, softconstraints, student.campus)
 	# print(MyEncoder().encode(assignment))
 	assignment = MyEncoder().encode(assignment)
-	print(json.dumps(assignment, cls=MyEncoder))
+	# print(json.dumps(assignment, cls=MyEncoder))
 	assignment = json.loads(assignment)
 	classes.csvWriter(schedulePath, assignment)
-	# print(schedulePath)
