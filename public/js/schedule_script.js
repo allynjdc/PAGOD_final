@@ -8,7 +8,7 @@ $(document).ready(function(){
 	$(document).on("click", "#add_constraint", addConstraint);
 	$(document).on("click", "#edit_constraint", editConstraint);
     $(document).on("click", "#generate_btn", generateSchedule);
-    $(document).on("click", "#generate_schedule", showAndGenerate);
+    $(document).on("click", "#generate_schedule", generateSchedule);
 	$(document).on("click", ".remove-constraint", removeConstraint);
 	$(document).on("click", ".edit-constraint", editModalOpen);
     $(document).on("click", ".constraint-item", changeBtnName);
@@ -19,13 +19,7 @@ $(document).ready(function(){
     		format: 'LT'
     	});
     });
-    $(document).on('click','a[data-toggle="collapse"]',function(e) {
-    	var elementName = $(this).attr("data-target");
-    	var isExpanded = $(elementName).attr("aria-expanded");
-	    if( isExpanded ) {
-	        $(elementName).collapse({toggle: false});
-	    }
-	});
+    
 });
 
 function saveConstraints(){
@@ -85,7 +79,7 @@ function saveConstraints(){
 		// console.log(data);
 		},
 		error: function(data){
-			console.log(data.responseText);
+			console.log(data);
 		}
 	});
 }
@@ -131,8 +125,8 @@ function Subject(){
 }
 
 function returnIndex(day){
-	var days = ["M", "T", "W", "Th", "F", "S"]
-	return days.indexOf(day)
+	var days = ["M", "T", "W", "Th", "F", "S"];
+	return days.indexOf(day);
 }
 
 function convertToTime(decimalTime){

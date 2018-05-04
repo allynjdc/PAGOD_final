@@ -9,7 +9,7 @@
 @endpush
 
 @section('content')
- 	@include('modal')
+    @include('modal')
 	<!-- MIDDLE CONTENT -->
 	<div class="container index_container">
 		<!-- ROW -->
