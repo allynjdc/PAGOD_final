@@ -17,47 +17,33 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>Math 17</td>
-						<td>5.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 11</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>GE (AH)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>GE (SSP)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>PE 1</td>
-						<td>(2.0)</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>GE (MST)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>NSTP</td>
-						<td>(3.0)</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
+				@foreach($final as $row)
+					@if($row[0] == 1 && $row[1] == 1)
+						<tr>
+							<td>{{$row[2]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
+							@if($row[4] == 1)
+							<td><span class="glyphicon glyphicon-ok"></span></td>
+							@else
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+							@endif
+						</tr>
+					@endif
+				@endforeach
 				</tbody>
 				<tfoot>
 					<tr class="bg-success">
 						<td><strong>TOTAL</strong></td>
-						<td>17 units</td>
+						<td>{{$sum1}} units</td>
+						@if($sum1>0)
 						<td><span class="glyphicon glyphicon-ok"></span></td>
+						@else
+						<td><span class="glyphicon glyphicon-remove"></span></td>
+						@endif
 					</tr>
 				</tfoot>
 			</table>
@@ -72,52 +58,33 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>Math 100</td>
-						<td>4.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 21</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 56</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>NSTP</td>
-						<td>(3.0)</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>PE</td>
-						<td>(2.0)</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>GE (SSP)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>GE (AH)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>GE (MST)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
+				@foreach($final as $row)
+					@if($row[0] == 1 && $row[1] == 2)
+						<tr>
+							<td>{{$row[2]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
+							@if($row[4] == 1)
+							<td><span class="glyphicon glyphicon-ok"></span></td>
+							@else
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+							@endif
+						</tr>
+					@endif
+				@endforeach
 				</tbody>
 				<tfoot>
 					<tr class="bg-success">
 						<td><strong>TOTAL</strong></td>
-						<td>19 units</td>
+						<td>{{$sum2}} units</td>
+						@if($sum2 > 0)
 						<td><span class="glyphicon glyphicon-ok"></span></td>
+						@else
+						<td><span class="glyphicon glyphicon-remove"></span></td>
+						@endif
 					</tr>
 				</tfoot>
 			</table>
@@ -137,52 +104,33 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>GE (AH)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>GE (SSP)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>GE (MST)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 22</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 57</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>PHYSICS 51</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>PHYSICS 51.1</td>
-						<td>1.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>PE</td>
-						<td>(2.0)</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
+				@foreach($final as $row)
+					@if($row[0] == 2 && $row[1] == 1)
+						<tr>
+							<td>{{$row[2]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
+							@if($row[4] == 1)
+							<td><span class="glyphicon glyphicon-ok"></span></td>
+							@else
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+							@endif
+						</tr>
+					@endif
+				@endforeach
 				</tbody>
 				<tfoot>
 					<tr class="bg-success">
 						<td><strong>TOTAL</strong></td>
-						<td>19 units</td>
+						<td>{{$sum3}} units</td>
+						@if($sum3 > 0)
 						<td><span class="glyphicon glyphicon-ok"></span></td>
+						@else
+						<td><span class="glyphicon glyphicon-remove"></span></td>
+						@endif
 					</tr>
 				</tfoot>
 			</table>
@@ -197,52 +145,33 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>GE (SSP)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>GE (AH)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>GE (MST)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 123</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>PHYSICS 52</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>PHYSICS 52.1</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 130</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>PE</td>
-						<td>(2.0)</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
+				@foreach($final as $row)
+					@if($row[0] == 2 && $row[1] == 2)
+						<tr>
+							<td>{{$row[2]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
+							@if($row[4] == 1)
+							<td><span class="glyphicon glyphicon-ok"></span></td>
+							@else
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+							@endif
+						</tr>
+					@endif
+				@endforeach
 				</tbody>
 				<tfoot>
 					<tr class="bg-success">
 						<td><strong>TOTAL</strong></td>
-						<td>19 units</td>
+						<td>{{$sum4}} units</td>
+						@if($sum4 > 0)
 						<td><span class="glyphicon glyphicon-ok"></span></td>
+						@else
+						<td><span class="glyphicon glyphicon-remove"></span></td>
+						@endif
 					</tr>
 				</tfoot>
 			</table>
@@ -262,42 +191,32 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>GE (AH)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 127</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 128</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 131</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>STAT 105</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 141</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-				</tbody>
+				@foreach($final as $row)
+					@if($row[0] == 3 && $row[1] == 1)
+						<tr>
+							<td>{{$row[2]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
+							@if($row[4] == 1)
+							<td><span class="glyphicon glyphicon-ok"></span></td>
+							@else
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+							@endif
+						</tr>
+					@endif
+				@endforeach
 				<tfoot>
 					<tr class="bg-success">
 						<td><strong>TOTAL</strong></td>
-						<td>18 units</td>
+						<td>{{$sum5}} units</td>
+						@if($sum5 > 0)
 						<td><span class="glyphicon glyphicon-ok"></span></td>
+						@else
+						<td><span class="glyphicon glyphicon-remove"></span></td>
+						@endif
 					</tr>
 				</tfoot>
 			</table>
@@ -309,49 +228,41 @@
 						<th>Second Semester</th>
 						<th>Units</th>
 						<th>Completion</th>
-					</tr>
+					</tr> 
 				</thead>
 				<tbody>
-					<tr>
-						<td>ENG 10</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 124</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 125</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 129</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 132</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 126</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
+				@foreach($final as $row)
+					@if($row[0] == 3 && $row[1] == 2)
+						<tr>
+							<td>{{$row[2]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
+							@if($row[4] > 0)
+							<td><span class="glyphicon glyphicon-ok"></span></td>
+							@else
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+							@endif
+						</tr>
+					@endif
+				@endforeach
 				</tbody>
 				<tfoot>
 					<tr class="bg-success">
 						<td><strong>TOTAL</strong></td>
-						<td>18 units</td>
+						<td>{{$sum6}} units</td>
+						@if($sum6 > 0)
 						<td><span class="glyphicon glyphicon-ok"></span></td>
+						@else
+						<td><span class="glyphicon glyphicon-remove"></span></td>
+						@endif
 					</tr>
 				</tfoot>
 			</table>
 		</div>
+		@if($midr > 0)
 		<div class="table-responsive">
 			<table class="table table-hover">
 				<thead>
@@ -361,22 +272,37 @@
 						<th>Completion</th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr>
-						<td>CMSC 195</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-ok"></span></td>
-					</tr>
-				</tbody>
+				@foreach($mid as $row)
+						<tr>
+							<td>{{$row[0]}}</td>
+							<td>
+								@if(is_numeric($row[1]))
+									{{$row[1]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span>
+								@endif
+							</td>
+							@if($row[2] > 0)
+							<td><span class="glyphicon glyphicon-ok"></span></td>
+							@else
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+							@endif
+						</tr>
+				@endforeach
 				<tfoot>
 					<tr class="bg-success">
 						<td><strong>TOTAL</strong></td>
-						<td>3 units</td>
+						<td>{{$sum9}} units</td>
+						@if($sum9 > 0)
 						<td><span class="glyphicon glyphicon-ok"></span></td>
+						@else
+						<td><span class="glyphicon glyphicon-remove"></span></td>
+						@endif
 					</tr>
 				</tfoot>
 			</table>
 		</div>
+		@endif
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -392,47 +318,33 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>GE (SSP)</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-option-horizontal"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 142</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-option-horizontal"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 137</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-option-horizontal"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 198.1</td>
-						<td>2.0</td>
-						<td><span class="glyphicon glyphicon-option-horizontal"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 192</td>
-						<td>1.0</td>
-						<td><span class="glyphicon glyphicon-option-horizontal"></span></td>
-					</tr>
-					<tr>
-						<td>ELECTIVE</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-option-horizontal"></span></td>
-					</tr>
-					<tr>
-						<td>ELECTIVE</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-option-horizontal"></span></td>
-					</tr>
+				@foreach($final as $row)
+					@if($row[0] == 4 && $row[1] == 1)
+						<tr>
+							<td>{{$row[2]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
+							@if($row[4] > 0)
+							<td><span class="glyphicon glyphicon-ok"></span></td>
+							@else
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+							@endif
+						</tr>
+					@endif
+				@endforeach
 				</tbody>
 				<tfoot>
-					<tr class="bg-primary">
+					<tr class="bg-success">
 						<td><strong>TOTAL</strong></td>
-						<td>18 units</td>
-						<td><span class="glyphicon glyphicon-option-horizontal"></span></td>
+						<td>{{$sum7}} units</td>
+						@if($sum7 > 0)
+						<td><span class="glyphicon glyphicon-ok"></span></td>
+						@else
+						<td><span class="glyphicon glyphicon-remove"></span></td>
+						@endif
 					</tr>
 				</tfoot>
 			</table>
@@ -447,47 +359,127 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>PI 100</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-remove"></span></td>
-					</tr>
-					<tr>
-						<td>CMSC 198.2</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-remove"></span></td>
-					</tr>
-					<tr>
-						<td>ELECTIVE</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-remove"></span></td>
-					</tr>
-					<tr>
-						<td>ELECTIVE</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-remove"></span></td>
-					</tr>
-					<tr>
-						<td>ELECTIVE</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-remove"></span></td>
-					</tr>
-					<tr>
-						<td>ELECTIVE</td>
-						<td>3.0</td>
-						<td><span class="glyphicon glyphicon-remove"></span></td>
-					</tr>
+				@foreach($final as $row)
+					@if($row[0] == 4 && $row[1] == 2)
+						<tr>
+							<td>{{$row[2]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
+							@if($row[4] > 0)
+							<td><span class="glyphicon glyphicon-ok"></span></td>
+							@else
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+							@endif
+						</tr>
+					@endif
+				@endforeach
 				</tbody>
 				<tfoot>
-					<tr class="bg-danger">
+					<tr class="bg-success">
 						<td><strong>TOTAL</strong></td>
-						<td>17 units</td>
+						<td>{{$sum8}} units</td>
+						@if($sum8 > 0)
+						<td><span class="glyphicon glyphicon-ok"></span></td>
+						@else
 						<td><span class="glyphicon glyphicon-remove"></span></td>
+						@endif
 					</tr>
 				</tfoot>
 			</table>
 		</div>
 	</div>
+	@if($has5th > 0)
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4 class="table_text"><strong>FIFTH YEAR</strong> <small class="pull-right">A.Y. 2017-2018</small></h4>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-hover">
+				<thead>
+					<tr class="table_text">
+						<th>First Semester</th>
+						<th>Units</th>
+						<th>Completion</th>
+					</tr>
+				</thead>
+				<tbody>
+				@foreach($final as $row)
+					@if($row[0] == 5 && $row[1] == 1)
+						<tr>
+							<td>{{$row[2]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
+							@if($row[4] > 0)
+							<td><span class="glyphicon glyphicon-ok"></span></td>
+							@else
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+							@endif
+						</tr>
+					@endif
+				@endforeach
+				</tbody>
+				<tfoot>
+					<tr class="bg-success">
+						<td><strong>TOTAL</strong></td>
+						<td>{{$sum10}} units</td>
+						@if($sum10 > 0)
+						<td><span class="glyphicon glyphicon-ok"></span></td>
+						@else
+						<td><span class="glyphicon glyphicon-remove"></span></td>
+						@endif
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-hover">
+				<thead>
+					<tr class="table_text">
+						<th>Second Semester</th>
+						<th>Units</th>
+						<th>Completion</th>
+					</tr>
+				</thead>
+				<tbody>
+				@foreach($final as $row)
+					@if($row[0] == 5 && $row[1] == 2)
+						<tr>
+							<td>{{$row[2]}}</td>
+							<td>@if(is_numeric($row[3]))
+									{{$row[3]}} units
+								@else
+									<span class="glyphicon glyphicon-minus"></span> 
+								@endif</td>
+							@if($row[4] > 0)
+							<td><span class="glyphicon glyphicon-ok"></span></td>
+							@else
+							<td><span class="glyphicon glyphicon-remove"></span></td>
+							@endif
+						</tr>
+					@endif
+				@endforeach
+				</tbody>
+				<tfoot>
+					<tr class="bg-success">
+						<td><strong>TOTAL</strong></td>
+						<td>{{$sum11}} units</td>
+						@if($sum11 > 0)
+						<td><span class="glyphicon glyphicon-ok"></span></td>
+						@else
+						<td><span class="glyphicon glyphicon-remove"></span></td>
+						@endif
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+	@endif
 </div>
 <!-- END Column md 8 -->	
 @endsection

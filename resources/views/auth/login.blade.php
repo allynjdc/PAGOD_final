@@ -37,19 +37,20 @@
  
                 <div class="col-xs-12 col-md-4 col-md-offset-1">
                     <div class="panel panel-default panel-shadow login_panel">
-                        <!-- <div>
-                            <img class="pagod_login" src="{{ asset('images/pagod.ico') }}">
-                        </div> -->
                         <div class="panel-body">
-                            <form method="POST" action="/home">
-                                <div class="input-group btn_logged">
+                            <form role="form" method="POST" action="{{ route('login') }}">
+                                 {{ csrf_field() }}
+
+                                <div class="input-group btn_logged"> 
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                    <input type="text" name="student_number" class="form-control" placeholder="Student Number" /> 
+                                    <input type="text" name="username" class="form-control" placeholder="Student Number" /> 
                                 </div>
+
                                 <div class="input-group btn_logged">
                                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                                     <input type="password" name="password" class="form-control" placeholder="Password" />
                                 </div>
+
                                 <button class="but_color btn btn-block" type="submit" name="submit">LOG IN <span class="glyphicon glyphicon-log-in"></span></button>
                             </form>
                         </div>
@@ -61,5 +62,13 @@
         <div id="footer" class="text-center footer">
             <p> <br> CALCABEN - ICAY &copy; 2017 </p>
         </div>
+
+        <script type="text/javascript">
+            $(".has-error").click(function(){
+                $(this).removeClass("has-error");
+                $(this).next().addClass("resolved");
+            });
+        </script>
+
     </body>
 </html>

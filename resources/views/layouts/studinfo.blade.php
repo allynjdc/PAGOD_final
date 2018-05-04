@@ -8,22 +8,17 @@
 			<!-- Column md 4 -->
 			<div class="col-md-4 right_side">
 				<!-- STUDENT INFORMATION -->
-				<div class="panel panel-default panel-shadow panel-profile-index">
+				<div class="panel panel-default panel-shadow panel-profile-index-home">
 					<div class="panel-body">
 						<img class="cover-img-index img-responsive" alt="cover" src="images/upv.jpg" data-toggle="modal" data-target="#cover-img" />
 						<div class="img-dp-index">
-							<img class="profile-img-index img-thumbnail img-responsive" alt="profile" src="images/profile.jpeg" data-toggle="modal" data-target="#profile-img"/>
+							<img class="profile-img-index img-thumbnail img-responsive" alt="profile" src="{{ Auth::user()->profile_picture }}" data-toggle="modal" data-target="#profile-img"/>
 						</div>
 						<div class="text-name-index">
-							<!-- 
-							<h4><b>{{Auth::user()->name}}</b></h4>
-							<small>{{ Auth::user()->course }} </small> 
-							-->
-
-							<h4><b>Allyn Joy Calcaben</b></h4>
-							<small>BS in Computer Science</small>
+							<h4><b>{{ Auth::user()->name }}</b></h4>
+							<small>{{ Auth::user()->courseName() }}</small>
 						</div>
-						<div class="ge-counts col-md-12 text-center">
+						<!-- <div class="ge-counts col-md-12 text-center">
 							<div class="count1 col-md-3 text-center">
 								<p><b><a class="anchor_color" href="#electives" data-toggle="modal">Electives</a></b><br> 4 </p>
 							</div>
@@ -36,7 +31,7 @@
 							<div class="count1 col-md-3 text-center">
 								<p><b><a class="anchor_color" href="#ssp" data-toggle="modal">SSP</a></b><br> 5 </p>
 							</div>
-						</div>
+						</div> -->
 					</div>
 				</div>
 				<!-- END STUDENT INFORMATION -->

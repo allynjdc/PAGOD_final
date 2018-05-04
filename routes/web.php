@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 /*
 |--------------------------------------------------------------------------
@@ -14,22 +14,19 @@
 Route::get('/', function () {
 	return view('auth/login');
 })->middleware('guest');
-	
-Route::get('/logout',function(){
-	Auth::logout();
-	return redirect('/'); 
-});
 
 Auth::routes();
 
-// route to process the form
-Route::post('/home','StudentController@index')->name('login');
+Route::group(['middleware' => ['auth']], function(){
 
-Route::group(['middleware' => 'auth'], function(){
-
-	Route::get('/home1', 'HomeController@index')->name('home');
-	Route::get('/studyplan','HomeController@plan');
-	Route::get('/acadprogress','HomeController@progress');
-	Route::get('/addwishlist','HomeController@wishlist');
-	Route::get('/addpreference','HomeController@preference');
+	// route to process the form
+	Route::get('/submitpreference','StudentController@submitpreference')->name('submitpreference');
+	Route::post('/saveconstraints', 'StudentController@saveConstraints')->name('saveconstraints');
+	Route::get('/home', 'HomeController@index')->name('home');
+	Route::get('/studyplan','StudentController@plan')->name('studyplan');
+	Route::get('/acadprogress','StudentController@progress')->name('acadprogress');
+	Route::get('/addwishlist','StudentController@wishlist')->name('addwishlist');
+	Route::get('/addpreference','StudentController@preference')->name('addpreference');
+	Route::get('/acquireschedule', 'StudentController@acquireSchedule')->name('acquireschedule');
+	Route::post('/generateschedule', 'StudentController@generateSchedule')->name('generateschedule');
 });

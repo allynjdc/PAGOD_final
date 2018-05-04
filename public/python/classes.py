@@ -2,6 +2,7 @@
 import csv
 import numpy as np
 import re
+import sectioning
 from datetime import datetime
 
 class Problem:
@@ -11,137 +12,11 @@ class Problem:
 		self.electiveList = electiveList
 		for variable in variables:
 			variable_domain.setdefault(variable, 0)
-			classOfferingList = createClassesList("../csv/data.csv")
-			variable_domain[variable] = self.findSections(variable, classOfferingList)
+			classOfferingList = createClassesList("csv\\data.csv")
+			# classOfferingList = createClassesList("../csv/data.csv")
+			classOfferingList = [classoffering for classoffering in classOfferingList if (classoffering.year == "2016-2017" and classoffering.semester == "1")]
+			variable_domain[variable] = sectioning.findSections(variable, classOfferingList, electiveList, coursesTaken)
 		self.variable_domain = variable_domain
-
-	def getDayValue(self, day):
-		if day == "M":
-			return 0
-		elif day == "T":
-			return 1
-		elif day == "W":
-			return 2
-		elif day == "Th":
-			return 3
-		elif day == "F":
-			return 4
-		elif day == "S":
-			return 5
-		return 6
-
-	def slotList(self):
-		return list(np.arange(7, 19.25, .25, dtype="double"))
-
-	def findSections(self, courseName, classOfferingList):
-		courseName, leclab = courseName.split("-")
-		if leclab == "lab":
-			return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName and classoffering.leclab == "lab"]
-		try:
-			if courseName.index("ge(") == 0:
-				courseName = "".join(i for i in courseName if not i.isdigit())
-				subjectsTaken = [classoffering.courseName for classoffering in self.coursesTaken]
-				return [classoffering for classoffering in createClassesList("../csv/"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
-			if courseName.index("pe") == 0:
-				pe_2_sports = {"badminton": "7", "bowling": "14", "ballroomdance":"26", "basketballwomen":"1", "tabletennis":"10","swimming":"19", "volleyball":"5", "lawntennis":"9", "football":"3", "softball":"4", "popularballroomdance":"26", "internationalfolkdance":"27", "philippinefolkdance":"28", "basketball":"1", "baseball": "23"}
-				pe_3_sports = {"advancedvolleyball": "5", "socialrecreation": "4", "advancedbadminton":"7", "advancedtabletennis": "10", "moderndance": "2", "camping": "6", "jazz": "3", "advancedlawntennis": "9"}
-				pe_2_subjects_to_avoid = []
-				pe_3_subjects_to_avoid = []
-				for course in self.coursesTaken:
-					if course.courseType == "pe":
-						if course.courseName in pe_2_sports.keys():
-							pe_2_subjects_to_avoid.append(pe_2_sports[course.courseName])
-						elif course.courseName in pe_3_sports.keys():
-							pe_3_subjects_to_avoid.append(pe_3_sports[course.courseName])
-				output = [classoffering for classoffering in classOfferingList if classoffering.courseName == "pe2" or classoffering.courseName == "pe3"]
-				if len(pe_2_subjects_to_avoid) != 0:
-					for sec in pe_2_subjects_to_avoid:
-						regex = sec+".+"
-						output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe2")]
-				if len(pe_3_subjects_to_avoid) != 0:
-					for sec in pe_3_subjects_to_avoid:
-						regex = sec+".+"
-						output = [classoffering for classoffering in output if not (re.match(regex, classoffering.section, re.M|re.I) and classoffering.courseName == "pe3")]
-				return output
-
-			if courseName.index("elective") == 0:
-				elective_names = [elective.courseName for elective in self.electiveList]
-				available_electives = [classoffering for classoffering in classOfferingList if classoffering.courseName in elective_names]
-				electives_taken = [course.courseName for course in self.coursesTaken if course.courseType == "elective"]
-				output = [elective for elective in available_electives if elective.courseName not in electives_taken]
-				return output
-		except ValueError as e:
-			"""Substring 'ge(' was not found"""
-
-		return [classoffering for classoffering in classOfferingList if courseName == classoffering.courseName]
-
-
-	def findDayIndices(self, slotList, start, end, day):
-		if start != None or end != None:
-			index1 = slotList.index(start)
-			index2 = slotList.index(end)
-			day_value = self.getDayValue(day)
-			slotLength = len(slotList)
-			index1 = (day_value * slotLength) + index1
-			index2 = (day_value * slotLength) + index2
-		else:
-			index1 = 9999
-			index2 = 9999
-		return list(np.arange(index1, index2))
-
-	def checkCompleteness(self, assignments):
-		for key in assignments.keys():
-			if assignments[key] == None:
-				return False
-		if self.checkListConflict(assignments):
-			return False
-		return True
-
-	def checkListConflict(self, assignments):
-		for key in assignments.keys():
-			currList = assignments[key]
-			currList = self.classOfferingToList(currList)
-			for item in assignments.keys():
-				if item == key:
-					continue
-				if self.checkConflict(currList, self.classOfferingToList(assignments[item])):
-					return True
-		return False
-
-	def checkConflict(self, list1, list2):
-		return not set(list1).isdisjoint(list2)
-
-	def selectUnassignedVariable(self, assignments):
-		for key in assignments.keys():
-			if assignments[key] == None:
-				return key
-
-	def orderDomainValues(self, name):
-		sections = self.variable_domain[name]
-		values = []
-		for section in sections:
-			sessions = section.sessions
-			slotList = []
-			for session in sessions:
-				days = session.days.split(" ")
-				for day in days:
-					dayIndices = self.findDayIndices(self.slotList(), session.start, session.end, day)
-					slotList = slotList + dayIndices
-			values.append(slotList)
-		return values
-
-	def classOfferingToList(self, section):
-		if section == None:
-			return []
-		sessions = section.sessions
-		slotList = []
-		for session in sessions:
-			days = session.days.split(" ")
-			for day in days:
-				dayIndices = self.findDayIndices(self.slotList(), session.start, session.end, day)
-				slotList = slotList + dayIndices
-		return slotList
-
 
 class Student:
 	biodiv = ["bs bio", "bs ph"]
@@ -157,33 +32,37 @@ class Student:
 		self.academicYear = academicYear
 		self.semester = semester
 		self.degreeProgram = degreeProgram
-		self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
+		############################################
+		self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
+		# self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
 		self.coursesTaken = coursesTaken
-		self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
+		self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
+		# self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
+		############################################
 		if degreeProgram in Student.biodiv:
 			self.department = "bio div"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 		elif degreeProgram in Student.cfos:
 			self.department = "cfos"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 		elif degreeProgram in Student.cm:
 			self.department = "CM"
-			self.campus = "iloilocity"
+			self.campus = "Iloilo City"
 		elif degreeProgram in Student.dpsm:
 			self.department = "dpsm"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 		elif degreeProgram in Student.chem:
 			self.department = "chem"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 		elif degreeProgram in Student.humdiv:
 			self.department = "hum div"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 		elif degreeProgram in Student.socscidiv:
 			self.department = "socsci div"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 		elif degreeProgram in Student.sotech:
 			self.department = "sotech"
-			self.campus = "miagao"
+			self.campus = "Miagao"
 
 class Subject:
 	def __init__(self, year, semester, courseName, courseType, units, leclab):
@@ -212,7 +91,7 @@ class ClassOffering:
 		self.sessions = sessions
 
 	def displayClassOffering(self):
-		print(self.courseName, "Section", self.section, self.instructor, self.leclab)
+		print(self.year, self.semester, self.courseName, "Section", self.section, self.instructor, self.leclab)
 		for session in self.sessions:
 			session.displaySession()
 
@@ -251,6 +130,33 @@ def csvReader(pathname):
 	reader = csv.reader(ifile)
 
 	return ifile, reader
+
+def csvWriter(pathname, assignment):
+	ifile = open(pathname, "w", newline='')
+	writer = csv.writer(ifile, delimiter=",")
+	# print(type(assignment[0]), assignment[0])
+	assignment = assignment[0]
+	for key in assignment.keys():
+		classoffering = assignment[key]
+		s_output = ""
+		for index in range(0,len(classoffering["sessions"])):
+			session_output = ""
+			if index != 0:
+				session_output = "|"
+			session = classoffering["sessions"][index]
+			session_output += (session["room"]+","+session["days"]+","+str(session["start"])+","+str(session["end"]))
+			s_output += session_output
+		writer.writerow(
+				[classoffering["year"],
+				classoffering["semester"],
+				classoffering["courseName"],
+				classoffering["campus"],
+				classoffering["leclab"],
+				classoffering["section"],
+				classoffering["units"],
+				classoffering["instructor"],
+				s_output]
+			)
 
 def createSubjectList(pathname):
 	ifile, reader = csvReader(pathname)
@@ -345,3 +251,32 @@ def createClassOffering(classitem):
 
 	classoffering.setSessions(sessions)
 	return classoffering
+
+class ConstraintCSV:
+	def __init__(self, meeting_time, no_class, musthave, mustnothave, subject, days, start, end, priority):
+		self.meeting_time = int(meeting_time)
+		self.no_class = int(no_class)
+		self.musthave = int(musthave)
+		self.mustnothave = int(mustnothave)
+		self.subject = subject
+		self.days = days.upper()
+		self.start = start
+		self.end = end
+		self.priority = priority
+
+def createConstraintsList(pathname):
+	ifile, reader = csvReader(pathname)
+	constraints = []
+	rownum = 1
+	for row in reader:
+		if rownum == 1:
+			rownum += 1
+			continue
+		conattrib = []
+		for col in row:
+			attribute = col.strip().lower()
+			conattrib.append(attribute)
+		constraint = ConstraintCSV(conattrib[0], conattrib[1], conattrib[2], conattrib[3], conattrib[4], conattrib[5], conattrib[6], conattrib[7], conattrib[8])
+		constraints.append(constraint)
+	ifile.close()
+	return constraints
