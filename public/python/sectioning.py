@@ -65,7 +65,6 @@ def findSections(courseName, classOfferingList, electiveList, coursesTaken, camp
 			electives_taken = [course.courseName for course in coursesTaken if course.courseType == "elective"]
 			output = [elective for elective in available_electives if elective.courseName not in electives_taken]
 			return output
-
 		if len(courseName.split("_")) == 2:
 			courseName = courseName.split("_")[0]
 	return [classoffering for classoffering in classOfferingList if (courseName == classoffering.courseName and classoffering.leclab == "lec" and classoffering.campus==campus)]

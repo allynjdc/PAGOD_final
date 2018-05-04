@@ -344,7 +344,67 @@ class StudentController extends Controller
             array_push($subjs,array($year,$sem,Input::get("subject_".(string)$i),Input::get("type_".(string)$i),Input::get("unit_".(string)$i),Input::get("leclab_".(string)$i)));
         }
  
-        return $this->saveFile($subjs,"preferences");
+        //
+        // FOR VALIDATION
+        //
+        $cor = Auth::user()->course;
+        $course = "\"$cor\"";
+        $courses_taken = Auth::user()->courses_taken;
+        $process = new Process("python python\preference.py $course $courses_taken");
+        $process->run();
+
+        if(!$process->isSuccessful()){
+            throw new ProcessFailedException($process);
+        }
+
+        // SEPARATING THE SINGLE STRING RESULT FROM PYTHON ACCODING TO COURSETYPES
+        $output = $process->getOutput();
+        $subjType = explode('/', $output);
+
+        $ah = explode(",", $subjType[0]);
+        $mst = explode(",", $subjType[1]);
+        $ssp = explode(",", $subjType[2]);
+        $core = explode(",", $subjType[3]);
+        array_pop($ah);
+        array_pop($mst);
+        array_pop($ssp);
+        array_pop($core);
+
+        $final = $ah;
+        array_push($final, $mst);
+        array_push($final, $ssp);
+        array_push($final, $core);
+
+        //
+        // VALIDATING INPUTS
+        //
+        $flag = 0;
+        foreach($subjs as $subj){
+            echo strtolower($subj[2])." - ";
+            $str = strtolower(str_replace(" ","",$subj[2])); 
+            echo in_array($str, $final, TRUE).", ";
+            // echo in_array($str, $ah, TRUE).", ";
+            // echo in_array($str, $core, TRUE).", ";
+            // echo in_array($str, $mst, FALSE);
+            echo "<br>";
+            // if(!in_array(strtolower($subj[2]), $ah) && !in_array(strtolower($subj[2]), $mst) && !in_array(strtolower($subj[2]), $ssp) && !in_array(strtolower($subj[2]), $core)){
+            //     echo strtolower($subj[2]).", ";
+            //     echo in_array(strtolower($subj[2]), $core, TRUE).", ";
+            //     echo in_array(strtolower($subj[2]), $ah, TRUE).", ";
+            //     echo (!in_array(strtolower($subj[2]), $ah) && !in_array(strtolower($subj[2]), $mst) && !in_array(strtolower($subj[2]), $ssp) && !in_array(strtolower($subj[2]), $core)).", ";
+            //     $flag = 1;
+            //     echo $flag;
+            //     break;
+            // }
+        }
+ 
+        // if($flag = 1){
+        //     // NOT VALIDATED
+        //     return Redirect::to('addpreference')->with('error','INVALID INPUT SUBJECT!');
+        // } else {
+        //     return $this->saveFile($subjs,"preferences");
+        // }
+        
 
     }
 

@@ -1,8 +1,12 @@
 @extends('layouts.app')
 
-@section('content')
+@section('content') 
 <!-- MIDDLE PART -->
 	<div class="container index_container">
+
+		<div id="app">
+	        @include('flash_message')
+	    </div>
 
 		<!-- Column md 4 -->
 		<div class="col-md-4 right_side">
