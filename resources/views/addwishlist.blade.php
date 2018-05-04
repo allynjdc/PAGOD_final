@@ -171,10 +171,29 @@
 		</div><!-- END ROW -->
 			
 	</div><!-- END MIDDLE CONTENT -->
-	<script type="text/javascript">
-		$("#schedule-loading").jqs({
-			mode: "read",
-			hour: 12
-		});
-	</script>
+
+  <script type="text/javascript">
+    $("#schedule-loading").jqs({
+      mode: "read",
+      hour: 12
+    });
+  </script>
+  @if (count($schedule) > 0)
+    <script type="text/javascript">
+      @foreach($schedule as $key => $subject)
+        @foreach($subject["sessions"] as $index=>$session)
+          @foreach($session["days"] as $i => $day)
+            $("#schedule-loading").jqs('import',[
+              {
+                day: {{$day}},
+                periods: [
+                  ["{{$session["start"]}}", "{{$session["end"]}}", "{{$subject["coursename"]}}".toUpperCase()+" - "+"{{$subject["leclab"]}}".toUpperCase()]
+                ]
+              }
+            ]);
+          @endforeach
+        @endforeach
+      @endforeach
+    </script>
+  @endif
 @endsection

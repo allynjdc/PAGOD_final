@@ -205,12 +205,28 @@
 	<div id="error-modal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
+				<div class="modal-header bg-error">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<h4><span class="glyphicon glyphicon-remove-circle"></span> GENERATE SCHEDULE</h4>
 				</div>
 				<div class="modal-body">
 					Something went wrong in creating your schedule. Please try again.
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- LOADING MODAL END -->
+
+	<!-- SUCCESS MODAL -->
+	<div id="success-modal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header bg-success">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4><span class="glyphicon glyphicon-ok-circle"></span> GENERATE SCHEDULE</h4>
+				</div>
+				<div class="modal-body">
+					Your schedule is now generated!
 				</div>
 			</div>
 		</div>

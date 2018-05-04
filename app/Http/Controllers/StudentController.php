@@ -9,10 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Routing\Redirector;
-//use App\Http\Controllers\Controller;
-//use Illuminate\Log\Writer;
-//use App\Http\Controllers\Writer;
-//use Illuminate\Support\Collection;
+use App\Http\Controllers\Bc\BackgroundProcess\BackgroundProcess;
 use Carbon\Carbon;
 use App\User;
 use Session;
@@ -27,47 +24,6 @@ class StudentController extends Controller
 {
 
 	public function index(){
- 
-		// $rules = array(
-		//     'username' => 'required|min:9|max:9', 
-		//     'password' => 'required|min:3' 
-		// );
- 
-		// // run the validation rules on the inputs from the form
-		// $validator = Validator::make(Input::all(), $rules);
-
-		// // if the validator fails, redirect back to the form
-		// if($validator->fails()) {
-		//     return Redirect::to('/login')
-		//         ->withErrors($validator) 
-		//         ->withInput(Input::except('password')); 
-
-		// } else {
-
-		//     // create our user data for the authentication
-		//     $data = array(
-		//         'username' => Input::get('username'),
-		//         'password'  => Input::get('password')
-		//     );
-
-		//     $user = User::where('username',$data['username'])
-		// 		->first();
-
-		//     // attempt to do the login
-		// 	// Auth::attempt($data)
-		//     if(Hash::check($data['password'], $user->password)) {
-
-  //               Auth::login($user);
-  //               echo Auth::user()->id;
-  //       		//return view('home', compact('user'));
-
-		//     } else {        
-
-		//         // validation not successful, send back to form 
-		//         return Redirect::to('/login');
-
-		//     }
-		// }
 		
 	}
 
@@ -387,7 +343,7 @@ class StudentController extends Controller
         for($i=1;$i<=$con;$i++){
             array_push($subjs,array($year,$sem,Input::get("subject_".(string)$i),Input::get("type_".(string)$i),Input::get("unit_".(string)$i),Input::get("leclab_".(string)$i)));
         }
-
+ 
         //
         // FOR VALIDATION
         //
@@ -455,7 +411,8 @@ class StudentController extends Controller
     public function wishlist(Request $request)
     {
         $constraintspath = public_path("constraints/".Auth::user()->id.".csv");
-        
+        $handle = fopen($constraintspath, "r");
+        $header = true;
         $constraintHigh = array();
         $constraintLow = array();
         $constraintMed = array();
@@ -534,9 +491,81 @@ class StudentController extends Controller
             // }
 
         }
-        return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed'));
 
+        $schedule = array();
+        $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
+        if(file_exists($schedulepath)){
+            $handle = fopen($schedulepath, "r");
+            while($csvLine = fgetcsv($handle, ",")){
+                $year = $csvLine[0];
+                $semester = $csvLine[1];
+                $course = $csvLine[2];
+                $campus = $csvLine[3];
+                $leclab = $csvLine[4];
+                $section = $csvLine[5];
+                $units = $csvLine[6];
+                $instructor = $csvLine[7];
+                $sessions = explode("|", $csvLine[8]);
+                $array_sessions = array();
+                foreach ($sessions as $key => $session) {
+                    $session = explode(",", $session);
+                    $room = $session[0];
+                    $days = explode(" ",$session[1]);
+                    foreach ($days as $key => $day) {
+                        $days[$key] = $this->returnIndex($day);
+                    }
+                    $start = $this->convertToTime($session[2]);
+                    $end = $this->convertToTime($session[3]);
+                    array_push($array_sessions, array(
+                        "room" => $room,
+                        "days" => $days,
+                        "start" => $start,
+                        "end" => $end
+                    ));
+                }
+                $subject = array(
+                    "coursename" => $course,
+                    "units" => $units,
+                    "leclab" => $leclab,
+                    "section" => $section,
+                    "instructor" => $instructor,
+                    "sessions" => $array_sessions
+                );
+                array_push($schedule, $subject);
+            }
+            fclose($handle);
+        }
+        return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed', 'schedule'));
     }
+
+    public function returnIndex($day){
+        $days = ["M", "T", "W", "Th", "F", "S"];
+        return array_search($day, $days);
+    }
+
+    public function convertToTime($decimalTime){
+    $stringTime = "";
+    $hourPart = floor($decimalTime);
+    $minutePart = $decimalTime - $hourPart;
+    $timeOfDay = "am";
+    if ($hourPart - 12 >= 0){
+        $stringTime .= ($hourPart - 12);
+        $timeOfDay = "pm";
+    }else{
+        $stringTime .= $hourPart;
+        $timeOfDay = "am";
+    }
+    if (strlen($stringTime) < 2){
+        $stringTime = "0".$stringTime;
+    }
+    $stringTime .= ":";
+    $minutePart = $minutePart * 60;
+    if (strlen($minutePart."") < 2){
+        $minutePart = $minutePart . "0";
+    }
+    $stringTime .= ($minutePart . $timeOfDay);
+    return $stringTime;
+}
 
     public function generateSchedule(Request $request)
     {
@@ -545,31 +574,35 @@ class StudentController extends Controller
         $courses_taken = Auth::user()->courses_taken;
         $constraintspath = Auth::user()->constraints;
         $preferencespath = Auth::user()->preferences;
-        // $process = new Process("python python\backtracking.py $course $courses_taken");
-        unlink(public_path("schedule/".Auth::user()->id.".csv"));
         $schedulepath = "\"schedule\\\\".Auth::user()->id.".csv\"";
+        Auth::user()->update([
+            'schedule' => $schedulepath
+        ]);
+        if (file_exists(public_path("schedule/".Auth::user()->id.".csv"))){
+            unlink(public_path("schedule/".Auth::user()->id.".csv"));
+        }
         $process = new Process("python python\localsearch.py $course $courses_taken $constraintspath $preferencespath $schedulepath");
         $process->run();
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
-        $newschedpath = $process->getOutput();
-        Auth::user()->update([
-            'schedule' => $newschedpath
-        ]);
-        return "OK";
+        // return "OK";
         // return json_decode($process->getOutput(), true);
+        return "local search is now being run.";
     }
 
     public function acquireSchedule(Request $request)
     {
         $schedulepath = Auth::user()->schedule;
-        $process = new Process("python python\acquire_schedule.py $schedulepath");
-        $process->run();
-        if(!$process->isSuccessful()){
-            throw new ProcessFailedException($process);
+        if (file_exists(public_path("schedule/".Auth::user()->id.".csv"))){
+            $process = new Process("python python\acquire_schedule.py $schedulepath");
+            $process->run();
+            if(!$process->isSuccessful()){
+                throw new ProcessFailedException($process);
+            }
+            return json_decode($process->getOutput(), true);
         }
-        return json_decode($process->getOutput(), true);
+        return "NONE";
     }
 
     public function saveConstraints(Request $request)
@@ -591,7 +624,6 @@ class StudentController extends Controller
             fputcsv($output, $array_data);
         }
         fclose($output);
-        return "OK";
     }
 
     public function saveFile($Array_data,$type){
