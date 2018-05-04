@@ -38,10 +38,7 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <button id="menu" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                        <span class="glyphicon glyphicon-menu-hamburger"></span>
                     </button>
 
                     <a href="/home" class="but_color navbar-brand">{{ config('app.name', 'PAGOD') }} </a>

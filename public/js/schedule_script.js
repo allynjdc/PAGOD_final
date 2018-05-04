@@ -168,6 +168,7 @@ function showSchedule(){
 		processData: false,
 		contentType: false,
 		success: function(data){
+			console.log(data);
 			if (data != "NONE") {
 				var subjectArray = [];
 				$.each(data, function(key, course){
@@ -176,7 +177,6 @@ function showSchedule(){
 						var days = course["sessions"][i]["days"].split(" ");
 						var start = course["sessions"][i]["start"];
 						var end = course["sessions"][i]["end"];
-						console.log(end)
 						for (var i = days.length - 1; i >= 0; i--) {
 							days[i] = returnIndex(days[i]);
 						}
@@ -193,7 +193,6 @@ function showSchedule(){
 						subjectArray.push(subject);
 					}
 				});
-				console.log(subjectArray);
 				subjObjList = [];
 				for (var i = subjectArray.length - 1; i >= 0; i--) {
 					subjObj = new Subject();
