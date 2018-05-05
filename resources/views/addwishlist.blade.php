@@ -171,7 +171,6 @@
 		</div><!-- END ROW -->
 			
 	</div><!-- END MIDDLE CONTENT -->
-
   <script type="text/javascript">
     $("#schedule-loading").jqs({
       mode: "read",

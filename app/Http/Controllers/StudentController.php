@@ -410,88 +410,10 @@ class StudentController extends Controller
 
     public function wishlist(Request $request)
     {
-        $constraintspath = public_path("constraints/".Auth::user()->id.".csv");
-        $handle = fopen($constraintspath, "r");
         $header = true;
         $constraintHigh = array();
         $constraintLow = array();
         $constraintMed = array();
-
-        if(file_exists($constraintspath)){
-            $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
-            $schedule = array();
-            $handle = fopen($constraintspath, "r");
-            $header = true;
-            $constraintHigh = array();
-            $constraintLow = array();
-            $constraintMed = array();
-            while($csvLine = fgetcsv($handle, ",")){
-                if ($header){
-                    $header = false;
-                }else{
-                    $text = "";
-                    $constraint_type = "";
-                    $musthave = "";
-                    $course = $csvLine[4];
-                    $days = $csvLine[5];
-                    $priority = "high";
-                    $start = $csvLine[6];
-                    $end = $csvLine[7];
-                    if ($csvLine[8] == "M"){
-                        $priority = "medium";
-                    }else if ($csvLine[8] == "L"){
-                        $priority = "low";
-                    }
-                    if ($csvLine[0] || $csvLine[1]){
-                        $constraint_type = "meetingtime";
-                        $text = "Classes must start from ".$start." to ".$end;
-                        if ($csvLine[1]){
-                            $start = "8:00 AM";
-                            $end = "8:00 AM";
-                            $text = "No Classes";
-                        }
-                        $text .= " on ".str_replace(" ", ", ", $days);
-                    }else if ($csvLine[2] || $csvLine[3]) {
-                        $constraint_type = "courserestriction";
-                        $musthave = "musthave";
-                        $text = "Must Have ";
-                        if($csvLine[3]){
-                            $musthave = "mustnothave";
-                            $text = "Must Not Have ";
-                        }
-                        $text .= strtoupper($course);
-                    }
-                    $constraint = array(
-                        "constraint_type" => $constraint_type,
-                        "priority" => $priority,
-                        "musthave" => $musthave,
-                        "start_time" => $start,
-                        "end_time" => $end,
-                        "course" => $course,
-                        "days" => $days,
-                        "text" => $text
-                    );
-                    if ($priority == "high"){
-                        array_push($constraintHigh, $constraint);
-                    }else if($priority == "medium"){
-                        array_push($constraintMed, $constraint);
-                    }else if($priority == "low"){
-                        array_push($constraintLow, $constraint);
-                    }
-                }
-            }
-        
-            // var_dump($constraintHigh[0]["constraint_type"], $constraintLow, $constraintMed);
-            fclose($handle);
-            // if(File::exists($schedulepath)){
-            //     $shandle = fopen($schedulepath, "r");
-            //     while($csvLine = fgetcsv($shandle, ",")){
-                    
-            //     }
-            // }
-
-        }
-
         $schedule = array();
         $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
         if(file_exists($schedulepath)){
