@@ -24,12 +24,12 @@
 
 						<div class="tab-content">
   							<div id="addcourserestriction" class="tab-pane fade active in">
-  								<div class="input-group bootstrap-timepicker timepicker btn_logged">
-									<div class="input-group-btn"> <!--- input-group-btn -->
+  								<div class="input-group bootstrap-timepicker timepicker btn_logged"><!--- input-group-btn but_color -->
+									<div class="input-group-btn"> 
 										<div class="dropdown">
 											<button data-constraint="mustnothave" type="button" class="btn but_color dropdown-toggle add-constraint-btn" data-toggle="dropdown">Must Not Have <span class="caret"></span></button>
 											<ul class="dropdown-menu" id="drop" role="menu">
-												<li role="presentation">
+												<li role="presentation" selected>
 													<a class="add-constraint-item constraint-item" href="javascript:void(0)">Must Have</a>
 												</li>
 												<li role="presentation">
@@ -73,21 +73,7 @@
 		    </div>
 	    </div>
 	</div>
-	<!-- END MODAL ADD CONSTRAINTS --> 
-
-	<!--- MODAL REMOVE CONSTRAINTS -->
-	<!-- <div id="remove" class="modal fade" role="dialog">
-		<div class="modal-dialog">
-		  	<div class="modal-content ">
-			    <div class="modal-body confirm_panel">
-			       <h4> Are you sure you want to remove this? </h4>
-			    	<button type="button" class="btn btn-danger remove-constraint" data-dismiss="modal">Remove</button>
-			    	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			    </div>
-		    </div>
-	    </div>
-	</div> -->
-	<!-- END MODAL REMOVE CONSTRAINTS -->
+	<!-- END MODAL ADD CONSTRAINTS -->
 
 	<!-- MODAL EDIT CONSTRAINTS -->
 	<div id="editconstraint" class="modal fade" role="dialog" >
@@ -127,7 +113,7 @@
 											</li>
 										</ul>
 									</div>
-									<input name="edit_course" type="text" class="form-control input-small">
+									<input name="edit_course" type="text" class="form-control input-small" />
 						        </div>
   							</div>
   							<div id="editmeetingtime" class="tab-pane fade">

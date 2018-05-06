@@ -8,7 +8,7 @@ $(document).ready(function(){
 	$(document).on("click", "#add_constraint", addConstraint);
 	$(document).on("click", "#edit_constraint", editConstraint);
     $(document).on("click", "#generate_btn", generateSchedule);
-    $(document).on("click", "#generate_schedule", showAndGenerate);
+    $(document).on("click", "#generate_schedule", generateSchedule);
 	$(document).on("click", ".remove-constraint", removeConstraint);
 	$(document).on("click", ".edit-constraint", editModalOpen);
     $(document).on("click", ".constraint-item", changeBtnName);
@@ -19,13 +19,7 @@ $(document).ready(function(){
     		format: 'LT'
     	});
     });
-    $(document).on('click','a[data-toggle="collapse"]',function(e) {
-    	var elementName = $(this).attr("data-target");
-    	var isExpanded = $(elementName).attr("aria-expanded");
-	    if( isExpanded ) {
-	        $(elementName).collapse({toggle: false});
-	    }
-	});
+    
 });
 
 function saveConstraints(){
@@ -85,7 +79,7 @@ function saveConstraints(){
 		// console.log(data);
 		},
 		error: function(data){
-			console.log(data.responseText);
+			console.log(data);
 		}
 	});
 }
@@ -131,8 +125,8 @@ function Subject(){
 }
 
 function returnIndex(day){
-	var days = ["M", "T", "W", "Th", "F", "S"]
-	return days.indexOf(day)
+	var days = ["M", "T", "W", "Th", "F", "S"];
+	return days.indexOf(day);
 }
 
 function convertToTime(decimalTime){
@@ -225,6 +219,7 @@ function showSchedule(){
 		processData: false,
 		contentType: false,
 		success: function(data){
+			console.log(data);
 			if (data != "NONE") {
 				var subjectArray = [];
 				$.each(data, function(key, course){
@@ -233,7 +228,6 @@ function showSchedule(){
 						var days = course["sessions"][i]["days"].split(" ");
 						var start = course["sessions"][i]["start"];
 						var end = course["sessions"][i]["end"];
-						console.log(end)
 						for (var i = days.length - 1; i >= 0; i--) {
 							days[i] = returnIndex(days[i]);
 						}
@@ -250,7 +244,6 @@ function showSchedule(){
 						subjectArray.push(subject);
 					}
 				});
-				console.log(subjectArray);
 				subjObjList = [];
 				for (var i = subjectArray.length - 1; i >= 0; i--) {
 					subjObj = new Subject();
