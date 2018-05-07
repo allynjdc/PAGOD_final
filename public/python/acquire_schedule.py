@@ -14,9 +14,6 @@ def csvConversion(pathname):
 	index = 0
 	subjects = {}
 	for row in reader:
-		if index == 0:
-			index += 1
-			continue
 		year = row[0]
 		semester = row[1]
 		courseName = row[2]

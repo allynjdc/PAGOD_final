@@ -599,7 +599,16 @@ class StudentController extends Controller
     {
         $array_data = array();
         foreach ($request->constraints as $key => $constraint) {
-            $row = array($constraint['meeting_time'],$constraint['no_class'],$constraint['musthave'],$constraint['mustnothave'],$constraint['subject'],$constraint['days'],$constraint['start'],$constraint['end'],$constraint['priority']);
+            $row = array(
+                $constraint['meeting_time'],
+                $constraint['no_class'],
+                $constraint['musthave'],
+                $constraint['mustnothave'],
+                $constraint['subject'],
+                $constraint['days'],
+                $constraint['start'],
+                $constraint['end'],
+                $constraint['priority']);
             array_push($array_data, $row);
         }
         $filename = "constraints/".Auth::user()->id.".csv";

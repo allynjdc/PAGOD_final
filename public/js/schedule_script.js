@@ -153,63 +153,6 @@ function convertToTime(decimalTime){
 	return stringTime;
 }
 
-// function showAndGenerate(e){
-// 	e.preventDefault();
-// 	$.when(generateSchedule, setInterval(showSchedule, 5000)).done(
-// 		function(data){
-// 			var subjectArray = [];
-// 			$.each(data[0], function(key, course){
-// 				// course = JSON.parse(course);
-// 				for (var i = course["sessions"].length - 1; i >= 0; i--) {
-// 					var days = course["sessions"][i]["days"].split(" ");
-// 					var start = course["sessions"][i]["start"];
-// 					var end = course["sessions"][i]["end"];
-// 					console.log(end);
-// 					for (var i = days.length - 1; i >= 0; i--) {
-// 						days[i] = returnIndex(days[i]);
-// 					}
-// 					var subject = {
-// 						courseName: course["courseName"].toUpperCase(),
-// 						leclab: course["leclab"],
-// 						units: course["units"],
-// 						days: days,
-// 						start_time: convertToTime(start),
-// 						end_time: convertToTime(end),
-// 						instructor: course["instructor"]
-// 					}
-// 					subjectArray.push(subject);
-// 				}
-// 			});
-// 			subjObjList = [];
-// 			for (var i = subjectArray.length - 1; i >= 0; i--) {
-// 				subjObj = new Subject();
-// 				subjObj.setCourseName(subjectArray[i].courseName);
-// 				subjObj.setTime(subjectArray[i].start_time, subjectArray[i].end_time);
-// 				subjObj.setDays(subjectArray[i].days);
-// 				subjObj.setUnits(subjectArray[i].units);
-// 				subjObj.setLecLab(subjectArray[i].lecLab);
-// 				subjObj.setInstructor(subjectArray[i].instructor)
-// 				subjObjList.push(subjObj);
-// 			}
-
-// 			for (var i = subjObjList.length - 1; i >= 0; i--) {
-// 				subjectDays = subjObjList[i].days;
-// 				for (var j = subjectDays.length - 1; j >= 0; j--) {
-// 					$("#schedule-loading").jqs('import',[
-// 						{
-// 							day: subjectDays[j],
-// 							periods: [
-// 								[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName+" - "+subjObjList[i].leclab]
-// 							]
-// 						}
-// 					]);
-// 				}
-// 			}
-// 			$('body').loadingModal('hide');
-// 		}
-// 	);
-// }
-
 function showSchedule(){
 	console.log("running show schedule");
 	loadingSchedModal();
@@ -219,7 +162,7 @@ function showSchedule(){
 		processData: false,
 		contentType: false,
 		success: function(data){
-			console.log(data);
+			$("#schedule-loading").jqs("reset");
 			if (data != "NONE") {
 				var subjectArray = [];
 				$.each(data, function(key, course){
@@ -251,7 +194,7 @@ function showSchedule(){
 					subjObj.setTime(subjectArray[i].start_time, subjectArray[i].end_time);
 					subjObj.setDays(subjectArray[i].days);
 					subjObj.setUnits(subjectArray[i].units);
-					subjObj.setLecLab(subjectArray[i].lecLab);
+					subjObj.setLecLab(subjectArray[i].leclab);
 					subjObj.setInstructor(subjectArray[i].instructor);
 					subjObj.setSection(subjectArray[i].section);
 					subjObjList.push(subjObj);
@@ -264,19 +207,21 @@ function showSchedule(){
 							{
 								day: subjectDays[j],
 								periods: [
-									[subjObjList[i].start_time, subjObjList[i].end_time, subjObjList[i].courseName]
+									[subjObjList[i].start_time, subjObjList[i].end_time, (subjObjList[i].courseName+" - "+subjObjList[i].lecLab).toUpperCase()]
 								]
 							}
 						]);
 					}
 				}
 				$('body').loadingModal('hide');
+				$('body').loadingModal('destroy');
 			}
 		},
 		error:function(data){
 			console.log(data.responseText);
 			$("#error-modal").modal();
 			$('body').loadingModal('hide');
+			$('body').loadingModal('destroy');
 		},
 		complete:function(){
 			clearInterval(showSchedule);
@@ -306,6 +251,7 @@ function generateSchedule(e){
 		error:function(error){
 			console.log(error.responseText);
 			$('body').loadingModal('hide');
+			$('body').loadingModal('destroy');
 			$("#error-modal").modal();
 		}
 	});
