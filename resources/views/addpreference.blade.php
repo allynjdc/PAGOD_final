@@ -144,10 +144,9 @@
 					@endif
 				</div>
 				<form role="form" method="GET" action="/submitpreference">
-				<div class="table-responsive">					
-	                                 {{ csrf_field() }}
+					<div class="table-responsive">					
+	                    {{ csrf_field() }}
 						<table class="table table-hover">
-
 							<thead>
 								<tr>
 									@if($sem == 2)
@@ -182,14 +181,9 @@
 										</td>
 								</tr>
 								@endforeach
-								<tr>
-									<td><input type="hidden" name="subject_count" class="form-control" value="{{$con}}" /> 
-									</td>
-									<td><input type="hidden" name="year" class="form-control" value="{{$year}}" /> 
-									</td>
-									<td><input type="hidden" name="sem" class="form-control" value="{{$sem}}" /> 
-									</td>
-								</tr>
+								<input type="hidden" name="subject_count" class="form-control" value="{{$con}}" /> 
+								<input type="hidden" name="year" class="form-control" value="{{$year}}" /> 
+								<input type="hidden" name="sem" class="form-control" value="{{$sem}}" /> 
 								
 								<!-- <tr>
 									<td>
@@ -212,20 +206,18 @@
 								</tr> -->
 							</tbody>
 							<tfoot>
-								<tr class="">
-									<td><strong>TOTAL</strong></td>
-									<td>{{$sum1}} units</td>
-									<td></td>
-								</tr>
+								<td><strong>TOTAL</strong></td>
+								<td>{{$sum1}} units</td>
+								<td><button class="btn but_color"> Send Preference </button></td>
 							</tfoot>
 						</table>
-					
-				</div>
-				<div>
-					<div class="btn-group btn_logged pull-right">
-						<button class="btn but_color"> Send Preference </button>
+						
 					</div>
-				</div>
+					<!-- <div>
+						<div class="btn-group btn_logged pull-right">
+							
+						</div>
+					</div> -->
 				</form>
 			</div>
 		</div>

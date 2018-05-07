@@ -351,26 +351,40 @@ class StudentController extends Controller
         $course = "\"$cor\"";
         $courses_taken = Auth::user()->courses_taken;
         $flag = 0;
+        $flag_no_input = 0;
+        $invalid_subjects = array();
         foreach($subjs as $sub){
-            $str = strtolower(str_replace(" ","",$sub[2])); 
-            $process = new Process("python python\p_validation.py $course $courses_taken $str");
-            $process->run();
-
-            if(!$process->isSuccessful()){
-                throw new ProcessFailedException($process);
+            $str = strtolower(str_replace(" ","",$sub[2]));
+            if (!empty($str))
+            {
+                $process = new Process("python python\p_validation.py $course $courses_taken $str");
+                $process->run();
+    
+                if(!$process->isSuccessful()){
+                    throw new ProcessFailedException($process);
+                }
+                $output = $process->getOutput();
+                echo $str." - ".$output.", ".strcmp($output,"FALSE");
+                if(strcmp($output,"FALSE") > 1){
+                    array_push($invalid_subjects, $sub[2]);
+                    $flag = 1;
+                }
             }
-
-            $output = $process->getOutput();
-            echo $str." - ".$output.", ".strcmp($output,"FALSE");
-            if(strcmp($output,"FALSE") > 1){
+            else
+            {
                 $flag = 1;
-                break;
+                $flag_no_input = 1;
             }
         }
         
         if($flag == 1){
             // NOT VALIDATED
-            return Redirect::to('addpreference')->with('error','INVALID INPUT SUBJECT!');
+            if ($flag_no_input && !empty($invalid_subjects)){
+                return Redirect::to('addpreference')->with('error',"INVALID INPUT SUBJECT! Problems were found at the following inputs: ".implode(", ", $invalid_subjects).". Some fields also had no input.");
+            }else if($flag_no_input && empty($invalid_subjects)){
+                return Redirect::to('addpreference')->with('error',"INVALID INPUT SUBJECT! Some fields had no input.");
+            }
+            return Redirect::to('addpreference')->with('error',"INVALID INPUT SUBJECT! Problems were found at the following subjects: ".implode(", ", $invalid_subjects));
         } else {
             return $this->saveFile($subjs,"preferences");
         }

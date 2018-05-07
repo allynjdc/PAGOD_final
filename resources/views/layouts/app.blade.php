@@ -20,7 +20,7 @@
     
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="{{ asset('js/jquery.js') }}"></script>
+    <!-- <script type="text/javascript" src="{{ asset('js/jquery.js') }}"></script> -->
     <script src="{{ asset('css/bootstrap-3.3.7-dist/js/jquery.min.js')}}"></script>
     <script src="{{ asset('css/bootstrap-3.3.7-dist/js/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/moment.js') }}"></script>
