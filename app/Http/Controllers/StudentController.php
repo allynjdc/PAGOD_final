@@ -382,13 +382,11 @@ class StudentController extends Controller
     {
         $constraintspath = public_path("constraints/".Auth::user()->id.".csv");
         $header = true;
-        $schedule = array();
         $constraintHigh = array();
         $constraintLow = array();
         $constraintMed = array();
 
         if(file_exists($constraintspath)){
-            $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
             $handle = fopen($constraintspath, "r");
             $header = true;
             $constraintHigh = array();
@@ -448,6 +446,49 @@ class StudentController extends Controller
                         array_push($constraintLow, $constraint);
                     }
                 }
+            }
+            fclose($handle);
+        }
+        $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
+        $schedule = array();
+        if(file_exists($schedulepath)){
+            $handle = fopen($schedulepath, "r");
+            while($csvLine = fgetcsv($handle, ",")){
+                $year = $csvLine[0];
+                $semester = $csvLine[1];
+                $course = $csvLine[2];
+                $campus = $csvLine[3];
+                $leclab = $csvLine[4];
+                $section = $csvLine[5];
+                $units = $csvLine[6];
+                $instructor = $csvLine[7];
+                $sessions = explode("|", $csvLine[8]);
+                $array_sessions = array();
+                foreach ($sessions as $key => $session) {
+                    $session = explode(",", $session);
+                    $room = $session[0];
+                    $days = explode(" ",$session[1]);
+                    foreach ($days as $key => $day) {
+                        $days[$key] = $this->returnIndex($day);
+                    }
+                    $start = $this->convertToTime($session[2]);
+                    $end = $this->convertToTime($session[3]);
+                    array_push($array_sessions, array(
+                        "room" => $room,
+                        "days" => $days,
+                        "start" => $start,
+                        "end" => $end
+                    ));
+                }
+                $subject = array(
+                    "coursename" => $course,
+                    "units" => $units,
+                    "leclab" => $leclab,
+                    "section" => $section,
+                    "instructor" => $instructor,
+                    "sessions" => $array_sessions
+                );
+                array_push($schedule, $subject);
             }
             fclose($handle);
         }
