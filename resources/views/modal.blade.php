@@ -24,17 +24,20 @@
 
 						<div class="tab-content">
   							<div id="addcourserestriction" class="tab-pane fade active in">
-  								<div class="input-group bootstrap-timepicker timepicker btn_logged">
-									<div class="input-group-btn">
-										<button data-constraint="mustnothave" type="button" class="btn but_color dropdown-toggle add-constraint-btn" data-toggle="dropdown">Must Not Have <span class="caret"></span></button>
-										<ul class="dropdown-menu" role="menu">
-											<li role="presentation">
-												<a class="add-constraint-item constraint-item" href="javascript:void(0)">Must Have</a>
-											</li>
-											<li role="presentation">
-												<a class="add-constraint-item constraint-item" href="javascript:void(0)">Must Not Have</a>
-											</li>
-										</ul>
+  								<div class="input-group bootstrap-timepicker timepicker btn_logged"><!--- input-group-btn but_color -->
+									<div class="input-group-btn"> 
+										<div class="dropdown">
+											<button data-constraint="mustnothave" type="button" class="btn but_color dropdown-toggle add-constraint-btn" data-toggle="dropdown">Must Not Have <span class="caret"></span></button>
+											<ul class="dropdown-menu" id="drop" role="menu">
+												<li role="presentation" selected>
+													<a class="add-constraint-item constraint-item" href="javascript:void(0)">Must Have</a>
+												</li>
+												<li role="presentation">
+													<a class="add-constraint-item constraint-item" href="javascript:void(0)">Must Not Have</a>
+												</li>
+											</ul>	
+										</div>
+																				
 									</div>
 									<input name="course" type="text" class="form-control input-small">
 						        </div>

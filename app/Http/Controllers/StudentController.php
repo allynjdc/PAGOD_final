@@ -350,60 +350,30 @@ class StudentController extends Controller
         $cor = Auth::user()->course;
         $course = "\"$cor\"";
         $courses_taken = Auth::user()->courses_taken;
-        $process = new Process("python python\preference.py $course $courses_taken");
-        $process->run();
-
-        if(!$process->isSuccessful()){
-            throw new ProcessFailedException($process);
-        }
-
-        // SEPARATING THE SINGLE STRING RESULT FROM PYTHON ACCODING TO COURSETYPES
-        $output = $process->getOutput();
-        $subjType = explode('/', $output);
-
-        $ah = explode(",", $subjType[0]);
-        $mst = explode(",", $subjType[1]);
-        $ssp = explode(",", $subjType[2]);
-        $core = explode(",", $subjType[3]);
-        array_pop($ah);
-        array_pop($mst);
-        array_pop($ssp);
-        array_pop($core);
-
-        $final = $ah;
-        array_push($final, $mst);
-        array_push($final, $ssp);
-        array_push($final, $core);
-
-        //
-        // VALIDATING INPUTS
-        //
         $flag = 0;
-        foreach($subjs as $subj){
-            echo strtolower($subj[2])." - ";
-            $str = strtolower(str_replace(" ","",$subj[2])); 
-            echo in_array($str, $final, TRUE).", ";
-            // echo in_array($str, $ah, TRUE).", ";
-            // echo in_array($str, $core, TRUE).", ";
-            // echo in_array($str, $mst, FALSE);
-            echo "<br>";
-            // if(!in_array(strtolower($subj[2]), $ah) && !in_array(strtolower($subj[2]), $mst) && !in_array(strtolower($subj[2]), $ssp) && !in_array(strtolower($subj[2]), $core)){
-            //     echo strtolower($subj[2]).", ";
-            //     echo in_array(strtolower($subj[2]), $core, TRUE).", ";
-            //     echo in_array(strtolower($subj[2]), $ah, TRUE).", ";
-            //     echo (!in_array(strtolower($subj[2]), $ah) && !in_array(strtolower($subj[2]), $mst) && !in_array(strtolower($subj[2]), $ssp) && !in_array(strtolower($subj[2]), $core)).", ";
-            //     $flag = 1;
-            //     echo $flag;
-            //     break;
-            // }
+        foreach($subjs as $sub){
+            $str = strtolower(str_replace(" ","",$sub[2])); 
+            $process = new Process("python python\p_validation.py $course $courses_taken $str");
+            $process->run();
+
+            if(!$process->isSuccessful()){
+                throw new ProcessFailedException($process);
+            }
+
+            $output = $process->getOutput();
+            echo $str." - ".$output.", ".strcmp($output,"FALSE");
+            if(strcmp($output,"FALSE") > 1){
+                $flag = 1;
+                break;
+            }
         }
- 
-        // if($flag = 1){
-        //     // NOT VALIDATED
-        //     return Redirect::to('addpreference')->with('error','INVALID INPUT SUBJECT!');
-        // } else {
-        //     return $this->saveFile($subjs,"preferences");
-        // }
+        
+        if($flag == 1){
+            // NOT VALIDATED
+            return Redirect::to('addpreference')->with('error','INVALID INPUT SUBJECT!');
+        } else {
+            return $this->saveFile($subjs,"preferences");
+        }
         
 
     }
@@ -412,13 +382,13 @@ class StudentController extends Controller
     {
         $constraintspath = public_path("constraints/".Auth::user()->id.".csv");
         $header = true;
+        $schedule = array();
         $constraintHigh = array();
         $constraintLow = array();
         $constraintMed = array();
 
         if(file_exists($constraintspath)){
             $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
-            $schedule = array();
             $handle = fopen($constraintspath, "r");
             $header = true;
             $constraintHigh = array();
@@ -482,49 +452,6 @@ class StudentController extends Controller
             fclose($handle);
         }
 
-        $schedule = array();
-        $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
-        if(file_exists($schedulepath)){
-            $handle = fopen($schedulepath, "r");
-            while($csvLine = fgetcsv($handle, ",")){
-                $year = $csvLine[0];
-                $semester = $csvLine[1];
-                $course = $csvLine[2];
-                $campus = $csvLine[3];
-                $leclab = $csvLine[4];
-                $section = $csvLine[5];
-                $units = $csvLine[6];
-                $instructor = $csvLine[7];
-                $sessions = explode("|", $csvLine[8]);
-                $array_sessions = array();
-                foreach ($sessions as $key => $session) {
-                    $session = explode(",", $session);
-                    $room = $session[0];
-                    $days = explode(" ",$session[1]);
-                    foreach ($days as $key => $day) {
-                        $days[$key] = $this->returnIndex($day);
-                    }
-                    $start = $this->convertToTime($session[2]);
-                    $end = $this->convertToTime($session[3]);
-                    array_push($array_sessions, array(
-                        "room" => $room,
-                        "days" => $days,
-                        "start" => $start,
-                        "end" => $end
-                    ));
-                }
-                $subject = array(
-                    "coursename" => $course,
-                    "units" => $units,
-                    "leclab" => $leclab,
-                    "section" => $section,
-                    "instructor" => $instructor,
-                    "sessions" => $array_sessions
-                );
-                array_push($schedule, $subject);
-            }
-            fclose($handle);
-        }
         return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed', 'schedule'));
     }
 

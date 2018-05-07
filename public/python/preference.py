@@ -39,10 +39,10 @@ def cor_list(plan,taken):
 				core_list.append(subj.courseName)
 	return core_list
 
-def remainCORE(plan,taken):
+def remainCORE(plan,taken,takencourses):
 	CORE = []
 	for subj in plan:
-		if ((subj.courseName.replace(" ","") not in stp.getGEAH(takencourses)) and (subj.courseName.replace(" ","") not in stp.getGESSP(takencourses)) and (subj.courseName.replace(" ","") not in stp.getGEMST(takencourses)) and (subj.courseName.replace(" ","") not in cor_list(plan,taken))):
+		if ((subj.courseName.replace(" ","") not in stp.getGEAH(takencourses)) and (subj.courseName.replace(" ","") not in stp.getGESSP(takencourses)) and (subj.courseName.replace(" ","") not in stp.getGEMST(takencourses)) and (subj.courseName.replace(" ","") not in cor_list(plan,takencourses))):
 			if subj.courseName != '':
 				CORE.append(subj.courseName)
 	return CORE
@@ -56,7 +56,7 @@ if __name__ == '__main__':
 	remainAH = remainAH(gelist,stp.getGEAH(takencourses))
 	remainSSP = remainSSP(gelist,stp.getGESSP(takencourses))
 	remainMST = remainMST(gelist,stp.getGEMST(takencourses))
-	remainCORE = remainCORE(studyplan,takencourses)
+	remainCORE = remainCORE(studyplan,taken,takencourses)
 	for subj in remainAH:
 		print(subj+",")
 	print("/")
