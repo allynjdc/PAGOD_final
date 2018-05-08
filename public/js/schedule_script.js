@@ -213,6 +213,7 @@ function showSchedule(){
 						]);
 					}
 				}
+				$("#success-modal").modal();
 				$('body').loadingModal('hide');
 				$('body').loadingModal('destroy');
 			}
@@ -245,7 +246,7 @@ function generateSchedule(e){
 		contentType: false,
 		success:function(data){
 			console.log(data);
-			$('body').loadingModal('animation', 'fadingCircle').loadingModal('backgroundColor', 'rgb(178,48,46)').loadingModal('text','Your schedule is now generated.<br/>Please wait while your schedule is being loaded.');
+			loadingSchedModal();
 			var procShowSchedule = setInterval(showSchedule(), 1000);
 		},
 		error:function(error){
@@ -260,23 +261,18 @@ function generateSchedule(e){
 function calculateModal(){
 	$('body').loadingModal({
 		position: 'auto',
-		text: 'Calculating your schedule...\nThis may take a while',
+		text: 'Calculating your schedule...<br />This may take a while',
 		color: '#fff',
 		opacity: '0.7',
-		backgroundColor: 'rgb(178,48,46)',
+		backgroundColor: 'rgb(162,162,162)',
 		animation: 'circle'
 	});
 }
 
 function loadingSchedModal(){
-	$('body').loadingModal({
-		position: 'auto',
-		text: 'Your schedule is now generated.\nPlease wait while your schedule is being loaded.',
-		color: '#fff',
-		opacity: '0.7',
-		backgroundColor: 'rgb(178,48,46)',
-		animation: 'circle'
-	});
+	$('body').loadingModal('animation', 'cubeGrid')
+			.loadingModal('backgroundColor', 'rgb(162,162,162)')
+			.loadingModal('text','Your schedule is now generated.<br/>Please wait while your schedule is being loaded.');
 }
 
 function hideEditModal(){
