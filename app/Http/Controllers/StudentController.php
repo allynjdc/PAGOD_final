@@ -355,19 +355,24 @@ class StudentController extends Controller
         $invalid_subjects = array();
         foreach($subjs as $sub){
             $str = strtolower(str_replace(" ","",$sub[2]));
+            $type = strtolower(str_replace(" ", "", $sub[3]));
             if (!empty($str))
             {
-                $process = new Process("python python\p_validation.py $course $courses_taken $str");
-                $process->run();
-    
-                if(!$process->isSuccessful()){
-                    throw new ProcessFailedException($process);
-                }
-                $output = $process->getOutput();
-                echo $str." - ".$output.", ".strcmp($output,"FALSE");
-                if(strcmp($output,"FALSE") > 1){
-                    array_push($invalid_subjects, $sub[2]);
-                    $flag = 1;
+                if (strpos($type, "elective") === false){
+                    $process = new Process("python python\p_validation.py $course $courses_taken $str");
+                    $process->run();
+        
+                    if(!$process->isSuccessful()){
+                        throw new ProcessFailedException($process);
+                    }
+                    $output = $process->getOutput();
+                    echo $str." - ".$output.", ".strcmp($output,"FALSE");
+                    if(strcmp($output,"FALSE") > 1){
+                        array_push($invalid_subjects, $sub[2]);
+                        $flag = 1;
+                    }
+                }else{
+                    continue;
                 }
             }
             else
