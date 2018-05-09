@@ -51,7 +51,7 @@ class Problem:
 				
 		return None # no violation found
 
-	def all_hard_violations(self,solution,specific_variable=None):
+	def all_soft_violations(self,solution,specific_variable=None):
 		""" 
 		Input: solution
 		Output: list of hard constraints violated by solution,
@@ -59,12 +59,11 @@ class Problem:
 		"""
 		violations = []
 		for constraint in self.constraints:
-			if constraint.is_soft():
-				continue # skip soft constraints 
+			if constraint.is_hard():
+				continue # skip hard constraints 
 
 			if specific_variable is not None and specific_variable not in constraint.variables:
 				continue # skip if specific_variable is set, and constraint isn't related to it
-				
 			pass_test = constraint.test(solution)
 			if not pass_test:
 				violations.append(constraint)

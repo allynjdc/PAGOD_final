@@ -3,4 +3,5 @@ meeting_time,no_class,musthave,mustnothave,subject,days,start,end,priority
 1,0,0,0,,"M Th","8:00 AM","4:00 PM",H
 0,0,0,1,LIT3,,,,H
 0,0,1,0,PSYCH101,,,,H
+0,1,0,0,,W,,,M
 0,0,0,1,PSYCH10,,,,L

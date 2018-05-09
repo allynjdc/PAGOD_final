@@ -399,6 +399,16 @@ class StudentController extends Controller
 
     public function wishlist(Request $request)
     {
+        $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
+        $violated = array();
+        if(file_exists($violated_path)){
+            $handle = fopen($violated_path, "r");
+            while($csvLine = fgetcsv($handle, ",")){
+                array_push($violated, strtolower($csvLine[0]));
+            }
+            fclose($handle);
+        }
+
         $constraintspath = public_path("constraints/".Auth::user()->id.".csv");
         $header = true;
         $constraintHigh = array();
@@ -447,6 +457,10 @@ class StudentController extends Controller
                         }
                         $text .= strtoupper($course);
                     }
+                    $not_violated = array_search(strtolower($text), $violated);
+                    if (is_int($not_violated)){
+                        $not_violated = true;
+                    }
                     $constraint = array(
                         "constraint_type" => $constraint_type,
                         "priority" => $priority,
@@ -455,7 +469,8 @@ class StudentController extends Controller
                         "end_time" => $end,
                         "course" => $course,
                         "days" => $days,
-                        "text" => $text
+                        "text" => $text,
+                        "not_violated" => $not_violated
                     );
                     if ($priority == "high"){
                         array_push($constraintHigh, $constraint);
@@ -511,7 +526,7 @@ class StudentController extends Controller
             }
             fclose($handle);
         }
-
+        // var_dump($constraintHigh);
         return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed', 'schedule'));
     }
 
@@ -552,20 +567,19 @@ class StudentController extends Controller
         $constraintspath = Auth::user()->constraints;
         $preferencespath = Auth::user()->preferences;
         $schedulepath = "\"schedule\\\\".Auth::user()->id.".csv\"";
+        $violated_path = "\"violated_constraints\\\\".Auth::user()->id.".csv\"";
         Auth::user()->update([
             'schedule' => $schedulepath
         ]);
         if (file_exists(public_path("schedule/".Auth::user()->id.".csv"))){
             unlink(public_path("schedule/".Auth::user()->id.".csv"));
         }
-        $process = new Process("python python\localsearch.py $course $courses_taken $constraintspath $preferencespath $schedulepath");
+        $process = new Process("python python\localsearch.py $course $courses_taken $constraintspath $preferencespath $schedulepath $violated_path");
         $process->run();
         if(!$process->isSuccessful()){
             throw new ProcessFailedException($process);
         }
-        // return "OK";
-        // return json_decode($process->getOutput(), true);
-        return "local search is now being run.";
+        return json_decode($process->getOutput(), true);
     }
 
     public function acquireSchedule(Request $request)

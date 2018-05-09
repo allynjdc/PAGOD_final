@@ -91,7 +91,7 @@ class LocalSearchSolver:
 			print('Total neighbors:',neighbor_count)
 			print('Total legal neighbors:',legal_neighbor_count)
 			print('Best score:',best_state.score)
-		self.solutions = [best_state.solution]
+		self.solutions = [best_state]
 
 	def local_search(self):
 		config = self.config

@@ -5,8 +5,8 @@ class Constraint:
 		self.penalty = penalty or float('inf') # hard, if penalty undefined
 		self.name = 'undefined'
 
-	def __repr__(self):
-		return 'Constraint:%s' % self.name 
+	# def __repr__(self):
+	# 	return 'Constraint:%s' % self.name 
 
 	def is_hard(self):
 		return self.penalty == float('inf')
@@ -42,6 +42,7 @@ class MustHaveConstraint(Constraint):
 	def test(self, solution):
 		values = self.get_assigned_values(solution)
 		courseNames = []
+		# print(solution)
 		for var in self.variables:
 			classoffering = solution[var]
 			courseNames.append(classoffering.courseName)

@@ -131,11 +131,18 @@ def csvReader(pathname):
 
 	return ifile, reader
 
+def csvWriteConstraint(pathname, constraints):
+	ifile = open(pathname, "w", newline='')
+	writer = csv.writer(ifile, delimiter=",")
+	for constraint in constraints:
+		writer.writerow([constraint.name])
+	ifile.close()
+
 def csvWriter(pathname, assignment):
 	ifile = open(pathname, "w", newline='')
 	writer = csv.writer(ifile, delimiter=",")
 	# print(type(assignment[0]), assignment[0])
-	assignment = assignment[0]
+	# assignment = assignment[0]
 	for key in assignment.keys():
 		classoffering = assignment[key]
 		s_output = ""
@@ -157,6 +164,7 @@ def csvWriter(pathname, assignment):
 				classoffering["instructor"],
 				s_output]
 			)
+	ifile.close()
 
 def createSubjectList(pathname):
 	ifile, reader = csvReader(pathname)
