@@ -100,7 +100,7 @@ def initls(coursesToTake, coursesTaken, electiveList, softconstraints, campus="M
 	problem.solution_format = solution_format
 
 	config = common_config()
-	config.objective_fn = count_violations
+	config.objective_fn = count_penalty
 	config.best_fn = min
 	config.best_possible_score = 0
 	config.initial_solution = 'random'
