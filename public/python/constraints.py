@@ -57,7 +57,7 @@ class MustNotHaveConstraint(MustHaveConstraint):
 			courseNames.append(classoffering.courseName)
 		return not self.courseName in courseNames
 
-class NoClassOnTime(Constraint):
+class StartEndConstraint(Constraint):
 	def __init__(self,variables,days,start,end,penalty=0):
 		self.variables = variables
 		self.days = days
@@ -74,13 +74,18 @@ class NoClassOnTime(Constraint):
 		for var in self.variables:
 			classoffering = solution[var]
 			sessions = classoffering.sessions
+			intersect_flag = False
 			for session in sessions:
 				days = session.days.split(" ")
 				if not set(self.days).isdisjoint(days):
+					intersect_flag = True
 					break
-			classofferingList = sectioning.classOfferingToList(classoffering)
-			if not set(schedrestrict).isdisjoint(classofferingList):
-				return False
+			if intersect_flag:
+				classofferingList = sectioning.classOfferingToList(classoffering)
+				if set(schedrestrict).isdisjoint(classofferingList):
+					print(schedrestrict)
+					print ("conflict with: ",classoffering.courseName,": days",days,",",classofferingList)
+					return False
 		return True
 
 class NoClassOnDayConstraint(Constraint):

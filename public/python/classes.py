@@ -27,17 +27,22 @@ class Student:
 	humdiv = ["bs cms", "ba lit"]
 	socscidiv = ["ba cd", "ba hist", "ba polsci (double major)", "ba polsci (single major)", "ba psych", "ba socio", "bs econ"]
 	sotech = ["bs chemical engineering", "bs food technology"]
+	no_electives = ["bs ph", "bs accountancy"]
 	def __init__(self, year,  academicYear, semester, degreeProgram, coursesTaken):
 		self.year = year
 		self.academicYear = academicYear
 		self.semester = semester
 		self.degreeProgram = degreeProgram
 		############################################
-		self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
-		# self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
+		# self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
+		self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
 		self.coursesTaken = coursesTaken
-		self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
-		# self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
+		############################################
+		if self.degreeProgram in Student.no_electives:
+			self.electiveList = []
+		else:
+			# self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
+			self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
 		############################################
 		if degreeProgram in Student.biodiv:
 			self.department = "bio div"
