@@ -34,15 +34,15 @@ class Student:
 		self.semester = semester
 		self.degreeProgram = degreeProgram
 		############################################
-		# self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
-		self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
+		self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
+		# self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
 		self.coursesTaken = coursesTaken
 		############################################
 		if self.degreeProgram in Student.no_electives:
 			self.electiveList = []
 		else:
-			# self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
-			self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
+			self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
+			# self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
 		############################################
 		if degreeProgram in Student.biodiv:
 			self.department = "bio div"

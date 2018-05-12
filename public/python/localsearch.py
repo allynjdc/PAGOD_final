@@ -80,8 +80,8 @@ def initls(coursesToTake, coursesTaken, electiveList, softconstraints, campus="M
 	variables = variableCourses(coursesToTake)
 	domain = {}
 	############################################
-	# classOfferingList = classes.createClassesList("csv\\data.csv")
-	classOfferingList = classes.createClassesList("../csv/data.csv")
+	classOfferingList = classes.createClassesList("csv\\data.csv")
+	# classOfferingList = classes.createClassesList("../csv/data.csv")
 	############################################
 	semester = coursesToTake[0].semester
 	classOfferingList = [classoffering for classoffering in classOfferingList if (classoffering.semester == semester and classoffering.campus==campus)]
@@ -107,8 +107,8 @@ def initls(coursesToTake, coursesTaken, electiveList, softconstraints, campus="M
 	config.respawn_solution = 'random'
 	config.neighborhood_fn = change_upto_two_values
 	############################################
-	# config.explain = False
-	config.explain = True
+	config.explain = False
+	# config.explain = True
 	############################################
 	reverse = True
 	hill_climbing_config(config,reverse)
@@ -118,7 +118,7 @@ def initls(coursesToTake, coursesTaken, electiveList, softconstraints, campus="M
 		if solver.solutions[0].score != float('inf'):
 			break
 	############################################
-	display_solutions(problem, solver)
+	# display_solutions(problem, solver)
 	############################################
 
 	return solver.solutions[0].solution, problem
@@ -142,19 +142,19 @@ def solution_format(problem, solution):
 	return "".join(output)
 
 if __name__ == "__main__":
-	# course = sys.argv[1]
-	# csvpath = sys.argv[2]
-	# constraintspath = sys.argv[3]
-	# preferencesPath = sys.argv[4]
-	# schedulePath = sys.argv[5]
-	# violated_path = sys.argv[6]
+	course = sys.argv[1]
+	csvpath = sys.argv[2]
+	constraintspath = sys.argv[3]
+	preferencesPath = sys.argv[4]
+	schedulePath = sys.argv[5]
+	violated_path = sys.argv[6]
 	############################################
-	course = "bs cmsc"
-	csvpath = "../csv/4thYrKomsai3.csv"
-	constraintspath = "../constraints/1.csv"
-	preferencesPath = "../preferences/1.csv"
-	schedulePath = "../schedule/1.csv"
-	violated_path = "../violated_constraints/1.csv"
+	# course = "bs cmsc"
+	# csvpath = "../csv/4thYrKomsai3.csv"
+	# constraintspath = "../constraints/1.csv"
+	# preferencesPath = "../preferences/1.csv"
+	# schedulePath = "../schedule/1.csv"
+	# violated_path = "../violated_constraints/1.csv"
 	############################################
 	student = classes.Student(3, "2016-2017", 2, course, classes.createSubjectList(csvpath))
 	coursesToTake = classes.createSubjectList(preferencesPath)

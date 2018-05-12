@@ -86,6 +86,27 @@ class StartEndConstraint(Constraint):
 					return False
 		return True
 
+class NoClassOnTimeConstraint(StartEndConstraint):
+	def test(self, solution):
+		values = self.get_assigned_values(solution)
+		start = timeDecimal(self.start)
+		end = timeDecimal(self.end)
+		schedrestrict = modifiedDomainValues(self.days, start, end)
+		for var in self.variables:
+			classoffering = solution[var]
+			sessions = classoffering.sessions
+			intersect_flag = False
+			for session in sessions:
+				days = session.days.split(" ")
+				if not set(self.days).isdisjoint(days):
+					intersect_flag = True
+					break
+			if intersect_flag:
+				classofferingList = sectioning.classOfferingToList(classoffering)
+				if not set(schedrestrict).isdisjoint(classofferingList):
+					return False
+		return True
+
 class NoClassOnDayConstraint(Constraint):
 	def __init__(self,variables,days,penalty=0):
 		self.variables = variables

@@ -19,9 +19,37 @@ $(document).ready(function(){
     		format: 'LT'
     	});
     });
-    
+    $('#add-end-time').on('dp.change', function(e){
+    	restrictTime(e, '#add-end-time', '#add-start-time')
+    });
+
+	$('#edit-end-time').on('dp.change', function(e){
+		restrictTime(e, '#edit-end-time', '#edit-start-time')
+	});    
 });
 
+function restrictTime(e, end_picker, pair_picker){
+	// chosen time for end_time
+	var end_time = timeToSeconds($(end_picker).val());
+	// chosen time for start_time
+	var start_time = timeToSeconds($(pair_picker).val());
+	console.log("start_time: "+start_time);
+	console.log("end_time: "+end_time);
+	if (end_time < start_time){
+		$(end_picker).val($(pair_picker).val());
+	}
+}
+function timeToSeconds(time) {
+	var mer = time.split(" ")[1];
+	time = time.split(" ")[0];
+    time = time.split(/:/);
+    if (mer.toLowerCase() == "PM".toLowerCase() && parseInt(time[0]) > 12){
+    	return (time[0] + 12) * 3600 + time[1] * 60;
+    }else if (mer.toLowerCase() == "AM".toLowerCase() && parseInt(time[0]) == 12){
+    	return (time[0] - 12) * 3600 + time[1] * 60;
+    }
+    return time[0] * 3600 + time[1] * 60;
+}
 function saveConstraints(){
 	var constraint_entries = $(".priority_entry:not(.no_entry)");
 	var constraints = [];

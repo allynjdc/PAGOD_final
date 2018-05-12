@@ -32,8 +32,8 @@ def findSections(courseName, classOfferingList, electiveList, coursesTaken, camp
 			courseName = removeDigits(courseName)
 			subjectsTaken = [classoffering.courseName for classoffering in coursesTaken]
 			############################################
-			return [classoffering for classoffering in classes.createClassesList("../csv/"+courseName+".csv") if (classoffering.courseName not in subjectsTaken and classoffering.campus==campus)]
-			# return [classoffering for classoffering in classes.createClassesList("csv\\"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
+			# return [classoffering for classoffering in classes.createClassesList("../csv/"+courseName+".csv") if (classoffering.courseName not in subjectsTaken and classoffering.campus==campus)]
+			return [classoffering for classoffering in classes.createClassesList("csv\\"+courseName+".csv") if classoffering.courseName not in subjectsTaken]
 			############################################
 		elif "pe" in courseName:
 			courseName = removeDigits(courseName)
