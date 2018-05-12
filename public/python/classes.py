@@ -27,17 +27,22 @@ class Student:
 	humdiv = ["bs cms", "ba lit"]
 	socscidiv = ["ba cd", "ba hist", "ba polsci (double major)", "ba polsci (single major)", "ba psych", "ba socio", "bs econ"]
 	sotech = ["bs chemical engineering", "bs food technology"]
+	no_electives = ["bs ph", "bs accountancy"]
 	def __init__(self, year,  academicYear, semester, degreeProgram, coursesTaken):
 		self.year = year
 		self.academicYear = academicYear
 		self.semester = semester
 		self.degreeProgram = degreeProgram
 		############################################
-		self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
-		# self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
+		# self.allCourses = createSubjectList("study plans\\"+degreeProgram+".csv")
+		self.allCourses = createSubjectList("../study plans/"+degreeProgram+".csv")
 		self.coursesTaken = coursesTaken
-		self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
-		# self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
+		############################################
+		if self.degreeProgram in Student.no_electives:
+			self.electiveList = []
+		else:
+			# self.electiveList = createElectiveList("electives\\"+degreeProgram+".csv")
+			self.electiveList = createElectiveList("../electives/"+degreeProgram+".csv")
 		############################################
 		if degreeProgram in Student.biodiv:
 			self.department = "bio div"
@@ -131,11 +136,18 @@ def csvReader(pathname):
 
 	return ifile, reader
 
+def csvWriteConstraint(pathname, constraints):
+	ifile = open(pathname, "w", newline='')
+	writer = csv.writer(ifile, delimiter=",")
+	for constraint in constraints:
+		writer.writerow([constraint.name])
+	ifile.close()
+
 def csvWriter(pathname, assignment):
 	ifile = open(pathname, "w", newline='')
 	writer = csv.writer(ifile, delimiter=",")
 	# print(type(assignment[0]), assignment[0])
-	assignment = assignment[0]
+	# assignment = assignment[0]
 	for key in assignment.keys():
 		classoffering = assignment[key]
 		s_output = ""
@@ -157,6 +169,7 @@ def csvWriter(pathname, assignment):
 				classoffering["instructor"],
 				s_output]
 			)
+	ifile.close()
 
 def createSubjectList(pathname):
 	ifile, reader = csvReader(pathname)

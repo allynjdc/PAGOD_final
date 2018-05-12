@@ -19,7 +19,7 @@ def common_config():
 	config.max_restarts = 20
 	config.max_iterations = 100
 	config.max_flat_iterations = 30
-	config.random_seed = 123456789
+	config.random_seed = None
 	return config
 
 def hill_walking_config(config,reverse):
@@ -48,24 +48,24 @@ def softConstraintList(softconstraints, variables):
 			penalty = 5
 		if const.meeting_time:
 			days = const.days.split(" ")
-			c = NoClassOnTime(variables,days,const.start, const.end)
-			c.name = 'No Class On Time: '+const.days+" "+const.start+" "+const.end
+			c = StartEndConstraint(variables,days,const.start, const.end)
+			c.name = 'Classes must start from '+const.start.upper()+" to "+const.end.upper()+" on "+(", ".join(days))
 			c.penalty = penalty
 			constraints.append(c)
 		elif const.no_class:
 			days = const.days.split(" ")
 			c = NoClassOnDayConstraint(variables, days)
-			c.name = 'No Class On: '+const.days
+			c.name = 'No classes on '+(", ".join(days))
 			c.penalty = penalty
 			constraints.append(c)
 		elif const.musthave:
 			c = MustHaveConstraint(variables, const.subject)
-			c.name = 'Must Have: '+const.subject
+			c.name = 'Must Have '+const.subject.upper()
 			c.penalty = penalty
 			constraints.append(c)
 		elif const.mustnothave:
 			c = MustNotHaveConstraint(variables, const.subject)
-			c.name = 'Must Not Have: '+const.subject
+			c.name = 'Must Not Have '+const.subject.upper()
 			c.penalty = penalty
 			constraints.append(c)
 
@@ -80,8 +80,8 @@ def initls(coursesToTake, coursesTaken, electiveList, softconstraints, campus="M
 	variables = variableCourses(coursesToTake)
 	domain = {}
 	############################################
-	classOfferingList = classes.createClassesList("csv\\data.csv")
-	# classOfferingList = classes.createClassesList("../csv/data.csv")
+	# classOfferingList = classes.createClassesList("csv\\data.csv")
+	classOfferingList = classes.createClassesList("../csv/data.csv")
 	############################################
 	semester = coursesToTake[0].semester
 	classOfferingList = [classoffering for classoffering in classOfferingList if (classoffering.semester == semester and classoffering.campus==campus)]
@@ -100,25 +100,28 @@ def initls(coursesToTake, coursesTaken, electiveList, softconstraints, campus="M
 	problem.solution_format = solution_format
 
 	config = common_config()
-	config.objective_fn = count_violations
+	config.objective_fn = count_penalty
 	config.best_fn = min
 	config.best_possible_score = 0
 	config.initial_solution = 'random'
 	config.respawn_solution = 'random'
 	config.neighborhood_fn = change_upto_two_values
 	############################################
-	config.explain = False
-	# config.explain = True
+	# config.explain = False
+	config.explain = True
 	############################################
 	reverse = True
 	hill_climbing_config(config,reverse)
-	solver = LocalSearchSolver(problem,config)
-	solver.solve()
+	while True:
+		solver = LocalSearchSolver(problem,config)
+		solver.solve()
+		if solver.solutions[0].score != float('inf'):
+			break
 	############################################
-	# display_solutions(problem, solver)
+	display_solutions(problem, solver)
 	############################################
 
-	return solver.solutions
+	return solver.solutions[0].solution, problem
 
 def solution_format(problem, solution):
 	assigned_subjects = {}
@@ -139,25 +142,30 @@ def solution_format(problem, solution):
 	return "".join(output)
 
 if __name__ == "__main__":
-	course = sys.argv[1]
-	csvpath = sys.argv[2]
-	constraintspath = sys.argv[3]
-	preferencesPath = sys.argv[4]
-	schedulePath = sys.argv[5]
+	# course = sys.argv[1]
+	# csvpath = sys.argv[2]
+	# constraintspath = sys.argv[3]
+	# preferencesPath = sys.argv[4]
+	# schedulePath = sys.argv[5]
+	# violated_path = sys.argv[6]
 	############################################
-	# course = "bs cmsc"
-	# csvpath = "../csv/4thYrKomsai3.csv"
-	# constraintspath = "../constraints/1.csv"
-	# preferencesPath = "../preferences/1.csv"
-	# schedulePath = "../schedule/1.csv"
+	course = "bs cmsc"
+	csvpath = "../csv/4thYrKomsai3.csv"
+	constraintspath = "../constraints/1.csv"
+	preferencesPath = "../preferences/1.csv"
+	schedulePath = "../schedule/1.csv"
+	violated_path = "../violated_constraints/1.csv"
 	############################################
 	student = classes.Student(3, "2016-2017", 2, course, classes.createSubjectList(csvpath))
 	coursesToTake = classes.createSubjectList(preferencesPath)
 	softconstraints = classes.createConstraintsList(constraintspath)
-	assignment = initls(coursesToTake, student.coursesTaken, student.electiveList, softconstraints, student.campus)
-	# print(MyEncoder().encode(assignment))
-	assignment = MyEncoder().encode(assignment)
+	assignment, problem = initls(coursesToTake, student.coursesTaken, student.electiveList, softconstraints, student.campus)
 
-	# print(json.dumps(assignment, cls=MyEncoder))
+	constraints = problem.all_soft_violations(assignment)
+	classes.csvWriteConstraint(violated_path, constraints)
+	constraints = MyEncoder().encode(constraints)
+	print(constraints)
+
+	assignment = MyEncoder().encode(assignment)
 	assignment = json.loads(assignment)
 	classes.csvWriter(schedulePath, assignment)

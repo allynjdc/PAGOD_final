@@ -36,7 +36,7 @@
     								<div id="high" class="panel-collapse collapse @if(count($constraintHigh) >= 1) in @endif">
       									<div class="panel-body">
                                         @forelse($constraintHigh as $key=>$constraint)
-                                        <div class="priority_entry" id="high_{{$key+1}}">
+                                        <div class="priority_entry @if($constraint["not_violated"]) bg-danger @else bg-success @endif" id="high_{{$key+1}}">
                                             <p>
                                                 <b>{{ $constraint["text"] }}</b>
                                                 <a class="remove-constraint" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>
@@ -77,7 +77,7 @@
     								<div id="medium" class="panel-collapse collapse @if(count($constraintMed) >= 1) in @endif">
       									<div class="panel-body">
       										@forelse($constraintMed as $key=>$constraint)
-                                            <div class="priority_entry" id="medium_{{$key+1}}">
+                                            <div class="priority_entry @if($constraint["not_violated"]) bg-danger @else bg-success @endif" id="medium_{{$key+1}}">
                                                 <p>
                                                     <b>{{ $constraint["text"] }}</b>
                                                     <a class="remove-constraint" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>
@@ -118,7 +118,7 @@
     								<div id="low" class="panel-collapse collapse @if(count($constraintLow) >= 1) in @endif">
       									<div class="panel-body">
       										@forelse($constraintLow as $key=>$constraint)
-                                            <div class="priority_entry" id="low_{{$key+1}}">
+                                            <div class="priority_entry @if($constraint["not_violated"]) bg-danger @else bg-success @endif" id="low_{{$key+1}}">
                                                 <p>
                                                     <b>{{ $constraint["text"] }}</b>
                                                     <a class="remove-constraint" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>
@@ -186,7 +186,7 @@
                         {
                             day: {{$day}},
                             periods: [
-                                ["{{$session["start"]}}", "{{$session["end"]}}", "{{$subject["coursename"]}}".toUpperCase()+" - "+"{{$subject["leclab"]}}".toUpperCase()]
+                                ["{{$session["start"]}}", "{{$session["end"]}}", ("{{$subject["coursename"]}}").toUpperCase()+" - "+("{{$subject["leclab"]}}").toUpperCase()]
                             ]
                         }
                     ]);

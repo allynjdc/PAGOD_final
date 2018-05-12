@@ -5,8 +5,8 @@ class Constraint:
 		self.penalty = penalty or float('inf') # hard, if penalty undefined
 		self.name = 'undefined'
 
-	def __repr__(self):
-		return 'Constraint:%s' % self.name 
+	# def __repr__(self):
+	# 	return 'Constraint:%s' % self.name 
 
 	def is_hard(self):
 		return self.penalty == float('inf')
@@ -42,6 +42,7 @@ class MustHaveConstraint(Constraint):
 	def test(self, solution):
 		values = self.get_assigned_values(solution)
 		courseNames = []
+		# print(solution)
 		for var in self.variables:
 			classoffering = solution[var]
 			courseNames.append(classoffering.courseName)
@@ -56,7 +57,7 @@ class MustNotHaveConstraint(MustHaveConstraint):
 			courseNames.append(classoffering.courseName)
 		return not self.courseName in courseNames
 
-class NoClassOnTime(Constraint):
+class StartEndConstraint(Constraint):
 	def __init__(self,variables,days,start,end,penalty=0):
 		self.variables = variables
 		self.days = days
@@ -73,13 +74,18 @@ class NoClassOnTime(Constraint):
 		for var in self.variables:
 			classoffering = solution[var]
 			sessions = classoffering.sessions
+			intersect_flag = False
 			for session in sessions:
 				days = session.days.split(" ")
 				if not set(self.days).isdisjoint(days):
+					intersect_flag = True
 					break
-			classofferingList = sectioning.classOfferingToList(classoffering)
-			if not set(schedrestrict).isdisjoint(classofferingList):
-				return False
+			if intersect_flag:
+				classofferingList = sectioning.classOfferingToList(classoffering)
+				if set(schedrestrict).isdisjoint(classofferingList):
+					print(schedrestrict)
+					print ("conflict with: ",classoffering.courseName,": days",days,",",classofferingList)
+					return False
 		return True
 
 class NoClassOnDayConstraint(Constraint):

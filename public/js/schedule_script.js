@@ -69,14 +69,13 @@ function saveConstraints(){
 		}
 		constraints.push(constraint);
 	});
-	console.log(constraints);
 	$.ajax({
 		method: 'POST',
 		url: '/saveconstraints',
 		data: {constraints: constraints},
 		dataType: 'json',
 		success: function(data){
-		// console.log(data);
+			console.log(data);
 		},
 		error: function(data){
 			console.log(data);
@@ -245,7 +244,17 @@ function generateSchedule(e){
 		processData: false,
 		contentType: false,
 		success:function(data){
-			console.log(data);
+			var violated_constraints = data;
+			var constraint_entries = $(".priority_entry:not(.no_entry)");
+			for (var i = constraint_entries.length - 1; i >= 0; i--) {
+				for (var j = violated_constraints.length - 1; j >= 0; j--) {
+					if (violated_constraints[j]["name"].toLowerCase() == $(constraint_entries[i]).find("b").text().toLowerCase()){
+						$(constraint_entries[i]).addClass("bg-danger");
+					}else{
+						$(constraint_entries[i]).addClass("bg-success");
+					}
+				}
+			}
 			loadingSchedModal();
 			var procShowSchedule = setInterval(showSchedule(), 1000);
 		},
@@ -348,7 +357,6 @@ function editConstraint(e){
 	var start_time = "";
 	var end_time = "";
 	var course = $("#editcourserestriction > div > input:text[name=edit_course]").val();
-	console.log(course);
 	if($("#edit_tabs > .active").attr("data-tab") == "editcourserestriction"){
 		constraint_type = "courserestriction";
 		text = "Must Not Have"
@@ -484,7 +492,6 @@ function addConstraint(e){
 		course: $("#addcourserestriction > div > input:text[name=course]").val(),
 		days: selected
 	};
-	console.log(constraintObject);
 	var newDiv = '<div class="priority_entry" id="'+$("input:radio[name=add_priority]:checked").val()+'_'+(constraint_num)+'">'+
 					'<p>'+
 						'<b>'+text+'</b>'+
