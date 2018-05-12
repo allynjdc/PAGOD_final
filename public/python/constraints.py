@@ -83,8 +83,6 @@ class StartEndConstraint(Constraint):
 			if intersect_flag:
 				classofferingList = sectioning.classOfferingToList(classoffering)
 				if set(schedrestrict).isdisjoint(classofferingList):
-					print(schedrestrict)
-					print ("conflict with: ",classoffering.courseName,": days",days,",",classofferingList)
 					return False
 		return True
 
