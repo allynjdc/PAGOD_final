@@ -280,14 +280,20 @@ function generateSchedule(e){
 		success:function(data){
 			var violated_constraints = data;
 			var constraint_entries = $(".priority_entry:not(.no_entry)");
-			for (var i = constraint_entries.length - 1; i >= 0; i--) {
-				for (var j = violated_constraints.length - 1; j >= 0; j--) {
-					if (violated_constraints[j]["name"].toLowerCase() == $(constraint_entries[i]).find("b").text().toLowerCase()){
-						$(constraint_entries[i]).addClass("bg-danger");
-					}else{
-						$(constraint_entries[i]).addClass("bg-success");
+			$(constraint_entries).removeClass("bg-danger");
+			$(constraint_entries).removeClass("bg-success");
+			if (violated_constraints.length){
+				for (var i = constraint_entries.length - 1; i >= 0; i--) {
+					for (var j = violated_constraints.length - 1; j >= 0; j--) {
+						if (violated_constraints[j]["name"].toLowerCase() == $(constraint_entries[i]).find("b").text().toLowerCase()){
+							$(constraint_entries[i]).addClass("bg-danger");
+						}else{
+							$(constraint_entries[i]).addClass("bg-success");
+						}
 					}
 				}
+			}else{
+				$(constraint_entries).addClass("bg-success");
 			}
 			loadingSchedModal();
 			var procShowSchedule = setInterval(showSchedule(), 1000);
@@ -445,6 +451,8 @@ function editConstraint(e){
 	var priority_value = $(".priority_options > p > label > input[name=edit_priority]:checked").val();
 	var prev_priority = $("#edit_constraint").attr("data-prev-priority");
 	var div_id = $("#edit_constraint").attr("data-constraint");
+	$("#"+div_id).removeClass("bg-success");
+	$("#"+div_id).removeClass("bg-danger");
 	$("#"+div_id).html('<p>'+
 						'<b>'+text+'</b>'+
 						'<a class="remove-constraint" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>'+
