@@ -12,7 +12,6 @@ $(document).ready(function(){
 	$(document).on("click", ".remove-constraint", removeConstraint);
 	$(document).on("click", ".edit-constraint", editModalOpen);
     $(document).on("click", ".constraint-item", changeBtnName);
-    $(document).on("hide.bs.modal", "#editconstraint", hideEditModal);
     $('[data-toggle="tooltip"]').tooltip();
     $(function(){
     	$('.timepicker3').datetimepicker({
@@ -320,6 +319,7 @@ function loadingSchedModal(){
 }
 
 function hideEditModal(){
+	console.log("at hide edit modal");
 	$("#edit_tabs > li").removeClass("active");
 	$("#editcourserestriction").removeClass("active");
 	$("#editcourserestriction").removeClass("in");
@@ -329,6 +329,7 @@ function hideEditModal(){
 	$("#editcourserestriction").addClass("active");
 	$("#editcourserestriction").addClass("in");
 	$("input:checkbox[name=days]").prop("checked", false);
+	$("input:radio[name=edit_priority]").prop("checked", false);
 	$("input:checkbox[name=edit-no-class-toggle]").prop("checked", false);
 }
 
@@ -391,6 +392,7 @@ function editModalOpen(){
 }
 
 function editConstraint(e){
+	console.log("at edit constraint");
 	e.preventDefault();
 	var text = "";
 	var musthave = "";
@@ -478,8 +480,8 @@ function editConstraint(e){
 	}else{
 		$("#"+div_id).data(constraintObject);
 	}
-	$("input:radio[name=edit_priority]").prop("checked", false);
 	saveConstraints();
+	hideEditModal();
 }
 
 function addConstraint(e){
