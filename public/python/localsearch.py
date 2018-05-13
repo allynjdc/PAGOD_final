@@ -54,10 +54,16 @@ def softConstraintList(softconstraints, variables):
 			constraints.append(c)
 		elif const.no_class:
 			days = const.days.split(" ")
-			c = NoClassOnDayConstraint(variables, days)
-			c.name = 'No classes on '+(", ".join(days))
-			c.penalty = penalty
-			constraints.append(c)
+			if const.start == const.end:
+				c = NoClassOnDayConstraint(variables, days)
+				c.name = 'No classes on '+(", ".join(days))
+				c.penalty = penalty
+				constraints.append(c)
+			else:
+				c = NoClassOnTimeConstraint(variables, days, const.start, const.end)
+				c.name = 'No Classes from '+const.start.upper()+" to "+const.end.upper()+" on "+(", ".join(days))
+				c.penalty = penalty
+				constraints.append(c)
 		elif const.musthave:
 			c = MustHaveConstraint(variables, const.subject)
 			c.name = 'Must Have '+const.subject.upper()

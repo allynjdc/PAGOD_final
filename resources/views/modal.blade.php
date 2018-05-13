@@ -44,6 +44,7 @@
   							</div>
 
   							<div id="addmeetingtime" class="tab-pane fade">
+  								<label class="checkbox-inline" data-toggle="tooltip" title="Toggling this checkbox will set the constraint as having no classes on chosen time instead of restricting your classes' start and end time."><input type="checkbox" name="add-no-class-toggle" value="1" />No Class Restriction</label>
 								<div class="input-group bootstrap-timepicker timepicker btn_logged">
 									<span class="input-group-addon">Start Time: </span>
 									<input id="add-start-time" type="text" class="form-control input-small timepicker3" />
@@ -57,11 +58,11 @@
 						        	<small><b>NOTE: </b>Inputting the SAME VALUES for START and END TIME will mean that there should be no class on chosen days.</small>
 						        </div>
 						        <div>
-						        	<label class="checkbox-inline"><input type="checkbox" name="days" value="M">MON</label>
-									<label class="checkbox-inline"><input type="checkbox" name="days" value="T">TUE</label>
-									<label class="checkbox-inline"><input type="checkbox" name="days" value="W">WED</label>
-									<label class="checkbox-inline"><input type="checkbox" name="days" value="Th">THUR</label>
-									<label class="checkbox-inline"><input type="checkbox" name="days" value="F">FRI</label>
+						        	<label class="checkbox-inline"><input type="checkbox" name="days" value="M" />MON</label>
+									<label class="checkbox-inline"><input type="checkbox" name="days" value="T" />TUE</label>
+									<label class="checkbox-inline"><input type="checkbox" name="days" value="W" />WED</label>
+									<label class="checkbox-inline"><input type="checkbox" name="days" value="Th" />THUR</label>
+									<label class="checkbox-inline"><input type="checkbox" name="days" value="F" />FRI</label>
 						        </div>
   							</div>
 						</div>
@@ -117,6 +118,7 @@
 						        </div>
   							</div>
   							<div id="editmeetingtime" class="tab-pane fade">
+  								<label class="checkbox-inline" data-toggle="tooltip" title="Toggling this checkbox will set the constraint as having no classes on chosen time instead of restricting your classes' start and end time."><input type="checkbox" name="edit-no-class-toggle" value="1" />No Class Restriction</label>
 								<div class="input-group bootstrap-timepicker timepicker btn_logged">
 									<span class="input-group-addon">Start Time: </span>
 									<input id="edit-start-time" type="text" class="form-control input-small timepicker3" />
@@ -144,7 +146,7 @@
 							</div> -->
 						</div>
 						<hr />
-						<button id="edit_constraint" type="submit" class="btn but_color btn_logged">EDIT</button>
+						<button id="edit_constraint" type="submit" class="btn but_color btn_logged" data-dismiss="modal">EDIT</button>
 			    		<button type="button" class="btn btn-default btn_logged" data-dismiss="modal">Close</button>
 			    	</form>
 			    </div>

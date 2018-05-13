@@ -16,8 +16,9 @@ $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
     $(function(){
     	$('.timepicker3').datetimepicker({
-    		format: 'LT'
+    		format: 'LT',
     	});
+    	$('.timepicker3').val('8:00 AM');
     });
     $('#add-end-time').on('dp.change', function(e){
     	restrictTime(e, '#add-end-time', '#add-start-time')
@@ -25,7 +26,7 @@ $(document).ready(function(){
 
 	$('#edit-end-time').on('dp.change', function(e){
 		restrictTime(e, '#edit-end-time', '#edit-start-time')
-	});    
+	});
 });
 
 function restrictTime(e, end_picker, pair_picker){
@@ -43,18 +44,18 @@ function timeToSeconds(time) {
 	var mer = time.split(" ")[1];
 	time = time.split(" ")[0];
     time = time.split(/:/);
-    if (mer.toLowerCase() == "PM".toLowerCase() && parseInt(time[0]) > 12){
+    if (mer.toLowerCase() == "PM".toLowerCase() && parseInt(time[0]) < 12){
     	return (time[0] + 12) * 3600 + time[1] * 60;
     }else if (mer.toLowerCase() == "AM".toLowerCase() && parseInt(time[0]) == 12){
     	return (time[0] - 12) * 3600 + time[1] * 60;
     }
     return time[0] * 3600 + time[1] * 60;
 }
+
 function saveConstraints(){
 	var constraint_entries = $(".priority_entry:not(.no_entry)");
 	var constraints = [];
 	$.each(constraint_entries, function(key, entry){
-		// console.log($(entry).data("constraint_type"));
 		var constraint_type = $(entry).data("constraint_type");
 		var musthave = 0;
 		var mustnothave = 0;
@@ -66,8 +67,14 @@ function saveConstraints(){
 		var end = "";
 		var priority = $(entry).data("priority")[0].toUpperCase();
 		if (constraint_type == "meetingtime"){
+			var toggle_text = "No Classes from "+$(entry).data("start_time")+" to "+$(entry).data("end_time")+" on "+$(entry).data("days").join(", ");
+			var possible_text = $(entry).find('b').text();
 			if ($(entry).data("start_time") == $(entry).data("end_time")){
 				no_class = 1;
+			}else if (toggle_text.toLowerCase() == possible_text.toLowerCase()){
+				no_class = 1;
+				start = $(entry).data("start_time");
+				end = $(entry).data("end_time");
 			}else{
 				meeting_time = 1;
 				start = $(entry).data("start_time");
@@ -321,8 +328,8 @@ function hideEditModal(){
 	$("#edit_tabs > li[data-tab=editcourserestriction]").addClass("active");
 	$("#editcourserestriction").addClass("active");
 	$("#editcourserestriction").addClass("in");
-	$("input:radio[name=edit_priority]").prop("checked", false);
 	$("input:checkbox[name=days]").prop("checked", false);
+	$("input:checkbox[name=edit-no-class-toggle]").prop("checked", false);
 }
 
 function changeBtnName(){
@@ -359,6 +366,11 @@ function editModalOpen(){
 		$("#edit"+constraint_type).addClass("in");
 		$("#edit-start-time").val(start_time);
 		$("#edit-end-time").val(end_time);
+		var toggle_text = "No Classes from "+start_time+" to "+end_time+" on "+days.join(", ");
+		var to_edit_text = $(this).parent().parent().find('b').text();
+		if ((start_time != end_time) && (toggle_text.toLowerCase() == to_edit_text.toLowerCase())){
+			$("input:checkbox[name=edit-no-class-toggle]").prop("checked", true);
+		}
 		$("#editmeetingtime input:checkbox[name=days]").each(function(){
 			for (var i = days.length - 1; i >= 0; i--) {
 				if(days[i] == $(this).val()){
@@ -400,6 +412,8 @@ function editConstraint(e){
 		text = "Classes must start from "+start_time+" to "+end_time;
 		if(start_time == end_time){
 			text = "No Classes";
+		}else if (start_time != end_time && ($('input:checkbox[name=edit-no-class-toggle]:checked').length > 0)){
+			text = "No Classes from "+start_time+" to "+end_time;
 		}
 		var selected = [];
 		$("#editmeetingtime > div > label > input:checkbox[name=days]:checked").each(function(){
@@ -418,14 +432,15 @@ function editConstraint(e){
 	constraintObject = {
 		id: $("#edit_constraint").attr("data-constraint"),
 		constraint_type: constraint_type,
-		priority: $("input:radio[name=edit_priority]:checked").val(),
+		priority: $(".priority_options > p > label > input[name=edit_priority]:checked").val(),
 		musthave: musthave,
 		start_time: start_time,
 		end_time: end_time,
 		course: course,
 		days: selected
 	};
-	var priority_value = $("input:radio[name=edit_priority]:checked").val();
+	console.log(constraintObject);
+	var priority_value = $(".priority_options > p > label > input[name=edit_priority]:checked").val();
 	var prev_priority = $("#edit_constraint").attr("data-prev-priority");
 	var div_id = $("#edit_constraint").attr("data-constraint");
 	$("#"+div_id).html('<p>'+
@@ -434,6 +449,7 @@ function editConstraint(e){
 						'<a class="edit-constraint" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>'+
 					'</p>');
 	if(priority_value != prev_priority){
+		console.log(priority_value+": "+prev_priority);
 		new_div_id = priority_value+"_"+($("#"+priority_value+" > .panel-body > .priority_entry").length+1);
 		constraintObject.id = new_div_id;
 		newDiv = $("#"+div_id).remove();
@@ -462,10 +478,8 @@ function editConstraint(e){
 	}else{
 		$("#"+div_id).data(constraintObject);
 	}
-	$("#editconstraint").modal('hide');
+	$("input:radio[name=edit_priority]").prop("checked", false);
 	saveConstraints();
-	$('body').removeClass('modal-open');
-	$('.modal-backdrop').remove();
 }
 
 function addConstraint(e){
@@ -490,6 +504,8 @@ function addConstraint(e){
 		text = "Classes must start from "+start_time+" to "+end_time;
 		if (start_time == end_time){
 			text = "No Classes";
+		}else if (start_time != end_time && ($('input:checkbox[name=add-no-class-toggle]:checked').length > 0)){
+			text = "No Classes from "+start_time+" to "+end_time;
 		}
 		var selected = [];
 		$("#addmeetingtime > div > label > input:checkbox[name=days]:checked").each(function(){
@@ -557,6 +573,7 @@ function addConstraintReset(){
 	$("#addconstraint").modal('hide');
 	$('body').removeClass('modal-open');
 	$('.modal-backdrop').remove();
+	$('.timepicker3').val('8:00 AM');
 	saveConstraints();
 }
 

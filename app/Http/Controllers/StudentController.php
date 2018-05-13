@@ -442,9 +442,13 @@ class StudentController extends Controller
                         $constraint_type = "meetingtime";
                         $text = "Classes must start from ".$start." to ".$end;
                         if ($csvLine[1]){
-                            $start = "8:00 AM";
-                            $end = "8:00 AM";
                             $text = "No Classes";
+                            if ($start != $end){
+                                $text .= " from ".$start." to ".$end;
+                            }else{
+                                $start = "8:00 AM";
+                                $end = "8:00 AM";
+                            }
                         }
                         $text .= " on ".str_replace(" ", ", ", $days);
                     }else if ($csvLine[2] || $csvLine[3]) {
