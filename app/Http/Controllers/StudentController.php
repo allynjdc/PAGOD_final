@@ -83,40 +83,48 @@ class StudentController extends Controller
                 if(substr_count($row[2], 'PE1')>0 || substr_count($row[2], 'NSTP')>0){
                     $sum1 = $sum1 + 0;
                 } else {
-                    $sum1 = $sum1 + $row[3];
+                    if(is_numeric($row[3])){
+                        $sum1 = $sum1 + $row[3];
+                    }
                 }
             } else if($row[0]==1 && $row[1]==2 && $row[4] > 0){
                 if(substr_count($row[2], 'PE')>0 || substr_count($row[2], 'NSTP')>0){
                     $sum2 = $sum2 + 0;
                 } else {
-                    $sum2 = $sum2 + $row[3];
+                    if(is_numeric($row[3])){
+                        $sum2 = $sum2 + $row[3];
+                    }
                 }
             } else if($row[0]==2 && $row[1]==1 && $row[4] > 0){
                 if(substr_count($row[2], 'PE')>0){
                     $sum3 = $sum3 + 0;
                 } else {
-                    $sum3 = $sum3 + $row[3];
+                    if(is_numeric($row[3])){
+                        $sum3 = $sum3 + $row[3];
+                    }
                 }
             } else if($row[0]==2 && $row[1]==2 && $row[4] > 0){
                 if(substr_count($row[2], 'PE')>0){
                     $sum4 = $sum4 + 0;
                 } else {
-                    $sum4 = $sum4 + $row[3];
+                    if(is_numeric($row[3])){
+                        $sum4 = $sum4 + $row[3];
+                    }
                 }
-            } else if($row[0]==3 && $row[1]==1 && $row[4] > 0){
+            } else if($row[0]==3 && $row[1]==1 && $row[4] > 0 && is_numeric($row[3])){
                 $sum5 = $sum5 + $row[3];
-            } else if($row[0]==3 && $row[1]==2 && $row[4] > 0){
+            } else if($row[0]==3 && $row[1]==2 && $row[4] > 0 && is_numeric($row[3])){
                 $sum6 = $sum6 + $row[3];
-            } else if($row[0]==4 && $row[1]==1 && $row[4] > 0){
+            } else if($row[0]==4 && $row[1]==1 && $row[4] > 0 && is_numeric($row[3])){
                 $sum7 = $sum7 + $row[3];
-            } else if($row[0]==4 && $row[1]==2 && $row[4] > 0){
+            } else if($row[0]==4 && $row[1]==2 && $row[4] > 0 && is_numeric($row[3])){
                 $sum8 = $sum8 + $row[3];
             } else if($row[0]==5 && $row[1]==1){
                 $has5th = $has5th + 1;
-                if($row[4] > 0){
+                if($row[4] > 0 && is_numeric($row[3])){
                     $sum10 = $sum10 + $row[3];
                 }
-            } else if($row[0]==5 && $row[1]==2 && $row[4] > 0){
+            } else if($row[0]==5 && $row[1]==2 && $row[4] > 0 && is_numeric($row[3])){
                 $sum11 = $sum11 + $row[3];
             }
 
@@ -126,7 +134,9 @@ class StudentController extends Controller
                 $mid[$midr][1] = $row[3];
                 $mid[$midr][2] = $row[4];
                 $midr++;  
-                $sum9 = $sum9 + $row[3];
+                if(is_numeric($row[3])){
+                    $sum9 = $sum9 + $row[3];
+                }
             }            
 
         }
@@ -206,12 +216,12 @@ class StudentController extends Controller
         $counts = $process->getOutput();
         $values = explode(',', $counts);
 
-        $ccore = ($ccore / $values[0]) * 100;
-        $celect = ($celect / $values[1]) * 100;
-        $cah = ($cah / $values[2]) * 100;
-        $cmst = ($cmst / $values[3]) * 100;
-        $cssp = ($cssp / $values[4]) * 100;
-        $cpenstp = ($cpenstp / $values[5]) * 100;
+        $ccore = ((int)$ccore / (int)$values[0]) * 100;
+        $celect = ((int)$celect / (int)$values[1]) * 100;
+        $cah = ((int)$cah / (int)$values[2]) * 100;
+        $cmst = ((int)$cmst / (int)$values[3]) * 100;
+        $cssp = ((int)$cssp / (int)$values[4]) * 100;
+        $cpenstp = ((int)$cpenstp / (int)$values[5]) * 100;
 
         return view('acadprogress', compact('core','ccore','ah','cah','ssp','cssp','mst','cmst','elect','celect','open','cpenstp','values'));
     }

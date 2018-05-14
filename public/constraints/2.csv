@@ -1,2 +1,4 @@
 meeting_time,no_class,musthave,mustnothave,subject,days,start,end,priority
-Array
+0,0,1,0,PI100,,,,H
+1,0,0,0,,W,"1:00 PM","4:00 PM",M
+0,1,0,0,,"M T W Th F","7:00 AM","9:00 AM",L

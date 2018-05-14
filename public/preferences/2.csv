@@ -1,11 +1,7 @@
 year,semester,courseName,type,units,lec/lab
-3,2,ENG10,service,3,lec
-3,2,CMSC124,core,3,lec
-3,2,CMSC124,core,,lab
-3,2,CMSC125,core,3,lec
-3,2,CMSC125,core,,lab
-3,2,CMSC129,core,3,lec
-3,2,CMSC129,core,,lab
-3,2,CMSC132,core,3,lec
-3,2,CMSC126,core,3,lec
-3,2,CMSC126,core,,lab
+4,2,PI100,service,3,lec
+4,2,CMSC198.2,core,2,lec
+4,2,CMSC170,elective,3,lec
+4,2,CMSC197,elective,3,lec
+4,2,CSMC152,elective,3,lec
+4,2,PSYCH101,freeelective,3,lec
