@@ -103,6 +103,9 @@ function saveConstraints(){
 		}
 		constraints.push(constraint);
 	});
+	if (constraints.length == 0 ){
+		constraints = [""]
+	}
 	$.ajax({
 		method: 'POST',
 		url: '/saveconstraints',

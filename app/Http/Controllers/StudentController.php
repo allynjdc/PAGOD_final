@@ -578,8 +578,8 @@ class StudentController extends Controller
         $cor = Auth::user()->course;
         $course = "\"$cor\"";
         $courses_taken = Auth::user()->courses_taken;
-        $constraintspath = Auth::user()->constraints;
-        $preferencespath = Auth::user()->preferences;
+        $constraintspath =  "\"constraints\\\\".Auth::user()->id.".csv\"";
+        $preferencespath =  "\"preferences\\\\".Auth::user()->id.".csv\"";
         $schedulepath = "\"schedule\\\\".Auth::user()->id.".csv\"";
         $violated_path = "\"violated_constraints\\\\".Auth::user()->id.".csv\"";
         Auth::user()->update([
@@ -612,32 +612,31 @@ class StudentController extends Controller
 
     public function saveConstraints(Request $request)
     {
-        $array_data = array();
-        foreach ($request->constraints as $key => $constraint) {
-            $row = array(
-                $constraint['meeting_time'],
-                $constraint['no_class'],
-                $constraint['musthave'],
-                $constraint['mustnothave'],
-                $constraint['subject'],
-                $constraint['days'],
-                $constraint['start'],
-                $constraint['end'],
-                $constraint['priority']);
-            array_push($array_data, $row);
-        }
         $filename = "constraints/".Auth::user()->id.".csv";
         $selected_array = array('meeting_time','no_class','musthave','mustnothave','subject','days','start','end','priority');
         $output = fopen($filename, 'w');
         fputcsv($output, $selected_array);
-        if(sizeof($array_data) > 1) {
+        if ($request->constraints != null){
+            $array_data = array();
+            foreach ($request->constraints as $key => $constraint) {
+                $row = array(
+                    $constraint['meeting_time'],
+                    $constraint['no_class'],
+                    $constraint['musthave'],
+                    $constraint['mustnothave'],
+                    $constraint['subject'],
+                    $constraint['days'],
+                    $constraint['start'],
+                    $constraint['end'],
+                    $constraint['priority']);
+                array_push($array_data, $row);
+            }
             foreach ($array_data as $row){
                 fputcsv($output, $row);
-            } 
-        } else {
-            fputcsv($output, $array_data);
+            }
         }
         fclose($output);
+        return $request->constraints;
     }
 
     public function saveFile($Array_data,$type){

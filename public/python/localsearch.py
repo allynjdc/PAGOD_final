@@ -13,6 +13,7 @@ from solver.ls import LocalSearchSolver
 from fn.ls import *
 from fn.objective import *
 from utils import *
+from pathlib import Path
 
 def common_config():
 	config = Config()
@@ -157,14 +158,16 @@ if __name__ == "__main__":
 	############################################
 	# course = "bs cmsc"
 	# csvpath = "../csv/4thYrKomsai3.csv"
-	# constraintspath = "../constraints/1.csv"
-	# preferencesPath = "../preferences/1.csv"
-	# schedulePath = "../schedule/1.csv"
-	# violated_path = "../violated_constraints/1.csv"
+	# constraintspath = "../constraints/4.csv"
+	# preferencesPath = "../preferences/4.csv"
+	# schedulePath = "../schedule/4.csv"
+	# violated_path = "../violated_constraints/4.csv"
 	############################################
 	student = classes.Student(3, "2016-2017", 2, course, classes.createSubjectList(csvpath))
 	coursesToTake = classes.createSubjectList(preferencesPath)
-	softconstraints = classes.createConstraintsList(constraintspath)
+	softconstraints = []
+	if Path(constraintspath).is_file():
+		softconstraints = classes.createConstraintsList(constraintspath)
 	assignment, problem = initls(coursesToTake, student.coursesTaken, student.electiveList, softconstraints, student.campus)
 
 	constraints = problem.all_soft_violations(assignment)
