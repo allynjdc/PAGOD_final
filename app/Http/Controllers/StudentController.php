@@ -409,139 +409,143 @@ class StudentController extends Controller
 
     public function wishlist(Request $request)
     {
-        $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
-        $violated = array();
-        if(file_exists($violated_path)){
-            $handle = fopen($violated_path, "r");
-            while($csvLine = fgetcsv($handle, ",")){
-                array_push($violated, strtolower($csvLine[0]));
+        $preferencespath = "preferences/".Auth::user()->id.".csv";
+        if (file_exists(public_path($preferencespath))){
+            $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
+            $violated = array();
+            if(file_exists($violated_path)){
+                $handle = fopen($violated_path, "r");
+                while($csvLine = fgetcsv($handle, ",")){
+                    array_push($violated, strtolower($csvLine[0]));
+                }
+                fclose($handle);
             }
-            fclose($handle);
-        }
 
-        $constraintspath = public_path("constraints/".Auth::user()->id.".csv");
-        $header = true;
-        $constraintHigh = array();
-        $constraintLow = array();
-        $constraintMed = array();
-
-        if(file_exists($constraintspath)){
-            $handle = fopen($constraintspath, "r");
+            $constraintspath = public_path("constraints/".Auth::user()->id.".csv");
             $header = true;
             $constraintHigh = array();
             $constraintLow = array();
             $constraintMed = array();
-            while($csvLine = fgetcsv($handle, ",")){
-                if ($header){
-                    $header = false;
-                }else{
-                    $text = "";
-                    $constraint_type = "";
-                    $musthave = "";
-                    $course = $csvLine[4];
-                    $days = $csvLine[5];
-                    $priority = "high";
-                    $start = $csvLine[6];
-                    $end = $csvLine[7];
-                    if ($csvLine[8] == "M"){
-                        $priority = "medium";
-                    }else if ($csvLine[8] == "L"){
-                        $priority = "low";
-                    }
-                    if ($csvLine[0] || $csvLine[1]){
-                        $constraint_type = "meetingtime";
-                        $text = "Classes must start from ".$start." to ".$end;
-                        if ($csvLine[1]){
-                            $text = "No Classes";
-                            if ($start != $end){
-                                $text .= " from ".$start." to ".$end;
-                            }else{
-                                $start = "8:00 AM";
-                                $end = "8:00 AM";
+
+            if(file_exists($constraintspath)){
+                $handle = fopen($constraintspath, "r");
+                $header = true;
+                $constraintHigh = array();
+                $constraintLow = array();
+                $constraintMed = array();
+                while($csvLine = fgetcsv($handle, ",")){
+                    if ($header){
+                        $header = false;
+                    }else{
+                        $text = "";
+                        $constraint_type = "";
+                        $musthave = "";
+                        $course = $csvLine[4];
+                        $days = $csvLine[5];
+                        $priority = "high";
+                        $start = $csvLine[6];
+                        $end = $csvLine[7];
+                        if ($csvLine[8] == "M"){
+                            $priority = "medium";
+                        }else if ($csvLine[8] == "L"){
+                            $priority = "low";
+                        }
+                        if ($csvLine[0] || $csvLine[1]){
+                            $constraint_type = "meetingtime";
+                            $text = "Classes must start from ".$start." to ".$end;
+                            if ($csvLine[1]){
+                                $text = "No Classes";
+                                if ($start != $end){
+                                    $text .= " from ".$start." to ".$end;
+                                }else{
+                                    $start = "8:00 AM";
+                                    $end = "8:00 AM";
+                                }
                             }
+                            $text .= " on ".str_replace(" ", ", ", $days);
+                        }else if ($csvLine[2] || $csvLine[3]) {
+                            $constraint_type = "courserestriction";
+                            $musthave = "musthave";
+                            $text = "Must Have ";
+                            if($csvLine[3]){
+                                $musthave = "mustnothave";
+                                $text = "Must Not Have ";
+                            }
+                            $text .= strtoupper($course);
                         }
-                        $text .= " on ".str_replace(" ", ", ", $days);
-                    }else if ($csvLine[2] || $csvLine[3]) {
-                        $constraint_type = "courserestriction";
-                        $musthave = "musthave";
-                        $text = "Must Have ";
-                        if($csvLine[3]){
-                            $musthave = "mustnothave";
-                            $text = "Must Not Have ";
+                        $not_violated = array_search(strtolower($text), $violated);
+                        if (is_int($not_violated)){
+                            $not_violated = true;
                         }
-                        $text .= strtoupper($course);
+                        $constraint = array(
+                            "constraint_type" => $constraint_type,
+                            "priority" => $priority,
+                            "musthave" => $musthave,
+                            "start_time" => $start,
+                            "end_time" => $end,
+                            "course" => $course,
+                            "days" => $days,
+                            "text" => $text,
+                            "not_violated" => $not_violated
+                        );
+                        if ($priority == "high"){
+                            array_push($constraintHigh, $constraint);
+                        }else if($priority == "medium"){
+                            array_push($constraintMed, $constraint);
+                        }else if($priority == "low"){
+                            array_push($constraintLow, $constraint);
+                        }
                     }
-                    $not_violated = array_search(strtolower($text), $violated);
-                    if (is_int($not_violated)){
-                        $not_violated = true;
+                }
+                fclose($handle);
+            }
+            $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
+            $schedule = array();
+            if(file_exists($schedulepath)){
+                $handle = fopen($schedulepath, "r");
+                while($csvLine = fgetcsv($handle, ",")){
+                    $year = $csvLine[0];
+                    $semester = $csvLine[1];
+                    $course = $csvLine[2];
+                    $campus = $csvLine[3];
+                    $leclab = $csvLine[4];
+                    $section = $csvLine[5];
+                    $units = $csvLine[6];
+                    $instructor = $csvLine[7];
+                    $sessions = explode("|", $csvLine[8]);
+                    $array_sessions = array();
+                    foreach ($sessions as $key => $session) {
+                        $session = explode(",", $session);
+                        $room = $session[0];
+                        $days = explode(" ",$session[1]);
+                        foreach ($days as $key => $day) {
+                            $days[$key] = $this->returnIndex($day);
+                        }
+                        $start = $this->convertToTime($session[2]);
+                        $end = $this->convertToTime($session[3]);
+                        array_push($array_sessions, array(
+                            "room" => $room,
+                            "days" => $days,
+                            "start" => $start,
+                            "end" => $end
+                        ));
                     }
-                    $constraint = array(
-                        "constraint_type" => $constraint_type,
-                        "priority" => $priority,
-                        "musthave" => $musthave,
-                        "start_time" => $start,
-                        "end_time" => $end,
-                        "course" => $course,
-                        "days" => $days,
-                        "text" => $text,
-                        "not_violated" => $not_violated
+                    $subject = array(
+                        "coursename" => $course,
+                        "units" => $units,
+                        "leclab" => $leclab,
+                        "section" => $section,
+                        "instructor" => $instructor,
+                        "sessions" => $array_sessions
                     );
-                    if ($priority == "high"){
-                        array_push($constraintHigh, $constraint);
-                    }else if($priority == "medium"){
-                        array_push($constraintMed, $constraint);
-                    }else if($priority == "low"){
-                        array_push($constraintLow, $constraint);
-                    }
+                    array_push($schedule, $subject);
                 }
+                fclose($handle);
             }
-            fclose($handle);
+            // var_dump($constraintHigh);
+            return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed', 'schedule'));
         }
-        $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
-        $schedule = array();
-        if(file_exists($schedulepath)){
-            $handle = fopen($schedulepath, "r");
-            while($csvLine = fgetcsv($handle, ",")){
-                $year = $csvLine[0];
-                $semester = $csvLine[1];
-                $course = $csvLine[2];
-                $campus = $csvLine[3];
-                $leclab = $csvLine[4];
-                $section = $csvLine[5];
-                $units = $csvLine[6];
-                $instructor = $csvLine[7];
-                $sessions = explode("|", $csvLine[8]);
-                $array_sessions = array();
-                foreach ($sessions as $key => $session) {
-                    $session = explode(",", $session);
-                    $room = $session[0];
-                    $days = explode(" ",$session[1]);
-                    foreach ($days as $key => $day) {
-                        $days[$key] = $this->returnIndex($day);
-                    }
-                    $start = $this->convertToTime($session[2]);
-                    $end = $this->convertToTime($session[3]);
-                    array_push($array_sessions, array(
-                        "room" => $room,
-                        "days" => $days,
-                        "start" => $start,
-                        "end" => $end
-                    ));
-                }
-                $subject = array(
-                    "coursename" => $course,
-                    "units" => $units,
-                    "leclab" => $leclab,
-                    "section" => $section,
-                    "instructor" => $instructor,
-                    "sessions" => $array_sessions
-                );
-                array_push($schedule, $subject);
-            }
-            fclose($handle);
-        }
-        // var_dump($constraintHigh);
-        return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed', 'schedule'));
+        return Redirect::to('addpreference')->with('error',"Your subject preferences have yet to be added. Please input your preferences first.");
     }
 
     public function returnIndex($day){
