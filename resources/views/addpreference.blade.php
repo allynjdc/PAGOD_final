@@ -34,7 +34,7 @@
       										@foreach($core as $subj)
       										<div class="priority_entry no_entry">
       											<p>
-      												<b>{{$subj}}</b>
+      												<b>{{strtoupper($subj)}}</b>
       											</p>
       										</div>
       										@endforeach
@@ -71,7 +71,7 @@
       										<div class="priority_entry no_entry">
       											<p>
       												&nbsp;<br/>
-      												<b>{{$subj}}</b>
+      												<b>{{strtoupper($subj)}}</b>
       											</p>
       										</div>
       										@endforeach
@@ -92,7 +92,7 @@
       										<div class="priority_entry no_entry">
       											<p>
       												&nbsp;<br/>
-      												<b>{{$subj}}</b>
+      												<b>{{strtoupper($subj)}}</b>
       											</p>
       										</div>
       										@endforeach
@@ -113,7 +113,7 @@
       										<div class="priority_entry no_entry">
       											<p>
       												&nbsp;<br/>
-      												<b>{{$subj}}</b>
+      												<b>{{strtoupper($subj)}}</b>
       											</p>
       										</div>
       										@endforeach
@@ -155,7 +155,7 @@
 										<th>First Semester</th>
 									@endif
 									<th>Units</th>
-									<th>Action</th>
+									<th>Lec / Lab</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -166,6 +166,8 @@
 										<td>{{$subj[4]}}
 											<input type="hidden" name="unit_{{$con}}" class="form-control" value="{{$subj[4]}}"/>
 											<input type="hidden" name="type_{{$con}}" class="form-control" value="{{$subj[3]}}" />
+										</td>
+										<td>{{$subj[6]}}
 											<input type="hidden" name="leclab_{{$con}}" class="form-control" value="{{$subj[6]}}" />
 										</td>
 									@else
@@ -173,12 +175,11 @@
 										<td>{{$subj[4]}}
 											<input type="hidden" name="unit_{{$con}}" class="form-control" value="{{$subj[4]}}" />
 											<input type="hidden" name="type_{{$con}}" class="form-control" value="{{$subj[3]}}" />
+										</td>
+										<td>{{$subj[6]}}
 											<input type="hidden" name="leclab_{{$con}}" class="form-control" value="{{$subj[6]}}" />
 										</td>
 									@endif
-										<td>
-											<a href='#remove' data-toggle='modal' class='anchor_color'><span class="glyphicon glyphicon-remove"></span></a>
-										</td>
 								</tr>
 								@endforeach
 								<input type="hidden" name="subject_count" class="form-control" value="{{$con}}" /> 
