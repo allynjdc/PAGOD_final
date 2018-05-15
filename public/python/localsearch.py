@@ -95,6 +95,7 @@ def initls(coursesToTake, coursesTaken, electiveList, softconstraints, campus="M
 
 	for var in variables:
 		domain[var] = sectioning.findSections(var, classOfferingList, electiveList, coursesTaken, campus)
+	print(domain.keys)
 	constraints = []
 	c = NoConflictsConstraint(variables)
 	c.name = 'No Conflicts'
@@ -125,7 +126,7 @@ def initls(coursesToTake, coursesTaken, electiveList, softconstraints, campus="M
 		if solver.solutions[0].score != float('inf'):
 			break
 	############################################
-	# display_solutions(problem, solver)
+	display_solutions(problem, solver)
 	############################################
 
 	return solver.solutions[0].solution, problem

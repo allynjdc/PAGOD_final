@@ -311,32 +311,12 @@ class StudentController extends Controller
         // COUNT ONLY THE SUM OF UNITS PER SEMS
         $sum1 = 0;
         foreach($sfinal as $row) {
-            if($row[0]==1 && $row[1]==1 && $row[5] > 0){
-                if(substr_count($row[2], 'PE1')>0 || substr_count($row[2], 'NSTP')>0){
-                    $sum1 = $sum1 + 0;
-                } else {
-                    $sum1 = $sum1 + $row[4];
-                }
-            } else if($row[0]==1 && $row[1]==2 && $row[5] > 0){
-                if(substr_count($row[2], 'PE')>0 || substr_count($row[2], 'NSTP')>0){
-                    $sum1 = $sum1 + 0;
-                } else {
-                    $sum1 = $sum1 + $row[4];
-                }
-            } else if($row[0]==2 && $row[1]==1 && $row[5] > 0){
-                if(substr_count($row[2], 'PE')>0){
-                    $sum1 = $sum1 + 0;
-                } else {
-                    $sum1 = $sum1 + $row[4];
-                }
-            } else if($row[0]==2 && $row[1]==2 && $row[5] > 0){
-                if(substr_count($row[2], 'PE')>0){
-                    $sum1 = $sum1 + 0;
-                } else {
-                    $sum1 = $sum1 + $row[4];
-                }
+            if(substr_count(strtoupper($row[3]),"PE")>0  || strpos(strtolower($row[3]),"pe")){
+                $sum1 = $sum1 + 0;
             } else {
-                $sum1 = $sum1 + $row[4];
+                if(is_numeric($row[4])){
+                    $sum1 = $sum1 + $row[4];
+                }
             }   
         }         
 
@@ -368,7 +348,7 @@ class StudentController extends Controller
             $type = strtolower(str_replace(" ", "", $sub[3]));
             if (!empty($str))
             {
-                if (strpos($type, "elective") === false){
+                if ((strpos(strtolower($type), "elective") === false) or (strpos(strtolower($type),"pe") === false) or (strpos(strtolower($type),"pe1") === false) or (substr_count(strtoupper($row[3]),"PE") < 0)){
                     $process = new Process("python python\p_validation.py $course $courses_taken $str");
                     $process->run();
         
