@@ -14,7 +14,7 @@ def variableCourses(coursesToTake):
 	pe_cnt = 1
 	for course in coursesToTake:
 		if course.courseName != "":
-			mult_sections = ["cmsc197", "stat197", "cd168", "econ198", "psych195"]
+			mult_sections = ["cmsc197", "stat197", "cd168", "econ198", "psych195", "cl195", "econ198"]
 			applied_chem = "chem181"
 			if course.courseName in mult_sections:
 				coursenamesToTake.append(course.courseName+"_"+str(elective_cnt)+"-"+course.leclab)
