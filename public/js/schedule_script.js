@@ -365,6 +365,10 @@ function hideEditModal(){
 	$("input:checkbox[name=days]").prop("checked", false);
 	$("input:radio[name=edit_priority]").prop("checked", false);
 	$("#edit_meetingtime_type option").removeAttr("selected");
+	$("#edit-max-num").val("1");
+	$("#edit-straight-num").val("1");
+	$("#edit-pref-input option").removeAttr("selected");
+	$("#edit-pref-input option:first").attr("selected", true);
 }
 
 function changeBtnName(){

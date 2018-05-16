@@ -89,13 +89,13 @@
   							<div id="addmaxstraight" class="tab-pane fade">
   								<div class="input-group btn_logged">
 									<span class="input-group-addon">Maximum No. of Straight Classes: </span>
-									<input id="add-straight-num" type="number" class="form-control" min="1" />
+									<input id="add-straight-num" type="number" class="form-control" min="1" value="1" />
 						        </div>
   							</div>
   							<div id="addmaxdaily" class="tab-pane fade">
   								<div class="input-group btn_logged">
 									<span class="input-group-addon">Maximum No. of Daily Classes: </span>
-									<input id="add-max-num" type="number" class="form-control" min="1" />
+									<input id="add-max-num" type="number" class="form-control" min="1" value="1" />
 						        </div>
   							</div>
 						</div>
@@ -198,13 +198,13 @@
   							<div id="editmaxstraight" class="tab-pane fade">
   								<div class="input-group btn_logged">
 									<span class="input-group-addon">Maximum No. of Straight Classes: </span>
-									<input id="edit-straight-num" type="number" class="form-control" min="1" />
+									<input id="edit-straight-num" type="number" class="form-control" min="1" value="1" />
 						        </div>
   							</div>
   							<div id="editmaxdaily" class="tab-pane fade">
   								<div class="input-group btn_logged">
 									<span class="input-group-addon">Maximum No. of Daily Classes: </span>
-									<input id="edit-max-num" type="number" class="form-control" min="1" />
+									<input id="edit-max-num" type="number" class="form-control" min="1" value="1" />
 						        </div>
   							</div>
 						</div>
