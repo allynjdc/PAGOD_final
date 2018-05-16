@@ -1,5 +1,6 @@
-meeting_time,no_class,musthave,mustnothave,subject,days,start,end,priority
-1,0,0,0,,"M Th","8:00 AM","4:00 PM",H
-0,0,0,1,LIT3,,,,H
-0,0,0,1,LIT2,,,,M
-0,1,0,0,,"T F","8:00 AM","10:00 AM",M
+meeting_time,no_class,musthave,mustnothave,maxstraight,maxdaily,subject,days,start,end,instructor,maxnum,priority
+1,0,0,0,0,0,,"M Th","8:00 AM","4:00 PM",,0,H
+1,0,0,0,0,0,,"T F","8:00 AM","10:00 AM",,0,H
+0,0,0,0,0,0,,,,,"SIMORA,R",0,H
+0,0,0,1,0,0,LIT2,,,,,0,M
+0,1,0,0,0,0,,"M Th",,,,0,M

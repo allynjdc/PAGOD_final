@@ -18,14 +18,23 @@ $(document).ready(function(){
     		format: 'LT',
     	});
     	$('.timepicker3').val('8:00 AM');
+    	$('.endtimepicker').val('9:00 AM');
     });
     $('#add-end-time').on('dp.change', function(e){
     	restrictTime(e, '#add-end-time', '#add-start-time')
     });
-
 	$('#edit-end-time').on('dp.change', function(e){
 		restrictTime(e, '#edit-end-time', '#edit-start-time')
 	});
+	var radio_buttons = $("input[name=add_priority]");
+	for (var i = radio_buttons.length - 1; i >= 0; i--) {
+		radio_buttons[i].onclick = function(){
+			$('#add_constraint').prop('disabled', false);
+		}
+	}
+	$("#add_meetingtime_type").on("change", chooseConstraint);
+	$("#edit_meetingtime_type").on("change", editChooseConstraint);
+	$(".edit_modal_close").on("click", hideEditModal);
 });
 
 function restrictTime(e, end_picker, pair_picker){
@@ -35,7 +44,7 @@ function restrictTime(e, end_picker, pair_picker){
 	var start_time = timeToSeconds($(pair_picker).val());
 	console.log("start_time: "+start_time);
 	console.log("end_time: "+end_time);
-	if (end_time < start_time){
+	if (end_time <= start_time){
 		$(end_picker).val($(pair_picker).val());
 	}
 }
@@ -60,6 +69,10 @@ function saveConstraints(){
 		var mustnothave = 0;
 		var no_class = 0;
 		var meeting_time = 0;
+		var instructor = "";
+		var maxdaily = 0;
+		var maxstraight = 0;
+		var maxnum = 0;
 		var subject = "";
 		var days = "";
 		var start = "";
@@ -80,7 +93,7 @@ function saveConstraints(){
 				end = $(entry).data("end_time");
 			}
 			days = $(entry).data("days").join(" ");
-		}else{
+		}else if (constraint_type == "courserestriction"){
 			if ($(entry).data("musthave") == "musthave"){
 				musthave = 1;
 				mustnothave = 0;
@@ -89,16 +102,28 @@ function saveConstraints(){
 				musthave = 0;
 			}
 			subject = $(entry).data("course");
+		}else if (constraint_type == "prefinstructor"){
+			instructor = $(entry).data("instructor");
+		}else if (constraint_type == "maxstraight"){
+			maxstraight = 1;
+			maxnum = $(entry).data("maxnum");
+		}else if (constraint_type == "maxdaily"){
+			maxdaily = 1;
+			maxnum = $(entry).data("maxnum");
 		}
 		var constraint = {
 			meeting_time: meeting_time,
 			no_class: no_class,
 			musthave: musthave,
 			mustnothave: mustnothave,
+			maxstraight: maxstraight,
+			maxdaily: maxdaily,
 			subject: subject,
 			days: days,
 			start: start,
 			end: end,
+			instructor: instructor,
+			maxnum: maxnum,
 			priority: priority,
 		}
 		constraints.push(constraint);
@@ -339,7 +364,7 @@ function hideEditModal(){
 	$("#editcourserestriction").addClass("in");
 	$("input:checkbox[name=days]").prop("checked", false);
 	$("input:radio[name=edit_priority]").prop("checked", false);
-	$("input:checkbox[name=edit-no-class-toggle]").prop("checked", false);
+	$("#edit_meetingtime_type option").removeAttr("selected");
 }
 
 function changeBtnName(){
@@ -363,6 +388,8 @@ function editModalOpen(){
 	var start_time = $(this).parent().parent().data("start_time");
 	var end_time = $(this).parent().parent().data("end_time");
 	var days = $(this).parent().parent().data("days");
+	var instructor = $(this).parent().parent().data("instructor");
+	var maxnum = $(this).parent().parent().data("maxnum");
 	$("#edit_constraint").attr("data-constraint", $(this).parent().parent().data("id"));
 	$("#edit_constraint").attr("data-prev-priority", priority);
 	if(constraint_type == "meetingtime"){
@@ -378,8 +405,35 @@ function editModalOpen(){
 		$("#edit-end-time").val(end_time);
 		var toggle_text = "No Classes from "+start_time+" to "+end_time+" on "+days.join(", ");
 		var to_edit_text = $(this).parent().parent().find('b').text();
-		if ((start_time != end_time) && (toggle_text.toLowerCase() == to_edit_text.toLowerCase())){
-			$("input:checkbox[name=edit-no-class-toggle]").prop("checked", true);
+		$("#edit_meetingtime_type option").removeAttr("selected");
+		console.log(start_time+" "+end_time);
+		if (days.length == 5){
+			if (start_time == end_time){
+				$("#edit_meetingtime_type option[value='2']").attr("selected", true);
+				$(".edit_time_div").css("display", "block");
+				$(".edit-checkbox-days").css("display", "none");
+			}else{
+				$("#edit_meetingtime_type option[value='4']").attr("selected", true);
+				$(".edit_time_div").css("display", "block");
+				$(".edit-checkbox-days").css("display", "none");
+			}
+		}
+		else{
+			if (start_time == end_time){
+				if(toggle_text.toLowerCase() == to_edit_text.toLowerCase()){
+					$("#edit_meetingtime_type option[value='3']").attr("selected", true);
+					$(".edit_time_div").css("display", "block");
+					$(".edit-checkbox-days").css("display", "block");
+				}else{
+					$("#edit_meetingtime_type option[value='1']").attr("selected", true);
+					$(".edit_time_div").css("display", "none");
+					$(".edit-checkbox-days").css("display", "block");
+				}
+			}else{
+				$("#edit_meetingtime_type option[value='5']").attr("selected", true);
+				$(".edit_time_div").css("display", "block");
+				$(".edit-checkbox-days").css("display", "block");
+			}
 		}
 		$("#editmeetingtime input:checkbox[name=days]").each(function(){
 			for (var i = days.length - 1; i >= 0; i--) {
@@ -388,7 +442,32 @@ function editModalOpen(){
 				}
 			}
 		});
-	}else{
+	}else if(constraint_type == "prefinstructor"){
+		$("#edit_tabs > li[data-tab=editcourserestriction]").removeClass("active");
+		$("#editcourserestriction").removeClass("active");
+		$("#editcourserestriction").removeClass("in");
+		$("#edit_tabs > li[data-tab=edit"+constraint_type+"]").addClass("active");
+		$("#edit"+constraint_type).addClass("active");
+		$("#edit"+constraint_type).addClass("in");
+		$("#edit-pref-input option").removeAttr("selected");
+		$("#edit-pref-input option[value='"+instructor+"']").attr("selected", true);
+	}else if(constraint_type == "maxstraight"){
+		$("#edit_tabs > li[data-tab=editcourserestriction]").removeClass("active");
+		$("#editcourserestriction").removeClass("active");
+		$("#editcourserestriction").removeClass("in");
+		$("#edit_tabs > li[data-tab=edit"+constraint_type+"]").addClass("active");
+		$("#edit"+constraint_type).addClass("active");
+		$("#edit"+constraint_type).addClass("in");
+		$("#edit-straight-num").val(maxnum);
+	}else if(constraint_type == "maxdaily"){
+		$("#edit_tabs > li[data-tab=editcourserestriction]").removeClass("active");
+		$("#editcourserestriction").removeClass("active");
+		$("#editcourserestriction").removeClass("in");
+		$("#edit_tabs > li[data-tab=edit"+constraint_type+"]").addClass("active");
+		$("#edit"+constraint_type).addClass("active");
+		$("#edit"+constraint_type).addClass("in");
+		$("#edit-max-num").val(maxnum);
+	}else if(constraint_type == "courserestriction"){
 		var constraint_btn_html = "Must Not Have";
 		if(musthave == "musthave"){
 			constraint_btn_html = "Must Have";
@@ -408,6 +487,8 @@ function editConstraint(e){
 	var start_time = "";
 	var end_time = "";
 	var course = $("#editcourserestriction > div > input:text[name=edit_course]").val();
+	var instructor = "";
+	var maxnum = 0;
 	if($("#edit_tabs > .active").attr("data-tab") == "editcourserestriction"){
 		constraint_type = "courserestriction";
 		text = "Must Not Have"
@@ -416,7 +497,7 @@ function editConstraint(e){
 			text = "Must Have";
 		}
 		text += (" "+$("#editcourserestriction > div > input:text[name=edit_course]").val());
-	}else{
+	}else if ($("#edit_tabs > .active").attr("data-tab") == "editmeetingtime"){
 		constraint_type = "meetingtime";
 		start_time = $("#edit-start-time").val();
 		end_time = $("#edit-end-time").val();
@@ -439,6 +520,21 @@ function editConstraint(e){
 				}
 			}
 		}
+	}else if ($("#edit_tabs > .active").attr("data-tab") == "editprefinstructor"){
+		constraint_type = "prefinstructor";
+		text = "Preferred instructor is ";
+		instructor = $("#edit-pref-input").val();
+		text += instructor;
+	}else if ($("#edit_tabs > .active").attr("data-tab") == "editmaxstraight"){
+		constraint_type = "maxstraight";
+		text = "Maximum Number of Straight Classes must be ";
+		maxnum = $("#edit-straight-num").val();
+		text += maxnum;
+	}else if ($("#edit_tabs > .active").attr("data-tab") == "editmaxdaily"){
+		constraint_type = "maxdaily";
+		text = "Maximum Number of Daily Classes must be ";
+		maxnum = $("#edit-max-num").val();
+		text += maxnum;
 	}
 	constraintObject = {
 		id: $("#edit_constraint").attr("data-constraint"),
@@ -448,7 +544,9 @@ function editConstraint(e){
 		start_time: start_time,
 		end_time: end_time,
 		course: course,
-		days: selected
+		instructor: instructor,
+		days: selected,
+		maxnum: maxnum
 	};
 	console.log(constraintObject);
 	var priority_value = $(".priority_options > p > label > input[name=edit_priority]:checked").val();
@@ -502,6 +600,9 @@ function addConstraint(e){
 	var musthave = "";
 	var start_time = "";
 	var end_time = "";
+	var priority_value = "#"+$("input:radio[name=add_priority]:checked").val();
+	var instructor = "";
+	var maxnum = 0;
 	if($("#add_tabs > .active").attr("data-tab") == "addcourserestriction"){
 		constraint_type = "courserestriction";
 		text = "Must Not Have"
@@ -510,20 +611,26 @@ function addConstraint(e){
 			text = "Must Have";
 		}
 		text += (" "+$("#addcourserestriction > div > input:text[name=course]").val());
-	}else{
-		constraint_type = "meetingtime"
+	}else if($("#add_tabs > .active").attr("data-tab") == "addmeetingtime"){
+		var meeting_type = $("#add_meetingtime_type").val();
+		constraint_type = "meetingtime";
 		start_time = $("#add-start-time").val();
 		end_time = $("#add-end-time").val();
 		text = "Classes must start from "+start_time+" to "+end_time;
-		if (start_time == end_time){
+		if (meeting_type == 1){
 			text = "No Classes";
-		}else if (start_time != end_time && ($('input:checkbox[name=add-no-class-toggle]:checked').length > 0)){
+			start_time = "8:00 AM";
+			end_time = "8:00 AM";
+		}else if (meeting_type == 2){
 			text = "No Classes from "+start_time+" to "+end_time;
 		}
-		var selected = [];
-		$("#addmeetingtime > div > label > input:checkbox[name=days]:checked").each(function(){
-			selected.push($(this).val());
-		});
+		var selected = ["M", "T", "W", "Th", "F"];
+		if (meeting_type == 1 || meeting_type == 3 || meeting_type == 5){
+			selected = [];
+			$("#addmeetingtime > div > label > input:checkbox[name=days]:checked").each(function(){
+				selected.push($(this).val());
+			});
+		}
 		if(selected.length){
 			text += " on ";
 			for (var i = 0; i < selected.length; i++) {
@@ -533,8 +640,22 @@ function addConstraint(e){
 				}
 			}
 		}
+	}else if($("#add_tabs > .active").attr("data-tab") == "addprefinstructor"){
+		constraint_type = "prefinstructor";
+		text = "Preferred instructor is ";
+		instructor = $("#add-pref-input").val();
+		text += instructor;
+	}else if($("#add_tabs > .active").attr("data-tab") == "addmaxstraight"){
+		constraint_type = "maxstraight";
+		text = "Maximum Number of Straight Classes must be ";
+		maxnum = $("#add-straight-num").val();
+		text += maxnum;
+	}else if($("#add_tabs > .active").attr("data-tab") == "addmaxdaily"){
+		constraint_type = "maxdaily";
+		text = "Maximum Number of Daily Classes must be ";
+		maxnum = $("#add-max-num").val();
+		text += maxnum;
 	}
-	var priority_value = "#"+$("input:radio[name=add_priority]:checked").val();
 	var constraint_num = ($(priority_value+" > .panel-body > .priority_entry").length)+1;
 	if($(priority_value+" > .panel-body > .no_entry").length){
 		constraint_num = 1;
@@ -547,7 +668,9 @@ function addConstraint(e){
 		start_time: start_time,
 		end_time: end_time,
 		course: $("#addcourserestriction > div > input:text[name=course]").val(),
-		days: selected
+		instructor: instructor,
+		days: selected,
+		maxnum: maxnum
 	};
 	var newDiv = '<div class="priority_entry" id="'+$("input:radio[name=add_priority]:checked").val()+'_'+(constraint_num)+'">'+
 					'<p>'+
@@ -568,6 +691,46 @@ function addConstraint(e){
 	addConstraintReset();
 }
 
+function chooseConstraint(){
+	var meeting_type = $("#add_meetingtime_type").val();
+	if(meeting_type == 1){
+		$(".time_div").css("display", "none");
+		$(".checkbox-days").css("display", "block");
+	}else if (meeting_type == 2){
+		$(".time_div").css("display", "block");
+		$(".checkbox-days").css("display", "none");
+	}else if (meeting_type == 3){
+		$(".time_div").css("display", "block");
+		$(".checkbox-days").css("display", "block");
+	}else if (meeting_type == 4){
+		$(".time_div").css("display", "block");
+		$(".checkbox-days").css("display", "none");
+	}else if (meeting_type == 5){
+		$(".time_div").css("display", "block");
+		$(".checkbox-days").css("display", "block");
+	}
+}
+
+function editChooseConstraint(){
+	var meeting_type = $("#edit_meetingtime_type").val();
+	if(meeting_type == 1){
+		$(".edit_time_div").css("display", "none");
+		$(".edit-checkbox-days").css("display", "block");
+	}else if (meeting_type == 2){
+		$(".edit_time_div").css("display", "block");
+		$(".edit-checkbox-days").css("display", "none");
+	}else if (meeting_type == 3){
+		$(".edit_time_div").css("display", "block");
+		$(".edit-checkbox-days").css("display", "block");
+	}else if (meeting_type == 4){
+		$(".edit_time_div").css("display", "block");
+		$(".edit-checkbox-days").css("display", "none");
+	}else if (meeting_type == 5){
+		$(".edit_time_div").css("display", "block");
+		$(".edit-checkbox-days").css("display", "block");
+	}
+}
+
 function addConstraintReset(){
 	$(".add-constraint-btn").html("Must Not Have <span class='caret'></span>");
 	$("input:radio[name=add_priority]").removeAttr("checked");
@@ -575,9 +738,20 @@ function addConstraintReset(){
 	$("#addcourserestriction > div > input:text[name=course]").val("");
 	$("#add-start-time").val("");
 	$("#add-end-time").val("");
+	$("#add-straight-num").val("1");
+	$("#add-max-num").val("1");
 	$("#add_tabs > li[data-tab=addmeetingtime]").removeClass("active");
 	$("#addmeetingtime").removeClass("active");
 	$("#addmeetingtime").removeClass("in");
+	$("#add_tabs > li[data-tab=addprefinstructor]").removeClass("active");
+	$("#addprefinstructor").removeClass("active");
+	$("#addprefinstructor").removeClass("in");
+	$("#add_tabs > li[data-tab=addmaxstraight]").removeClass("active");
+	$("#addmaxstraight").removeClass("active");
+	$("#addmaxstraight").removeClass("in");
+	$("#add_tabs > li[data-tab=addmaxdaily]").removeClass("active");
+	$("#addmaxdaily").removeClass("active");
+	$("#addmaxdaily").removeClass("in");
 	if(!$("#add_tabs > li[data-tab=addcourserestriction]").hasClass("active")){
 		$("#add_tabs > li[data-tab=addcourserestriction]").addClass("active");
 		$("#addcourserestriction").addClass("active");
@@ -587,6 +761,12 @@ function addConstraintReset(){
 	$('body').removeClass('modal-open');
 	$('.modal-backdrop').remove();
 	$('.timepicker3').val('8:00 AM');
+	$('.endtimepicker').val('9:00 AM');
+	$('#add_constraint').prop('disabled', true);
+	$("#add_meetingtime_type option").removeAttr("selected");
+	$("#add_meetingtime_type option[value=1]").attr("selected", true);
+	$(".time_div").css("display", "none");
+	$(".checkbox-days").css("display", "block");
 	saveConstraints();
 }
 

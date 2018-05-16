@@ -53,7 +53,9 @@
                                                 start_time: "{{$constraint['start_time']}}",
                                                 end_time: "{{$constraint['end_time']}}",
                                                 course: "{{$constraint['course']}}".toUpperCase(),
-                                                days: days
+                                                instructor: "{{$constraint['instructor']}}",
+                                                days: days,
+                                                maxnum: parseInt("{{$constraint['maxnum']}}")
                                             };
                                             $("#high_{{$key+1}}").data(constraintObject);
                                         </script>
@@ -87,14 +89,16 @@
                                             <script type="text/javascript">
                                                 var days = "{{$constraint['days']}}".split(" ");
                                                 var constraintObject = {
-                                                  id: "medium_{{$key+1}}",
-                                                  constraint_type: "{{$constraint["constraint_type"]}}",
-                                                  priority: "{{$constraint['priority']}}",
-                                                  musthave: "{{$constraint['musthave']}}",
-                                                  start_time: "{{$constraint['start_time']}}",
-                                                  end_time: "{{$constraint['end_time']}}",
-                                                  course: "{{$constraint['course']}}".toUpperCase(),
-                                                  days: days
+                                                    id: "medium_{{$key+1}}",
+                                                    constraint_type: "{{$constraint["constraint_type"]}}",
+                                                    priority: "{{$constraint['priority']}}",
+                                                    musthave: "{{$constraint['musthave']}}",
+                                                    start_time: "{{$constraint['start_time']}}",
+                                                    end_time: "{{$constraint['end_time']}}",
+                                                    course: "{{$constraint['course']}}".toUpperCase(),
+                                                    instructor: "{{$constraint['instructor']}}",
+                                                    days: days,
+                                                    maxnum: parseInt("{{$constraint['maxnum']}}")
                                                 };
                                                 $("#medium_{{$key+1}}").data(constraintObject);
                                             </script>
@@ -135,7 +139,9 @@
                                                     start_time: "{{$constraint['start_time']}}",
                                                     end_time: "{{$constraint['end_time']}}",
                                                     course: "{{$constraint['course']}}".toUpperCase(),
-                                                    days: days
+                                                    instructor: "{{$constraint['instructor']}}",
+                                                    days: days,
+                                                    maxnum: parseInt("{{$constraint['maxnum']}}")
                                                 };
                                                 $("#low_{{$key+1}}").data(constraintObject);
                                             </script>

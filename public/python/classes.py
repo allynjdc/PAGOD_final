@@ -266,15 +266,19 @@ def createClassOffering(classitem):
 	return classoffering
 
 class ConstraintCSV:
-	def __init__(self, meeting_time, no_class, musthave, mustnothave, subject, days, start, end, priority):
+	def __init__(self, meeting_time, no_class, musthave, mustnothave, maxstraight, maxdaily, subject, days, start, end, instructor, maxnum, priority):
 		self.meeting_time = int(meeting_time)
 		self.no_class = int(no_class)
 		self.musthave = int(musthave)
 		self.mustnothave = int(mustnothave)
+		self.maxstraight = int(maxstraight)
+		self.maxdaily = int(maxdaily)
 		self.subject = subject
 		self.days = days.upper()
 		self.start = start
 		self.end = end
+		self.instructor = instructor
+		self.maxnum = int(maxnum)
 		self.priority = priority
 
 def createConstraintsList(pathname):
@@ -289,7 +293,7 @@ def createConstraintsList(pathname):
 		for col in row:
 			attribute = col.strip().lower()
 			conattrib.append(attribute)
-		constraint = ConstraintCSV(conattrib[0], conattrib[1], conattrib[2], conattrib[3], conattrib[4], conattrib[5], conattrib[6], conattrib[7], conattrib[8])
+		constraint = ConstraintCSV(conattrib[0], conattrib[1], conattrib[2], conattrib[3], conattrib[4], conattrib[5], conattrib[6], conattrib[7], conattrib[8], conattrib[9], conattrib[10], conattrib[11], conattrib[12])
 		constraints.append(constraint)
 	ifile.close()
 	return constraints

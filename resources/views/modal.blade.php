@@ -20,8 +20,10 @@
 			    		<ul id="add_tabs" class="nav nav-tabs">
   							<li class="active" data-tab="addcourserestriction"><a data-toggle="tab" href="#addcourserestriction">Course Restriction</a></li>
   							<li data-tab="addmeetingtime"><a data-toggle="tab" href="#addmeetingtime">Meeting Time</a></li>
+  							<li data-tab="addprefinstructor"><a data-toggle="tab" href="#addprefinstructor">Preferred Instructor</a></li>
+  							<li data-tab="addmaxdaily"><a data-toggle="tab" href="#addmaxdaily">Max Daily</a></li>
+  							<li data-tab="addmaxstraight"><a data-toggle="tab" href="#addmaxstraight">Max Straight</a></li>
 						</ul>
-
 						<div class="tab-content">
   							<div id="addcourserestriction" class="tab-pane fade active in">
   								<div class="input-group bootstrap-timepicker timepicker btn_logged"><!--- input-group-btn but_color -->
@@ -36,28 +38,35 @@
 													<a class="add-constraint-item constraint-item" href="javascript:void(0)">Must Not Have</a>
 												</li>
 											</ul>	
-										</div>
-																				
+										</div>										
 									</div>
 									<input name="course" type="text" class="form-control input-small">
 						        </div>
   							</div>
-
   							<div id="addmeetingtime" class="tab-pane fade">
-  								<label class="checkbox-inline" data-toggle="tooltip" title="Toggling this checkbox will set the constraint as having no classes on chosen time instead of restricting your classes' start and end time."><input type="checkbox" name="add-no-class-toggle" value="1" />No Class Restriction</label>
-								<div class="input-group bootstrap-timepicker timepicker btn_logged">
-									<span class="input-group-addon">Start Time: </span>
-									<input id="add-start-time" type="text" class="form-control input-small timepicker3" />
-						        </div>
-
-						        <div class="input-group bootstrap-timepicker timepicker btn_logged">
-									<span class="input-group-addon">End Time: </span>
-									<input id="add-end-time" type="text" class="form-control input-small timepicker3" />
-						        </div>
-						        <div>
-						        	<small><b>NOTE: </b>Inputting the SAME VALUES for START and END TIME will mean that there should be no class on chosen days.</small>
-						        </div>
-						        <div>
+  								<div class="input-group btn_logged">
+  									<div class="input-group-btn">
+  										<button type="button" class="btn but_color">Constraint Type: </button>
+  									</div>
+  									<select class="form-control" id="add_meetingtime_type">
+  										<option value="1">No Class On Day</option>
+  										<option value="2">No Class On Time</option>
+  										<option value="3">No Class On Day & Time</option>
+  										<option value="4">Class Within Range For All Days</option>
+  										<option value="5">Class Within Range For Specific Days</option>
+  									</select>
+  								</div>
+								<div class="time_div" style="display: none">
+									<div class="input-group bootstrap-timepicker timepicker btn_logged">
+										<span class="input-group-addon">Start Time: </span>
+										<input id="add-start-time" type="text" class="form-control input-small timepicker3" />
+							        </div>
+							        <div class="input-group bootstrap-timepicker timepicker btn_logged">
+										<span class="input-group-addon">End Time: </span>
+										<input id="add-end-time" type="text" class="form-control input-small timepicker3 endtimepicker" />
+							        </div>
+								</div>
+						        <div class="checkbox-days">
 						        	<label class="checkbox-inline"><input type="checkbox" name="days" value="M" />MON</label>
 									<label class="checkbox-inline"><input type="checkbox" name="days" value="T" />TUE</label>
 									<label class="checkbox-inline"><input type="checkbox" name="days" value="W" />WED</label>
@@ -65,9 +74,33 @@
 									<label class="checkbox-inline"><input type="checkbox" name="days" value="F" />FRI</label>
 						        </div>
   							</div>
+  							<div id="addprefinstructor" class="tab-pane fade">
+  								<div class="input-group btn_logged">
+  									<div class="input-group-btn">
+  										<button type="button" class="btn but_color">Preferred Instructor: </button>
+  									</div>
+  									<select class="form-control" id="add-pref-input">
+										@foreach($instructors as $instructor)
+										<option value="{{$instructor}}">{{$instructor}}</option>
+  										@endforeach
+  									</select>
+  								</div>
+  							</div>
+  							<div id="addmaxstraight" class="tab-pane fade">
+  								<div class="input-group btn_logged">
+									<span class="input-group-addon">Maximum No. of Straight Classes: </span>
+									<input id="add-straight-num" type="number" class="form-control" min="1" />
+						        </div>
+  							</div>
+  							<div id="addmaxdaily" class="tab-pane fade">
+  								<div class="input-group btn_logged">
+									<span class="input-group-addon">Maximum No. of Daily Classes: </span>
+									<input id="add-max-num" type="number" class="form-control" min="1" />
+						        </div>
+  							</div>
 						</div>
 						<hr />
-						<button id="add_constraint" type="submit" class="btn but_color btn_logged" data-dismiss="modal">Add</button>
+						<button id="add_constraint" type="submit" class="btn but_color btn_logged" data-dismiss="modal" disabled="true">Add</button>
 			    		<button type="button" class="btn btn-default btn_logged" data-dismiss="modal">Close</button>
 			    	</form>
 			    </div>
@@ -98,7 +131,9 @@
 			    		<ul id="edit_tabs" class="nav nav-tabs">
   							<li class="active" data-tab="editcourserestriction"><a data-toggle="tab" href="#editcourserestriction">Course Restriction</a></li>
   							<li data-tab="editmeetingtime"><a data-toggle="tab" href="#editmeetingtime">Meeting Time</a></li>
-  							<!-- <li><a data-toggle="tab" href="#scheduleflow">Schedule Flow</a></li> -->
+  							<li data-tab="editprefinstructor"><a data-toggle="tab" href="#editprefinstructor">Preferred Instructor</a></li>
+  							<li data-tab="editmaxdaily"><a data-toggle="tab" href="#editmaxdaily">Max Daily</a></li>
+  							<li data-tab="editmaxstraight"><a data-toggle="tab" href="#editmaxstraight">Max Straight</a></li>
 						</ul>
 						<div class="tab-content">
   							<div id="editcourserestriction" class="tab-pane fade in active">
@@ -118,36 +153,64 @@
 						        </div>
   							</div>
   							<div id="editmeetingtime" class="tab-pane fade">
-  								<label class="checkbox-inline" data-toggle="tooltip" title="Toggling this checkbox will set the constraint as having no classes on chosen time instead of restricting your classes' start and end time."><input type="checkbox" name="edit-no-class-toggle" value="1" />No Class Restriction</label>
-								<div class="input-group bootstrap-timepicker timepicker btn_logged">
-									<span class="input-group-addon">Start Time: </span>
-									<input id="edit-start-time" type="text" class="form-control input-small timepicker3" />
-						        </div>
-
-						        <div class="input-group bootstrap-timepicker timepicker btn_logged">
-									<span class="input-group-addon">End Time: </span>
-									<input id="edit-end-time" type="text" class="form-control input-small timepicker3" />
-						        </div>
-						        <div>
-						        	<small><b>NOTE: </b>Inputting the SAME VALUES for START and END TIME will mean that there should be no class on chosen days.</small>
-						        </div>
-						        <div>
+  								<div class="input-group btn_logged">
+  									<div class="input-group-btn">
+  										<button type="button" class="btn but_color">Constraint Type: </button>
+  									</div>
+  									<select class="form-control" id="edit_meetingtime_type">
+  										<option value="1">No Class On Day</option>
+  										<option value="2">No Class On Time</option>
+  										<option value="3">No Class On Day & Time</option>
+  										<option value="4">Class Within Range For All Days</option>
+  										<option value="5">Class Within Range For Specific Days</option>
+  									</select>
+  								</div>
+								<div class="edit_time_div" style="display: none">
+									<div class="input-group bootstrap-timepicker timepicker btn_logged">
+										<span class="input-group-addon">Start Time: </span>
+										<input id="edit-start-time" type="text" class="form-control input-small timepicker3" />
+							        </div>
+							        <div class="input-group bootstrap-timepicker timepicker btn_logged">
+										<span class="input-group-addon">End Time: </span>
+										<input id="edit-end-time" type="text" class="form-control input-small timepicker3" />
+							        </div>
+								</div>
+						        <div class="edit-checkbox-days">
 	    							<label class="checkbox-inline"><input type="checkbox" name="days" value="M">MON</label>
 									<label class="checkbox-inline"><input type="checkbox" name="days" value="T">TUE</label>
 									<label class="checkbox-inline"><input type="checkbox" name="days" value="W">WED</label>
 									<label class="checkbox-inline"><input type="checkbox" name="days" value="Th">THUR</label>
 									<label class="checkbox-inline"><input type="checkbox" name="days" value="F">FRI</label>
 						        </div>
-							</div><!-- 
-							<div id="scheduleflow" class="tab-pane fade">
-								<label class="radio-inline"><input type="radio" name="priority" value="block" checked="checked">Block Schedule</label>
-								<label class="radio-inline"><input type="radio" name="priority" value="straight">Straight Schedule</label>
-								<label class="radio-inline"><input type="radio" name="priority" value="sparse">Sparse Schedule</label>
-							</div> -->
+							</div>
+							<div id="editprefinstructor" class="tab-pane fade">
+  								<div class="input-group btn_logged">
+  									<div class="input-group-btn">
+  										<button type="button" class="btn but_color">Preferred Instructor: </button>
+  									</div>
+  									<select class="form-control" id="edit-pref-input">
+										@foreach($instructors as $instructor)
+										<option value="{{$instructor}}">{{$instructor}}</option>
+  										@endforeach
+  									</select>
+  								</div>
+  							</div>
+  							<div id="editmaxstraight" class="tab-pane fade">
+  								<div class="input-group btn_logged">
+									<span class="input-group-addon">Maximum No. of Straight Classes: </span>
+									<input id="edit-straight-num" type="number" class="form-control" min="1" />
+						        </div>
+  							</div>
+  							<div id="editmaxdaily" class="tab-pane fade">
+  								<div class="input-group btn_logged">
+									<span class="input-group-addon">Maximum No. of Daily Classes: </span>
+									<input id="edit-max-num" type="number" class="form-control" min="1" />
+						        </div>
+  							</div>
 						</div>
 						<hr />
 						<button id="edit_constraint" type="submit" class="btn but_color btn_logged" data-dismiss="modal">EDIT</button>
-			    		<button type="button" class="btn btn-default btn_logged" data-dismiss="modal">Close</button>
+			    		<button type="button" class="btn btn-default btn_logged edit_modal_close" data-dismiss="modal">Close</button>
 			    	</form>
 			    </div>
 		    </div>
