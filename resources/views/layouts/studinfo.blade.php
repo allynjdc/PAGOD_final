@@ -62,6 +62,8 @@
 				</div>
 				<!-- END BUTTONS PANEL -->
 
+				@yield('studinfo1')
+
 				<!-- MODAL: electives -->
 				<div id="electives" class="modal fade" role="dialog">
 					<div class="modal-dialog modal-ge-count">

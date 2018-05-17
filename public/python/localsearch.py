@@ -39,7 +39,7 @@ def hill_climbing_config(config,reverse):
 		config.legal_neighbor_fn = strictly_increasing
 		config.selection_fn = select_max
 
-def softConstraintList(softconstraints, variables):
+def softConstraintList(softconstraints, variables, domain):
 	constraints = []
 	for const in softconstraints:
 		penalty = 15
@@ -75,6 +75,28 @@ def softConstraintList(softconstraints, variables):
 			c.name = 'Must Not Have '+const.subject.upper()
 			c.penalty = penalty
 			constraints.append(c)
+		elif const.instructor != "":
+			instructor_dict = {}
+			for key, classofferings in domain.items():
+				instructors = []
+				for classoffering in classofferings:
+					instructors.append(classoffering.instructor.strip().lower())
+				instructors = set(instructors)
+				instructor_dict[key] = list(instructors)
+			c = PreferredInstructor(instructor_dict, variables, const.instructor)
+			c.name = "Preferred instructor is "+const.instructor.upper()
+			c.penalty = penalty
+			constraints.append(c)
+		elif const.maxstraight:
+			c = MaxStraightClasses(variables, const.maxnum)
+			c.name = "Maximum Number of Straight Classes must be "+str(const.maxnum)
+			c.penalty = penalty
+			constraints.append(c)
+		elif const.maxdaily:
+			c = MaxDaily(variables, const.maxnum)
+			c.name = "Maximum Number of Daily Classes must be "+str(const.maxnum)
+			c.penalty = penalty
+			constraints.append(c)
 
 	return constraints
 
@@ -101,7 +123,7 @@ def initls(coursesToTake, coursesTaken, electiveList, softconstraints, campus="M
 	c.penalty = float('inf')
 	constraints.append(c)
 
-	constraints = constraints + softConstraintList(softconstraints, variables)
+	constraints = constraints + softConstraintList(softconstraints, variables, domain)
 	problem = Problem(variables, domain, constraints, electiveList)
 	problem.name = 'Local Search - Timetabling'
 	problem.solution_format = solution_format
@@ -158,10 +180,17 @@ if __name__ == "__main__":
 	############################################
 	# course = "bs cmsc"
 	# csvpath = "../csv/4thYrKomsai3.csv"
+<<<<<<< HEAD
 	# constraintspath = "../constraints/2.csv"
 	# preferencesPath = "../preferences/2.csv"
 	# schedulePath = "../schedule/2.csv"
 	# violated_path = "../violated_constraints/2.csv"
+=======
+	# constraintspath = "../constraints/1.csv"
+	# preferencesPath = "../preferences/1.csv"
+	# schedulePath = "../schedule/1.csv"
+	# violated_path = "../violated_constraints/1.csv"
+>>>>>>> 9c4d0c1c8d37a198cafc2bdcc8433dc7e361fa06
 	############################################
 	student = classes.Student(3, "2016-2017", 2, course, classes.createSubjectList(csvpath))
 	coursesToTake = classes.createSubjectList(preferencesPath)

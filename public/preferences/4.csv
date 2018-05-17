@@ -1,7 +1,8 @@
 year,semester,courseName,type,units,lec/lab
-4,2,PI100,service,3,lec
-4,2,CMSC198.2,core,2,lec
-4,2,elective,elective,3,lec
-4,2,elective,elective,3,lec
-4,2,elective,elective,3,lec
-4,2,elective,freeelective,3,lec
+2,2,LIT1,ge(ah),3,lec
+2,2,SOCSCI1,ge(ssp),3,lec
+2,2,PSYCH10,ge(ssp),3,lec
+2,2,MATH55,core,5,lec
+2,2,MATH114,core,3,lec
+2,2,STAT122,core,3,lec
+2,2,PE,pe,2,lec

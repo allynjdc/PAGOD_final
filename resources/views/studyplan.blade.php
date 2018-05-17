@@ -1,6 +1,6 @@
 @extends('layouts.studinfo')
 
-@section('studinfo')
+@section('studinfo') 
 <!-- Column md 8 -->
 <div class="col-md-8 col-sm-12">
 	<div class="panel panel-default">

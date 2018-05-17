@@ -29,7 +29,7 @@ def countGEMST(course):
 def countOPEN(course):
 	count = 0
 	for sub in course:
-		if sub.courseType == "pe" or sub.courseType == "nstp":
+		if sub.courseType == "pe" or sub.courseName == "pe1" or sub.courseType == "nstp":
 			count+=1
 	return count
 

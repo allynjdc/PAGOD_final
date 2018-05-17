@@ -197,7 +197,7 @@ class StudentController extends Controller
                     $elect[$celect][0] = strtoupper($val[0]);
                     $elect[$celect][1] = $val[2];
                     $celect++;
-                } else if (substr_count(strtoupper($val[1]),"PE")>0||substr_count(strtoupper($val[1]),"NSTP")>0) {
+                } else if (substr_count(strtoupper($val[1]),"PE")>0||substr_count(strtoupper($val[1]),"NSTP")>0||substr_count(strtoupper($val[1]),"PE1")>0) {
                     $open[$cpenstp][0] = strtoupper($val[0]);
                     $open[$cpenstp][1] = $val[2];
                     $cpenstp++;
@@ -321,7 +321,7 @@ class StudentController extends Controller
         }         
 
         $con = 0;
-        return view('addpreference', compact('ah','mst','ssp','core','year','sem','sfinal','sum1','con'));
+        return view('preferences', compact('ah','mst','ssp','core','year','sem','sfinal','sum1','con'));
     } 
 
     public function submitpreference(Request $request){
@@ -345,10 +345,12 @@ class StudentController extends Controller
         $invalid_subjects = array();
         foreach($subjs as $sub){
             $str = strtolower(str_replace(" ","",$sub[2]));
+            $str = strtolower(str_replace("\"","",$sub[2]));
             $type = strtolower(str_replace(" ", "", $sub[3]));
             if (!empty($str))
             {
-                if ((strpos(strtolower($type), "elective") === false) or (strpos(strtolower($type),"pe") === false) or (strpos(strtolower($type),"pe1") === false) or (substr_count(strtoupper($row[3]),"PE") < 0)){
+                //echo " | ".$type." - ".strpos(strtolower($type),"pe")." - ";
+                if((strpos(strtolower($type), "elective") === false) and (strpos(strtolower($type),"pe") === false)){
                     $process = new Process("python python\p_validation.py $course $courses_taken $str");
                     $process->run();
         
@@ -356,7 +358,7 @@ class StudentController extends Controller
                         throw new ProcessFailedException($process);
                     }
                     $output = $process->getOutput();
-                    echo $str." - ".$output.", ".strcmp($output,"FALSE");
+                    //echo $str." - ".$output;
                     if(strcmp($output,"FALSE") > 1){
                         array_push($invalid_subjects, $sub[2]);
                         $flag = 1;
@@ -391,6 +393,21 @@ class StudentController extends Controller
     {
         $preferencespath = "preferences/".Auth::user()->id.".csv";
         if (file_exists(public_path($preferencespath))){
+            $datapath = public_path("csv/data.csv");
+            $instructors = array();
+            if(file_exists($datapath)){
+                $handle = fopen($datapath, "r");
+                while($csvLine = fgetcsv($handle, ",")){
+                    $instructor = trim(utf8_encode($csvLine[11]));
+                    if($instructor != "TBA"){
+                        array_push($instructors, $instructor);
+                    }
+                }
+                fclose($handle);
+            }
+            $instructors = array_unique($instructors);
+            sort($instructors);
+
             $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
             $violated = array();
             if(file_exists($violated_path)){
@@ -420,14 +437,16 @@ class StudentController extends Controller
                         $text = "";
                         $constraint_type = "";
                         $musthave = "";
-                        $course = $csvLine[4];
-                        $days = $csvLine[5];
+                        $instructor = "";
+                        $course = $csvLine[6];
+                        $days = $csvLine[7];
                         $priority = "high";
-                        $start = $csvLine[6];
-                        $end = $csvLine[7];
-                        if ($csvLine[8] == "M"){
+                        $start = $csvLine[8];
+                        $end = $csvLine[9];
+                        $maxnum = 1;
+                        if ($csvLine[12] == "M"){
                             $priority = "medium";
-                        }else if ($csvLine[8] == "L"){
+                        }else if ($csvLine[12] == "L"){
                             $priority = "low";
                         }
                         if ($csvLine[0] || $csvLine[1]){
@@ -452,6 +471,18 @@ class StudentController extends Controller
                                 $text = "Must Not Have ";
                             }
                             $text .= strtoupper($course);
+                        }else if ($csvLine[4]) {
+                            $constraint_type = "maxstraight";
+                            $maxnum = $csvLine[11];
+                            $text = "Maximum Number of Straight Classes must be ".$maxnum;
+                        }else if ($csvLine[5]) {
+                            $constraint_type = "maxdaily";
+                            $maxnum = $csvLine[11];
+                            $text = "Maximum Number of Daily Classes must be ".$maxnum;
+                        }else if ((!empty($csvLine[10])) || ($csvLine[10] != "")){
+                            $constraint_type = "prefinstructor";
+                            $instructor = $csvLine[10];
+                            $text = "Preferred instructor is ".$instructor;
                         }
                         $not_violated = array_search(strtolower($text), $violated);
                         if (is_int($not_violated)){
@@ -464,7 +495,9 @@ class StudentController extends Controller
                             "start_time" => $start,
                             "end_time" => $end,
                             "course" => $course,
+                            "instructor" => $instructor,
                             "days" => $days,
+                            "maxnum" => $maxnum,
                             "text" => $text,
                             "not_violated" => $not_violated
                         );
@@ -522,8 +555,7 @@ class StudentController extends Controller
                 }
                 fclose($handle);
             }
-            // var_dump($constraintHigh);
-            return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed', 'schedule'));
+            return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed', 'schedule', 'instructors'));
         }
         return Redirect::to('addpreference')->with('error',"Your subject preferences have yet to be added. Please input your preferences first.");
     }
@@ -597,7 +629,7 @@ class StudentController extends Controller
     public function saveConstraints(Request $request)
     {
         $filename = "constraints/".Auth::user()->id.".csv";
-        $selected_array = array('meeting_time','no_class','musthave','mustnothave','subject','days','start','end','priority');
+        $selected_array = array('meeting_time','no_class','musthave','mustnothave','maxstraight','maxdaily','subject','days','start','end','instructor','maxnum','priority');
         $output = fopen($filename, 'w');
         fputcsv($output, $selected_array);
         if ($request->constraints != null){
@@ -608,10 +640,14 @@ class StudentController extends Controller
                     $constraint['no_class'],
                     $constraint['musthave'],
                     $constraint['mustnothave'],
+                    $constraint['maxstraight'],
+                    $constraint['maxdaily'],
                     $constraint['subject'],
                     $constraint['days'],
                     $constraint['start'],
                     $constraint['end'],
+                    $constraint['instructor'],
+                    $constraint['maxnum'],
                     $constraint['priority']);
                 array_push($array_data, $row);
             }

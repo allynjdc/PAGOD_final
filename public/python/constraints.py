@@ -29,8 +29,6 @@ class NoConflictsConstraint(Constraint):
 		else:
 			return True
 
-# class MaxStraightClasses(Constraint):
-
 
 class MustHaveConstraint(Constraint):
 	def __init__(self, variables, courseName, penalty=0):
@@ -42,7 +40,6 @@ class MustHaveConstraint(Constraint):
 	def test(self, solution):
 		values = self.get_assigned_values(solution)
 		courseNames = []
-		# print(solution)
 		for var in self.variables:
 			classoffering = solution[var]
 			courseNames.append(classoffering.courseName)
@@ -124,6 +121,65 @@ class NoClassOnDayConstraint(Constraint):
 				if not set(self.days).isdisjoint(days):
 					return False
 		return True
+
+class MaxDaily(Constraint):
+	def __init__(self, variables, numClass, penalty=0):
+		self.variables = variables
+		self.numClass = numClass
+		self.penalty = penalty or float('inf')
+		self.name = 'undefined'
+
+	def test(self, solution):
+		day_counter = {"M":0, "T":0, "W":0, "Th":0, "F":0}
+		for var in self.variables:
+			classoffering = solution[var]
+			sessions = classoffering.sessions
+			for session in sessions:
+				days = session.days.split(" ")
+				for day in days:
+					day_counter[day] += 1
+		for key,value in day_counter.items():
+			if value > self.numClass:
+				return False
+		return True
+
+class MaxStraightClasses(MaxDaily):
+	def test(self, solution):
+		day_dict = {"M":[], "T":[], "W":[], "Th":[], "F":[]}
+		for var in self.variables:
+			classoffering = solution[var]
+			sessions = classoffering.sessions
+			for session in sessions:
+				days = session.days.split(" ")
+				for day in days:
+					day_dict[day].append((session.start, session.end))
+		for key, sessions in day_dict.items():
+			sorted_sessions = sorted(sessions)
+			for index in range(0, len(sorted_sessions)-1):
+				start1, end1 = sorted_sessions[index]
+				start2, end2 = sorted_sessions[index+1]
+				if end1 == start2:
+					return False
+		return True
+
+class PreferredInstructor(Constraint):
+	def __init__(self, instructor_dict, variables, prefInstructor, penalty=0):
+		self.variables = variables
+		self.instructor_dict = instructor_dict
+		self.prefInstructor = prefInstructor
+		self.penalty = penalty or float('inf')
+		self.name = 'undefined'
+
+	def test(self, solution):
+		for var in self.variables:
+			instructors = self.instructor_dict[var]
+			if self.prefInstructor in instructors:
+				curr_instructor = solution[var].instructor
+				if curr_instructor.strip().lower() != self.prefInstructor.strip().lower():
+					return False
+		return True
+
+
 
 def timeDecimal(timeString):
 	timeString, daytime = timeString.split(" ")
