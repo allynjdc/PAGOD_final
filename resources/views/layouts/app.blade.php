@@ -51,6 +51,30 @@
                                 Home
                             </a>
                         </li>
+                        <!-- <li>
+                            <a class="but_color" href="/studyplan" data-toggle="tooltip" data-placement="bottom" title="Study Plan" >
+                                <span class="glyphicon glyphicon-education"></span>
+                                Study Plan
+                            </a>
+                        </li>
+                        <li>
+                            <a class="but_color" href="/acadprogress" data-toggle="tooltip" data-placement="bottom" title="Academic Progress" >
+                                <span class="glyphicon glyphicon-tasks"></span>
+                                Progress
+                            </a>
+                        </li>
+                        <li>
+                            <a class="but_color" href="/addpreference" data-toggle="tooltip" data-placement="bottom" title="Preferences" >
+                                <span class="glyphicon glyphicon-dashboard"></span>
+                                Preferences
+                            </a>
+                        </li>
+                        <li>
+                            <a class="but_color" href="/addwishlist" data-toggle="tooltip" data-placement="bottom" title="Add Wishlist" >
+                                <span class="glyphicon glyphicon-list"></span>
+                                Wishlist
+                            </a>
+                        </li> -->
                         <li>
                             <a class="but_color" href="{{ route('logout') }}"
                                 onclick="event.preventDefault();

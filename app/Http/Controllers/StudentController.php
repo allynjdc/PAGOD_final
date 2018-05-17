@@ -166,7 +166,7 @@ class StudentController extends Controller
         $cssp = 0;
         $cmst = 0;
         $celect = 0;
-        $cpenstp = 0;
+        $cpenstp = 1;
         $lines = explode('/', $output);
         foreach ($lines as $line) {          
             $val = explode(',', $line);
@@ -216,14 +216,14 @@ class StudentController extends Controller
         $counts = $process->getOutput();
         $values = explode(',', $counts);
 
-        $ccore = ((int)$ccore / (int)$values[0]) * 100;
-        $celect = ((int)$celect / (int)$values[1]) * 100;
-        $cah = ((int)$cah / (int)$values[2]) * 100;
-        $cmst = ((int)$cmst / (int)$values[3]) * 100;
-        $cssp = ((int)$cssp / (int)$values[4]) * 100;
-        $cpenstp = ((int)$cpenstp / (int)$values[5]) * 100;
+        $ccore1 = ((int)$ccore / (int)$values[0]) * 100;
+        $celect1 = ((int)$celect / (int)$values[1]) * 100;
+        $cah1 = ((int)$cah / (int)$values[2]) * 100;
+        $cmst1 = ((int)$cmst / (int)$values[3]) * 100;
+        $cssp1 = ((int)$cssp / (int)$values[4]) * 100;
+        $copen1 = ((int)$cpenstp / (int)$values[5]) * 100;
 
-        return view('acadprogress', compact('core','ccore','ah','cah','ssp','cssp','mst','cmst','elect','celect','open','cpenstp','values'));
+        return view('acadprogress', compact('core','ccore', 'ccore1','ah','cah','cah1','ssp','cssp','cssp1','mst','cmst','cmst1','elect','celect','celect1','open','cpenstp','copen1','values'));
     }
 
     public function preference(Request $request)

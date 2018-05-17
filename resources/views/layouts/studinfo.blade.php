@@ -3,6 +3,11 @@
 @section('content')
 	<!-- MIDDLE CONTENT  -->
 	<div class="container index_container">
+
+		<div id="app">
+	        @include('flash_message')
+	    </div>
+	    
 		<!-- ROW -->
 		<div class="row">
 			<!-- Column md 4 -->

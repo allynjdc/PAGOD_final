@@ -26,7 +26,7 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::get('/studyplan','StudentController@plan')->name('studyplan');
 	Route::get('/acadprogress','StudentController@progress')->name('acadprogress');
 	Route::get('/addwishlist','StudentController@wishlist')->name('addwishlist');
-	Route::get('/addpreference','StudentController@preference')->name('addpreference');
+	Route::get('/preference','StudentController@preference')->name('addpreference');
 	Route::get('/acquireschedule', 'StudentController@acquireSchedule')->name('acquireschedule');
 	Route::post('/generateschedule', 'StudentController@generateSchedule')->name('generateschedule');
 });

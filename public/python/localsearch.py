@@ -95,7 +95,6 @@ def initls(coursesToTake, coursesTaken, electiveList, softconstraints, campus="M
 
 	for var in variables:
 		domain[var] = sectioning.findSections(var, classOfferingList, electiveList, coursesTaken, campus)
-	print(domain.keys)
 	constraints = []
 	c = NoConflictsConstraint(variables)
 	c.name = 'No Conflicts'
@@ -126,7 +125,7 @@ def initls(coursesToTake, coursesTaken, electiveList, softconstraints, campus="M
 		if solver.solutions[0].score != float('inf'):
 			break
 	############################################
-	display_solutions(problem, solver)
+	# display_solutions(problem, solver)
 	############################################
 
 	return solver.solutions[0].solution, problem
@@ -159,10 +158,10 @@ if __name__ == "__main__":
 	############################################
 	# course = "bs cmsc"
 	# csvpath = "../csv/4thYrKomsai3.csv"
-	# constraintspath = "../constraints/4.csv"
-	# preferencesPath = "../preferences/4.csv"
-	# schedulePath = "../schedule/4.csv"
-	# violated_path = "../violated_constraints/4.csv"
+	# constraintspath = "../constraints/2.csv"
+	# preferencesPath = "../preferences/2.csv"
+	# schedulePath = "../schedule/2.csv"
+	# violated_path = "../violated_constraints/2.csv"
 	############################################
 	student = classes.Student(3, "2016-2017", 2, course, classes.createSubjectList(csvpath))
 	coursesToTake = classes.createSubjectList(preferencesPath)

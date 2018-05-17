@@ -24,7 +24,6 @@ def removeDigits(string):
 
 def findSections(courseName, classOfferingList, electiveList, coursesTaken, campus="Miagao"):
 	courseName, leclab = courseName.split("-")
-
 	if leclab == "lab":
 		return [classoffering for classoffering in classOfferingList if (courseName == classoffering.courseName and classoffering.leclab == "lab" and classoffering.campus==campus)]
 	else:
@@ -67,7 +66,7 @@ def findSections(courseName, classOfferingList, electiveList, coursesTaken, camp
 			return output
 		if len(courseName.split("_")) == 2:
 			courseName = courseName.split("_")[0]
-	return [classoffering for classoffering in classOfferingList if (courseName == classoffering.courseName and classoffering.leclab == "lec" and classoffering.campus==campus)]
+	return [classoffering for classoffering in classOfferingList if (courseName == classoffering.courseName and classoffering.leclab == leclab and classoffering.campus==campus)]
 
 
 def findDayIndices(slotList, start, end, day):

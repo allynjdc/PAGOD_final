@@ -16,12 +16,13 @@
 							<a class="anchor_color" data-toggle="collapse" href="#major">
 								Core Courses
 							</a>
-						</h4>
+						</h4> 
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$ccore}}%">
-				      			<span class="sr-only">{{$ccore}} Core Courses</span>
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$ccore1}}%">
+				      			{{$ccore}} out of {{$values[0]}}
 				    		</div>
 				  		</div>
+				  		
 					</div>
 					<div id="major" class="panel-collapse collapse">
 						<div class="panel-body">
@@ -64,8 +65,9 @@
 							</a>
 						</h4>
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$celect}}%">
-				      			<span class="sr-only">{{$celect}} Elective Courses</span>
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$celect1}}%">
+				      			<!-- <span class="sr-only">{{$celect}} Elective Courses</span> -->
+				      			{{$celect}} out of {{$values[1]}}
 				    		</div>
 				  		</div>
 					</div>
@@ -110,8 +112,9 @@
 							</a>
 						</h4>
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$cah}}%">
-				      			<span class="sr-only">{{$cah}} GE(AH)</span>
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$cah1}}%">
+				      			<!-- <span class="sr-only">{{$cah}} GE(AH)</span> -->
+				      			{{$cah}} out of {{$values[2]}}
 				    		</div>
 				  		</div>
 					</div>
@@ -156,8 +159,9 @@
 							</a>
 						</h4>
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$cmst}}%">
-				      			<span class="sr-only">{{$cmst}} Complete</span>
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$cmst1}}%">
+				      			<!-- <span class="sr-only">{{$cmst}} Complete</span> -->
+				      			{{$cmst}} out of {{$values[3]}}
 				    		</div>
 				  		</div>
 					</div>
@@ -202,8 +206,9 @@
 							</a>
 						</h4>
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$cssp}}%">
-				      			<span class="sr-only">{{$cssp}} Complete</span>
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$cssp1}}%">
+				      			<!-- <span class="sr-only">{{$cssp}} Complete</span> -->
+				      			{{$cssp}} out of {{$values[4]}}
 				    		</div>
 				  		</div>
 					</div>
@@ -248,8 +253,9 @@
 							</a>
 						</h4>
 						<div class="progress">
-				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$cpenstp}}%">
-				      			<span class="sr-only">{{$cpenstp}} Complete</span>
+				    		<div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{$copen1}}%">
+				      			<!-- <span class="sr-only">{{$cpenstp}} Complete</span> -->
+				      			{{$cpenstp}} out of {{$values[5]}}
 				    		</div>
 				  		</div>
 					</div>

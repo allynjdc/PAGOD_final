@@ -1,135 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.studinfo')
 
-@section('content')  
-<!-- MIDDLE PART -->
-	<div class="container index_container">
+@section('studinfo') 
 
-		<div id="app">
-	        @include('flash_message')
-	    </div>
-
-		<!-- Column md 4 -->
-		<div class="col-md-4 right_side">
-
-			<!-- FOR 4.0, 5.0 and INC -->
-			<div class="panel panel-default panel-shadow">
-					<div class="panel-body">
-							<div class="panel-heading">
-								<h3>
-									Important Subjects
-								</h3>
-							</div>					
-							<!-- PRIORITIES -->
-							<div class="panel-group priorities" id="accordion">
-								<!-- INC -->
-  								<div class="panel panel-default">
-    								<div class="panel-heading important">
-      									<h4 class="panel-title">
-        									<!-- <a data-toggle="collapse" data-parent="#accordion" href="#high">High Priority</a> -->
-        									<a data-toggle="collapse" href="#comply">CORE Courses<span class="badge pull-right" id="high_badge">{{sizeof($core)}}</span></a>
-     									</h4>
-    								</div>
-    								<div id="comply" class="panel-collapse collapse">
-      									<div class="panel-body">
-      										@foreach($core as $subj)
-      										<div class="priority_entry no_entry">
-      											<p>
-      												<b>{{strtoupper($subj)}}</b>
-      											</p>
-      										</div>
-      										@endforeach
-      									</div>
-    								</div>
-    							</div>
-    							
-							</div>				
-					</div>
-				</div>
-				<!-- END CHECK REMAINING GE -->
-
-			<!-- CHECK REMAINING GE -->
-			<div class="panel panel-default panel-shadow">
-					<div class="panel-body">
-							<div class="panel-heading">
-								<h3>
-									Check Remaining Available GE
-								</h3>
-							</div>					
-							<!-- PRIORITIES -->
-							<div class="panel-group priorities" id="accordion">
-								<!-- AH -->
-  								<div class="panel panel-default">
-    								<div class="panel-heading">
-      									<h4 class="panel-title">
-        									<!-- <a data-toggle="collapse" data-parent="#accordion" href="#high">High Priority</a> -->
-        									<a data-toggle="collapse" href="#GEah">AH<span class="badge pull-right" id="high_badge">{{sizeof($ah)}}</span></a>
-     									</h4>
-    								</div>
-    								<div id="GEah" class="panel-collapse collapse">
-      									<div class="panel-body">
-      										@foreach($ah as $subj)
-      										<div class="priority_entry no_entry">
-      											<p>
-      												&nbsp;<br/>
-      												<b>{{strtoupper($subj)}}</b>
-      											</p>
-      										</div>
-      										@endforeach
-      									</div>
-    								</div>
-    							</div>
-
-								<!-- Medium Priority -->
-								<div class="panel panel-default">
-    								<div class="panel-heading">
-      									<h4 class="panel-title">
-        									<a data-toggle="collapse" href="#GEmst">MST<span class="badge pull-right" id="medium_badge">{{sizeof($mst)}}</span></a>
-     									</h4>
-    								</div>
-    								<div id="GEmst" class="panel-collapse collapse">
-      									<div class="panel-body">
-      										@foreach($mst as $subj)
-      										<div class="priority_entry no_entry">
-      											<p>
-      												&nbsp;<br/>
-      												<b>{{strtoupper($subj)}}</b>
-      											</p>
-      										</div>
-      										@endforeach
-      									</div>
-      								</div>
-								</div>
-
-								<!-- Low Priority -->
-								<div class="panel panel-default">
-    								<div class="panel-heading">
-      									<h4 class="panel-title">
-        									<a data-toggle="collapse" href="#GEssp">SSP<span class="badge pull-right" id="low_badge">{{sizeof($ssp)}}</span></a>
-     									</h4>
-    								</div>
-    								<div id="GEssp" class="panel-collapse collapse">
-      									<div class="panel-body">
-      										@foreach($ssp as $subj)
-      										<div class="priority_entry no_entry">
-      											<p>
-      												&nbsp;<br/>
-      												<b>{{strtoupper($subj)}}</b>
-      											</p>
-      										</div>
-      										@endforeach
-      									</div>
-    								</div>
-								</div>
-							</div>
-  							
-					</div>
-				</div>
-				<!-- END CHECK REMAINING GE -->
-
-		</div>
-		<!-- End Column md 4 -->
-
-		<!-- Column md 8 -->
+<!-- Column md 8 -->
 		<div class="col-md-8">
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -240,4 +113,7 @@
 	    </div>
 	</div>
 	<!-- END MODAL REMOVE CONSTRAINTS -->
+	
+@endsection
+
 @endsection
