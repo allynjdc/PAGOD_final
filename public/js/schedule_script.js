@@ -514,7 +514,7 @@ function editConstraint(e){
 		text = "Classes must start from "+start_time+" to "+end_time;
 		if(start_time == end_time){
 			text = "No Classes";
-		}else if (start_time != end_time && $("#edit_meetingtime_type").val() == 3){
+		}else if (start_time != end_time && ($("#edit_meetingtime_type").val() == 3 || $("#edit_meetingtime_type").val() == 2)){
 			text = "No Classes from "+start_time+" to "+end_time;
 		}
 		var selected = [];
@@ -558,7 +558,6 @@ function editConstraint(e){
 		days: selected,
 		maxnum: maxnum
 	};
-	console.log(constraintObject);
 	var priority_value = $(".priority_options > p > label > input[name=edit_priority]:checked").val();
 	var prev_priority = $("#edit_constraint").attr("data-prev-priority");
 	var div_id = $("#edit_constraint").attr("data-constraint");
