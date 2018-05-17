@@ -400,7 +400,14 @@ class StudentController extends Controller
                 while($csvLine = fgetcsv($handle, ",")){
                     $instructor = trim(utf8_encode($csvLine[11]));
                     if($instructor != "TBA"){
-                        array_push($instructors, $instructor);
+                        if(count(explode(" / ", $instructor)) < 2){
+                            array_push($instructors, $instructor);
+                        }else{
+                            $mult_instructor = explode(" / ", $instructor);
+                            foreach ($mult_instructor as $key => $instructor) {
+                                array_push($instructors, $instructor);
+                            }
+                        }
                     }
                 }
                 fclose($handle);

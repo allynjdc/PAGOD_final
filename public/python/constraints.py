@@ -155,11 +155,14 @@ class MaxStraightClasses(MaxDaily):
 					day_dict[day].append((session.start, session.end))
 		for key, sessions in day_dict.items():
 			sorted_sessions = sorted(sessions)
+			curr_num = 0
 			for index in range(0, len(sorted_sessions)-1):
 				start1, end1 = sorted_sessions[index]
 				start2, end2 = sorted_sessions[index+1]
 				if end1 == start2:
-					return False
+					curr_num += 1
+			if curr_num > self.numClass:
+				return False
 		return True
 
 class PreferredInstructor(Constraint):
@@ -175,8 +178,13 @@ class PreferredInstructor(Constraint):
 			instructors = self.instructor_dict[var]
 			if self.prefInstructor in instructors:
 				curr_instructor = solution[var].instructor
-				if curr_instructor.strip().lower() != self.prefInstructor.strip().lower():
-					return False
+				if (len(curr_instructor.split(" / ")) < 2):
+					if curr_instructor.strip().lower() != self.prefInstructor.strip().lower():
+						return False
+				else:
+					curr_instructor = curr_instructor.strip().lower().split(" / ")
+					if self.prefInstructor.strip().lower() not in curr_instructor:
+						return False
 		return True
 
 
