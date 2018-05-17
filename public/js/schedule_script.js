@@ -268,7 +268,7 @@ function showSchedule(){
 							{
 								day: subjectDays[j],
 								periods: [
-									[subjObjList[i].start_time, subjObjList[i].end_time, (subjObjList[i].courseName+" - "+subjObjList[i].lecLab).toUpperCase()]
+									[subjObjList[i].start_time, subjObjList[i].end_time, (subjObjList[i].courseName+" - "+subjObjList[i].lecLab).toUpperCase()+"<br />Section "+subjObjList[i].section+"<br />"+subjObjList[i].instructor]
 								]
 							}
 						]);

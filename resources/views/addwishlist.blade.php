@@ -192,7 +192,7 @@
                         {
                             day: {{$day}},
                             periods: [
-                                ["{{$session["start"]}}", "{{$session["end"]}}", ("{{$subject["coursename"]}}").toUpperCase()+" - "+("{{$subject["leclab"]}}").toUpperCase()]
+                                ["{{$session["start"]}}", "{{$session["end"]}}", ("{{$subject["coursename"]}}").toUpperCase()+" - "+("{{$subject["leclab"]}}").toUpperCase()+"<br />Section "+("{{$subject["section"]}}").toUpperCase()+"<br />"+("{{$subject["instructor"]}}").toUpperCase()]
                             ]
                         }
                     ]);

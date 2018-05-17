@@ -404,6 +404,7 @@ class StudentController extends Controller
                 fclose($handle);
             }
             $instructors = array_unique($instructors);
+            sort($instructors);
 
             $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
             $violated = array();
