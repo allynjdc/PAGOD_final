@@ -30,6 +30,9 @@
             <div class="btn-group-justified btn_logged">
                 <a class="btn but_color" href="/acadprogress"> View Academic Progress </a>
             </div>
+            <div class="btn-group-justified btn_logged">
+                <a class="btn but_color" href="/classofferings"> View Class Offerings </a>
+            </div>
         </div>
     </div>
 </div>
