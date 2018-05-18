@@ -13,6 +13,15 @@ $(document).ready(function(){
 	$(document).on("click", ".edit-constraint", editModalOpen);
     $(document).on("click", ".constraint-item", changeBtnName);
     $('[data-toggle="tooltip"]').tooltip();
+    $(function(){
+		$("#add-success-modal").on('show.bs.modal', function(){
+			var myModal = $(this);
+			clearTimeout(myModal.data('hideInterval'));
+			myModal.data('hideInterval', setTimeout(function(){
+				myModal.modal('hide');
+			}, 1500));
+		});
+	});
     $(document).ready(function () {
         $('.dropdown-toggle').dropdown();
     });
@@ -769,9 +778,10 @@ function addConstraintReset(){
 		$("#addcourserestriction").addClass("active");
 		$("#addcourserestriction").addClass("in");
 	}
-	$("#addconstraint").modal('hide');
-	$('body').removeClass('modal-open');
-	$('.modal-backdrop').remove();
+	// $("#addconstraint").modal('hide');
+	// $('body').removeClass('modal-open');
+	// $('.modal-backdrop').remove();
+	$("#add-success-modal").modal('show');
 	$('.timepicker3').val('8:00 AM');
 	$('.endtimepicker').val('9:00 AM');
 	$('#add_constraint').prop('disabled', true);

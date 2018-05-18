@@ -100,7 +100,7 @@
   							</div>
 						</div>
 						<hr />
-						<button id="add_constraint" type="submit" class="btn but_color btn_logged" data-dismiss="modal" disabled="true">Add</button>
+						<button id="add_constraint" type="submit" class="btn but_color btn_logged" disabled="true">Add</button>
 			    		<button type="button" class="btn btn-default btn_logged" data-dismiss="modal">Close</button>
 			    	</form>
 			    </div>
@@ -259,9 +259,9 @@
 	<div id="error-modal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header bg-error">
+				<div class="modal-header bg-danger">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4><span class="glyphicon glyphicon-remove-circle"></span> GENERATE SCHEDULE</h4>
+					<h4><span class="glyphicon glyphicon-warning-sign"></span> GENERATE SCHEDULE</h4>
 				</div>
 				<div class="modal-body">
 					Something went wrong in creating your schedule. Please try again.
@@ -281,6 +281,21 @@
 				</div>
 				<div class="modal-body">
 					Your schedule is now generated!
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- LOADING MODAL END -->
+
+	<!-- ADD CONSTRAINT SUCCESS MODAL -->
+	<div id="add-success-modal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header bg-success">
+					<h4><span class="glyphicon glyphicon-ok-circle"></span> ADD CONSTRAINT</h4>
+				</div>
+				<div class="modal-body">
+					Successfully added a constraint!
 				</div>
 			</div>
 		</div>
