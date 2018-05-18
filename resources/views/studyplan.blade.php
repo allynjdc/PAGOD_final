@@ -18,7 +18,7 @@
 				</thead>
 				<tbody>
 				@foreach($final as $row)
-					@if($row[0] == 1 && $row[1] == 1)
+					@if($row[0] == 1 && $row[1] == 1 && is_numeric($row[3]))
 						<tr>
 							<td>{{$row[2]}}</td>
 							<td>@if(is_numeric($row[3]))
@@ -59,7 +59,7 @@
 				</thead>
 				<tbody>
 				@foreach($final as $row)
-					@if($row[0] == 1 && $row[1] == 2)
+					@if($row[0] == 1 && $row[1] == 2 && is_numeric($row[3]))
 						<tr>
 							<td>{{$row[2]}}</td>
 							<td>@if(is_numeric($row[3]))
@@ -105,7 +105,7 @@
 				</thead>
 				<tbody>
 				@foreach($final as $row)
-					@if($row[0] == 2 && $row[1] == 1)
+					@if($row[0] == 2 && $row[1] == 1 && is_numeric($row[3]))
 						<tr>
 							<td>{{$row[2]}}</td>
 							<td>@if(is_numeric($row[3]))
@@ -146,7 +146,7 @@
 				</thead>
 				<tbody>
 				@foreach($final as $row)
-					@if($row[0] == 2 && $row[1] == 2)
+					@if($row[0] == 2 && $row[1] == 2 && is_numeric($row[3]))
 						<tr>
 							<td>{{$row[2]}}</td>
 							<td>@if(is_numeric($row[3]))
@@ -192,7 +192,7 @@
 				</thead>
 				<tbody>
 				@foreach($final as $row)
-					@if($row[0] == 3 && $row[1] == 1)
+					@if($row[0] == 3 && $row[1] == 1 && is_numeric($row[3]))
 						<tr>
 							<td>{{$row[2]}}</td>
 							<td>@if(is_numeric($row[3]))
@@ -232,7 +232,7 @@
 				</thead>
 				<tbody>
 				@foreach($final as $row)
-					@if($row[0] == 3 && $row[1] == 2)
+					@if($row[0] == 3 && $row[1] == 2 && is_numeric($row[3]))
 						<tr>
 							<td>{{$row[2]}}</td>
 							<td>@if(is_numeric($row[3]))
@@ -274,18 +274,20 @@
 				</thead>
 				@foreach($mid as $row)
 						<tr>
-							<td>{{$row[0]}}</td>
-							<td>
-								@if(is_numeric($row[1]))
-									{{$row[1]}} units
+							@if(is_numeric($row[1]))
+								<td>{{$row[0]}}</td>
+								<td>
+									@if(is_numeric($row[1]))
+										{{$row[1]}} units
+									@else
+										<span class="glyphicon glyphicon-minus"></span>
+									@endif
+								</td>
+								@if($row[2] > 0)
+								<td><span class="glyphicon glyphicon-ok"></span></td>
 								@else
-									<span class="glyphicon glyphicon-minus"></span>
+								<td><span class="glyphicon glyphicon-remove"></span></td>
 								@endif
-							</td>
-							@if($row[2] > 0)
-							<td><span class="glyphicon glyphicon-ok"></span></td>
-							@else
-							<td><span class="glyphicon glyphicon-remove"></span></td>
 							@endif
 						</tr>
 				@endforeach
@@ -319,7 +321,7 @@
 				</thead>
 				<tbody>
 				@foreach($final as $row)
-					@if($row[0] == 4 && $row[1] == 1)
+					@if($row[0] == 4 && $row[1] == 1 && is_numeric($row[3]))
 						<tr>
 							<td>{{$row[2]}}</td>
 							<td>@if(is_numeric($row[3]))
@@ -360,7 +362,7 @@
 				</thead>
 				<tbody>
 				@foreach($final as $row)
-					@if($row[0] == 4 && $row[1] == 2)
+					@if($row[0] == 4 && $row[1] == 2 && is_numeric($row[3]))
 						<tr>
 							<td>{{$row[2]}}</td>
 							<td>@if(is_numeric($row[3]))
@@ -407,7 +409,7 @@
 				</thead>
 				<tbody>
 				@foreach($final as $row)
-					@if($row[0] == 5 && $row[1] == 1)
+					@if($row[0] == 5 && $row[1] == 1 && is_numeric($row[3]))
 						<tr>
 							<td>{{$row[2]}}</td>
 							<td>@if(is_numeric($row[3]))
@@ -448,7 +450,7 @@
 				</thead>
 				<tbody>
 				@foreach($final as $row)
-					@if($row[0] == 5 && $row[1] == 2)
+					@if($row[0] == 5 && $row[1] == 2 && is_numeric($row[3]))
 						<tr>
 							<td>{{$row[2]}}</td>
 							<td>@if(is_numeric($row[3]))

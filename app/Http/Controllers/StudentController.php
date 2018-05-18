@@ -694,4 +694,9 @@ class StudentController extends Controller
 
         return Redirect::to('home')->with('success','Preferences created successfully!');
     }
+
+    public function offeredSchedules(){
+
+        return view('classoffering');
+    }
 }

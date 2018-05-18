@@ -29,4 +29,5 @@ Route::group(['middleware' => ['auth']], function(){
 	Route::get('/addpreference','StudentController@preference')->name('addpreference');
 	Route::get('/acquireschedule', 'StudentController@acquireSchedule')->name('acquireschedule');
 	Route::post('/generateschedule', 'StudentController@generateSchedule')->name('generateschedule');
+	Route::get('/classofferings', 'StudentController@offeredSchedules')->name('classofferings');
 });
