@@ -180,17 +180,10 @@ if __name__ == "__main__":
 	############################################
 	# course = "bs cmsc"
 	# csvpath = "../csv/4thYrKomsai3.csv"
-<<<<<<< HEAD
-	# constraintspath = "../constraints/2.csv"
-	# preferencesPath = "../preferences/2.csv"
-	# schedulePath = "../schedule/2.csv"
-	# violated_path = "../violated_constraints/2.csv"
-=======
 	# constraintspath = "../constraints/1.csv"
 	# preferencesPath = "../preferences/1.csv"
 	# schedulePath = "../schedule/1.csv"
 	# violated_path = "../violated_constraints/1.csv"
->>>>>>> 9c4d0c1c8d37a198cafc2bdcc8433dc7e361fa06
 	############################################
 	student = classes.Student(3, "2016-2017", 2, course, classes.createSubjectList(csvpath))
 	coursesToTake = classes.createSubjectList(preferencesPath)

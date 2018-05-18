@@ -1,2 +1,3 @@
 meeting_time,no_class,musthave,mustnothave,maxstraight,maxdaily,subject,days,start,end,instructor,maxnum,priority
-,,,,,,,,,,,,
+0,1,0,0,0,0,,"M W Th","8:00 AM","9:00 AM",,0,H
+0,0,0,1,0,0,PSYCH101,,,,,0,M
