@@ -8,6 +8,10 @@
     	background-position: bottom;*/
 	}
 
+	.bigModal{
+		width:720px;
+	}
+	
 	.but_color, .but_color:hover, .but_color:active, .but_color:visited, .but_color:link {
 		background-color: #7a0202;
 		color: white;

@@ -1,7 +1,7 @@
 	<!--- MODAL ADD CONSTRAINTS -->
 	<div id="addconstraint" class="modal fade" role="dialog" >
 		<div class="modal-dialog"> 
-		  	<div class="modal-content ">
+		  	<div class="modal-content bigModal">
 		  		<div class="modal-header">
 		  			<button type="button" class="close" data-dismiss="modal">&times;</button>
 		  			<h4>NEW CONSTRAINT</h4>
@@ -51,7 +51,7 @@
   									<select class="form-control" id="add_meetingtime_type">
   										<option value="1">No Class On Day</option>
   										<option value="2">No Class On Time</option>
-  										<option value="3">No Class On Day & Time</option>
+  										<option value="3">No Class On Day &amp; Time</option>
   										<option value="4">Class Within Range For All Days</option>
   										<option value="5">Class Within Range For Specific Days</option>
   									</select>
@@ -112,7 +112,7 @@
 	<!-- MODAL EDIT CONSTRAINTS -->
 	<div id="editconstraint" class="modal fade" role="dialog" >
 		<div class="modal-dialog">
-		  	<div class="modal-content ">
+		  	<div class="modal-content bigModal">
 		  		<div class="modal-header">
 		  			<button type="button" class="close" data-dismiss="modal">&times;</button>
 		  			<h4>EDIT CONSTRAINT</h4>
