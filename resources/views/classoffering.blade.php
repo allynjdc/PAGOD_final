@@ -1,11 +1,11 @@
 @extends('layouts.studinfo')
 
 @section('studinfo') 
-
+ 
 <div class="col-md-8 col-sm-12">
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h4 class="table_text"><strong>FIRST YEAR</strong> <small class="pull-right">A.Y. 2014-2015</small></h4>
+			<h4 class="table_text"><strong>CLASS OFFERINGS</strong> <small class="pull-right">A.Y. {{$final[1][0]}}</small></h4>
 		</div>
 		<div class="table-responsive">
 			<table class="table table-hover">
@@ -18,12 +18,20 @@
 					</tr>
 				</thead>
 				<tbody>
+					@foreach($final as $col)
 					<tr>
-						<td> </td>
-						<td> </td>
-						<td> </td>
-						<td> </td>
+						<td>{{strtoupper($col[2])}} - {{$col[3]}}</td>
+						<td>{{$col[4]}}</td>
+						<td>{{$col[6]}}<br>{{$col[5]}}</td>
+						<td>{{$col[7]}}</td>
 					</tr>
+					@endforeach
+					<!-- <tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr> -->
 				</tbody>
 				<tfoot>
 					<tr class="bg-success">

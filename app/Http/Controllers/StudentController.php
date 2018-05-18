@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 namespace App\Http\Controllers;
 
@@ -319,6 +319,30 @@ class StudentController extends Controller
                 }
             }   
         }         
+
+        // //IF PREFERENCES CSV FILE EXISTS
+        // $preferencespath = "preferences/".Auth::user()->id.".csv";
+        // if (file_exists(public_path($preferencespath))){
+
+        //     $handle = fopen($preferencespath, "r");
+        //     while($csvLine = fgetcsv($handle, ",")){
+        //         $instructor = trim(utf8_encode($csvLine[11]));
+        //         if($instructor != "TBA"){
+        //             if(count(explode(" / ", $instructor)) < 2){
+        //                 array_push($instructors, $instructor);
+        //             }else{
+        //                 $mult_instructor = explode(" / ", $instructor);
+        //                 foreach ($mult_instructor as $key => $instructor) {
+        //                     array_push($instructors, $instructor);
+        //                 }
+        //             }
+        //         }
+                
+        //     }
+        //     fclose($handle);
+
+        // }
+
 
         $con = 0;
         return view('preferences', compact('ah','mst','ssp','core','year','sem','sfinal','sum1','con'));
@@ -697,6 +721,41 @@ class StudentController extends Controller
 
     public function offeredSchedules(){
 
-        return view('classoffering');
+        $preferencespath = "preferences/".Auth::user()->id.".csv";
+        if (file_exists(public_path($preferencespath))){
+
+            $cor = Auth::user()->id;
+            $course = "\"$cor\"";
+            $process = new Process("python python\class_offerings.py $course");
+            $process->run();
+
+            if(!$process->isSuccessful()){
+                throw new ProcessFailedException($process);
+            }
+
+            // SEPARATING THE SINGLE STRING RESULT FROM PYTHON ACCODING TO COURSETYPES
+            $output = $process->getOutput();
+            //echo $output;
+            $i  = 0;
+            $offerings = explode('/', $output);
+            foreach ($offerings as $set) {
+                $data = explode('|', $set);
+                for($j = 0; $j < sizeof($data)-1 ; $j++){
+                    $final[$i][$j] = $data[$j];
+                    // $final[$i][1] = $data[1];
+                    // $final[$i][2] = $data[2];
+                    // $final[$i][3] = $data[3];
+                    // $final[$i][4] = $data[4];
+                    // $final[$i][5] = $data[5];
+                    // $final[$i][6] = $data[6];
+                    // $final[$i][7] = $data[7];
+                }
+                $i = $i+1;
+            }
+
+            return view('classoffering',compact('final'));
+        }
+
+        return Redirect::to('addpreference')->with('error',"Your subject preferences have yet to be added. Please input your preferences first.");
     }
 }
