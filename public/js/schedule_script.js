@@ -13,6 +13,9 @@ $(document).ready(function(){
 	$(document).on("click", ".edit-constraint", editModalOpen);
     $(document).on("click", ".constraint-item", changeBtnName);
     $('[data-toggle="tooltip"]').tooltip();
+    $(document).ready(function () {
+        $('.dropdown-toggle').dropdown();
+    });
     $(function(){
     	$('.timepicker3').datetimepicker({
     		format: 'LT',
