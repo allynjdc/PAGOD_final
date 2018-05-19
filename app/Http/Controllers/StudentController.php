@@ -320,32 +320,23 @@ class StudentController extends Controller
             }   
         }         
 
-        // //IF PREFERENCES CSV FILE EXISTS
-        // $preferencespath = "preferences/".Auth::user()->id.".csv";
-        // if (file_exists(public_path($preferencespath))){
+        //IF PREFERENCES CSV FILE EXISTS
+        $preferences = array();
+        $preferencespath = "preferences/".Auth::user()->id.".csv";
+        if (file_exists(public_path($preferencespath))){
 
-        //     $handle = fopen($preferencespath, "r");
-        //     while($csvLine = fgetcsv($handle, ",")){
-        //         $instructor = trim(utf8_encode($csvLine[11]));
-        //         if($instructor != "TBA"){
-        //             if(count(explode(" / ", $instructor)) < 2){
-        //                 array_push($instructors, $instructor);
-        //             }else{
-        //                 $mult_instructor = explode(" / ", $instructor);
-        //                 foreach ($mult_instructor as $key => $instructor) {
-        //                     array_push($instructors, $instructor);
-        //                 }
-        //             }
-        //         }
-                
-        //     }
-        //     fclose($handle);
-
-        // }
-
+            $handle = fopen($preferencespath, "r");
+            while($csvLine = fgetcsv($handle, ",")){
+                //f(strpos(strtolower($csvLine[3]), "core") === false and (strpos(strtolower($csvLine[3]),"service") === false)){
+                    array_push($preferences, strtoupper($csvLine[2]));
+                //}
+            }
+            fclose($handle);
+        }
+        echo sizeof($preferences);
 
         $con = 0;
-        return view('preferences', compact('ah','mst','ssp','core','year','sem','sfinal','sum1','con'));
+        return view('preferences', compact('ah','mst','ssp','core','year','sem','sfinal','sum1','con','preferences'));
     } 
 
     public function submitpreference(Request $request){
@@ -355,7 +346,9 @@ class StudentController extends Controller
 
         $subjs = array();
         for($i=1;$i<=$con;$i++){
-            array_push($subjs,array($year,$sem,Input::get("subject_".(string)$i),Input::get("type_".(string)$i),Input::get("unit_".(string)$i),Input::get("leclab_".(string)$i)));
+            $subject = Input::get("subject_".(string)$i);
+            $subject = strtolower(str_replace("",'"',$subject));
+            array_push($subjs,array($year,$sem,$subject,Input::get("type_".(string)$i),Input::get("unit_".(string)$i),Input::get("leclab_".(string)$i)));
         }
  
         //
@@ -369,7 +362,7 @@ class StudentController extends Controller
         $invalid_subjects = array();
         foreach($subjs as $sub){
             $str = strtolower(str_replace(" ","",$sub[2]));
-            $str = strtolower(str_replace("\"","",$sub[2]));
+            $str = strtolower(str_replace("",'"',$sub[2]));
             $type = strtolower(str_replace(" ", "", $sub[3]));
             if (!empty($str))
             {
@@ -708,6 +701,7 @@ class StudentController extends Controller
 
         if(sizeof($Array_data) > 1) {
             foreach ($Array_data as $row){
+                $row[2] = strtolower(str_replace("",'"',$row[2]));
                 fputcsv($output, $row);
             } 
         } else {

@@ -34,11 +34,15 @@
 					</tr> -->
 				</tbody>
 				<tfoot>
-					<tr class="bg-success">
-						<td><strong>TOTAL</strong></td>
+					<tr class="bg-danger">
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<!-- <td><strong>TOTAL</strong></td>
 						<td> units</td>
 						<td><span class="glyphicon glyphicon-ok"></span></td>
-						<td><span class="glyphicon glyphicon-remove"></span></td>
+						<td><span class="glyphicon glyphicon-remove"></span></td> -->
 					</tr>
 				</tfoot>
 			</table>

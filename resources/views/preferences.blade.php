@@ -160,7 +160,13 @@
 						@foreach($sfinal as $subj)
 						<tr>
 							@if(substr_count(strtoupper($subj[2]),"PE")>0||substr_count(strtoupper($subj[2]),"GE")>0||substr_count(strtoupper($subj[2]),"ELECTIVE")>0)
-								<td><input type="text" name="subject_{{$con = $con+1}}" class="form-control" placeholder="{{$subj[2]}}" /> </td>
+								<td>
+									@if(!empty($preferences[$con]))
+									<input type="text" name="subject_{{$con = $con+1}}" class="form-control" value="{{$preferences[$con]}}" placeholder="{{$subj[2]}}" />
+									@else
+									<input type="text" name="subject_{{$con = $con+1}}" class="form-control" placeholder="{{$subj[2]}}" />
+									@endif
+								</td>
 								<td>{{$subj[4]}}
 									<input type="hidden" name="unit_{{$con}}" class="form-control" value="{{$subj[4]}}"/>
 									<input type="hidden" name="type_{{$con}}" class="form-control" value="{{$subj[3]}}" />
@@ -207,7 +213,7 @@
 					<tfoot>
 						<td><strong>TOTAL</strong></td>
 						<td>{{$sum1}} units</td>
-						<td><button class="btn but_color"> Send Preference </button></td>
+						<td><button class="btn but_color"> Save Preference </button></td>
 					</tfoot>
 				</table>
 				

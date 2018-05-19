@@ -17,7 +17,7 @@ if __name__ == '__main__':
 	classOfferingList = classes.createClassesList(path)
 	preferences = classes.createSubjectList(prefered)	
 	for prefer in preferences:
-		classOfferingList1 = [classoffering for classoffering in classOfferingList if (classoffering.courseName.lower().replace(" ","") == prefer.courseName.lower() and classoffering.semester == prefer.semester)]
+		classOfferingList1 = [classoffering for classoffering in classOfferingList if (classoffering.courseName.lower().replace(" ","") == prefer.courseName.lower().replace('"',"") and classoffering.semester == prefer.semester)]
 		for subject in classOfferingList1:
 			print(subject.year+"|")
 			print(subject.semester+"|")
