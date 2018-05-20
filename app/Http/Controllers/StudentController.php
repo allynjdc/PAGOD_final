@@ -333,11 +333,22 @@ class StudentController extends Controller
             }
             fclose($handle);
         }
-        echo sizeof($preferences);
+        // echo sizeof($preferences);
 
         $con = 0;
         return view('preferences', compact('ah','mst','ssp','core','year','sem','sfinal','sum1','con','preferences'));
     } 
+
+    public function sanitize($str){
+        $str = strtolower(str_replace(" ","",$str));
+        $str = str_replace("\"","",$str);
+        $str = str_replace("'","", $str);
+        return $str;
+    }
+
+    public function detectQuotes($str){
+        return preg_match('/"/', $str) || preg_match("/'/", $str);
+    }
 
     public function submitpreference(Request $request){
         $year = Input::get('year');
@@ -347,7 +358,7 @@ class StudentController extends Controller
         $subjs = array();
         for($i=1;$i<=$con;$i++){
             $subject = Input::get("subject_".(string)$i);
-            $subject = strtolower(str_replace("",'"',$subject));
+            // $subject = strtolower(str_replace("",'"',$subject));
             array_push($subjs,array($year,$sem,$subject,Input::get("type_".(string)$i),Input::get("unit_".(string)$i),Input::get("leclab_".(string)$i)));
         }
  
@@ -360,13 +371,23 @@ class StudentController extends Controller
         $flag = 0;
         $flag_no_input = 0;
         $invalid_subjects = array();
+        $quoted_subjects = array();
+        // $quoteDetected = 0;
         foreach($subjs as $sub){
-            $str = strtolower(str_replace(" ","",$sub[2]));
-            $str = strtolower(str_replace("",'"',$sub[2]));
+            // $quoteDetected +=  $this->detectQuotes($sub[2]);
+            // echo "$sub[2]: $quoteDetected: ";
+            $str = $this->sanitize($sub[2]);
+            // echo "$str <br/>";
             $type = strtolower(str_replace(" ", "", $sub[3]));
             if (!empty($str))
             {
                 //echo " | ".$type." - ".strpos(strtolower($type),"pe")." - ";
+                if($this->detectQuotes($sub[2])){
+                    array_push($quoted_subjects, $sub[2]);
+                    $flag = 1;
+                    continue;
+                }
+
                 if((strpos(strtolower($type), "elective") === false) and (strpos(strtolower($type),"pe") === false)){
                     $process = new Process("python python\p_validation.py $course $courses_taken $str");
                     $process->run();
@@ -381,6 +402,7 @@ class StudentController extends Controller
                         $flag = 1;
                     }
                 }else{
+                    $sub[2] = $str;
                     continue;
                 }
             }
@@ -392,13 +414,28 @@ class StudentController extends Controller
         }
         
         if($flag == 1){
-            // NOT VALIDATED
-            if ($flag_no_input && !empty($invalid_subjects)){
-                return Redirect::to('addpreference')->with('error',"INVALID INPUT SUBJECT! Problems were found at the following inputs: ".implode(", ", $invalid_subjects).". Some fields also had no input.");
-            }else if($flag_no_input && empty($invalid_subjects)){
-                return Redirect::to('addpreference')->with('error',"INVALID INPUT SUBJECT! Some fields had no input.");
+            $text = array();
+            if (!empty($invalid_subjects)){
+                $error_message = "INVALID SUBJECT ERROR! Problems were found at the following inputs: ".implode(", ", $invalid_subjects);
+                array_push($text, $error_message);
             }
-            return Redirect::to('addpreference')->with('error',"INVALID INPUT SUBJECT! Problems were found at the following subjects: ".implode(", ", $invalid_subjects));
+            if (!empty($quoted_subjects)){
+                $error_message = "QUOTED INPUT ERROR! Problems were found at the following inputs: ".implode(", ", $quoted_subjects);
+                array_push($text, $error_message);
+            }
+            if($flag_no_input){
+                $error_message = "BLANK INPUT ERROR! Some fields had no input.";
+                array_push($text, $error_message);
+            }
+            return Redirect::to('addpreference')->with('mult_error', $text);
+            // NOT VALIDATED
+            // if ($flag_no_input && !empty($invalid_subjects)){
+            //     $text = 
+            //     return Redirect::to('addpreference')->with('error',"INVALID INPUT SUBJECT! Problems were found at the following inputs: ".implode(", ", $invalid_subjects).". Some fields also had no input.");
+            // }else if($flag_no_input && empty($invalid_subjects)){
+            //     return Redirect::to('addpreference')->with('error',"INVALID INPUT SUBJECT! Some fields had no input.");
+            // }
+            // return Redirect::to('addpreference')->with('error',"INVALID INPUT SUBJECT! Problems were found at the following subjects: ".implode(", ", $invalid_subjects));
         } else {
             return $this->saveFile($subjs,"preferences");
         }

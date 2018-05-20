@@ -36,3 +36,12 @@
 	Please check the form below for errors
 </div>
 @endif
+
+@if ($message = Session::get('mult_error'))
+	<div class="alter alert-danger">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+		@foreach($message as $error_text)
+		<strong>{{ $error_text }}</strong>
+		@endforeach
+	</div>
+@endif
