@@ -576,9 +576,9 @@ function editConstraint(e){
 	$("#"+div_id).removeClass("bg-success");
 	$("#"+div_id).removeClass("bg-danger");
 	$("#"+div_id).html('<p>'+
+						'<a class="edit-constraint pull-left" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit"></span></a>'+
+						'<a class="remove-constraint pull-left" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove"></span></a>'+
 						'<b>'+text+'</b>'+
-						'<a class="remove-constraint" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>'+
-						'<a class="edit-constraint" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>'+
 					'</p>');
 	if(priority_value != prev_priority){
 		console.log(priority_value+": "+prev_priority);
@@ -695,9 +695,9 @@ function addConstraint(e){
 	};
 	var newDiv = '<div class="priority_entry" id="'+$("input:radio[name=add_priority]:checked").val()+'_'+(constraint_num)+'">'+
 					'<p>'+
+						'<a class="edit-constraint pull-left" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit"></span></a>'+
+						'<a class="remove-constraint pull-left" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove"></span></a>'+
 						'<b>'+text+'</b>'+
-						'<a class="remove-constraint" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>'+
-						'<a class="edit-constraint" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>'+
 					'</p>'+
 				'</div>';
 	if ($(priority_value+" > .panel-body > .no_entry").length){

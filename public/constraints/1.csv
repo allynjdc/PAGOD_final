@@ -1,7 +1,8 @@
 meeting_time,no_class,musthave,mustnothave,maxstraight,maxdaily,subject,days,start,end,instructor,maxnum,priority
-0,0,0,0,0,1,,,,,,2,H
+0,0,0,0,0,1,,,,,,4,H
 0,0,0,0,0,0,,,,,"POTOTANON,R",0,H
 0,0,0,0,1,0,,,,,,3,H
+0,0,1,0,0,0,LIT1,,,,,0,H
 0,1,0,0,0,0,,W,,,,0,M
 0,1,0,0,0,0,,"M T W Th F","8:00 AM","9:00 AM",,0,M
 0,1,0,0,0,0,,W,"8:00 AM","9:00 AM",,0,M

@@ -41,9 +41,9 @@
                                         @forelse($constraintHigh as $key=>$constraint)
                                         <div class="priority_entry @if($constraint["not_violated"]) bg-danger @else bg-success @endif" id="high_{{$key+1}}">
                                             <p>
+                                                <a class="edit-constraint pull-left" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>
+                                                <a class="remove-constraint pull-left" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>
                                                 <b>{{ $constraint["text"] }}</b>
-                                                <a class="remove-constraint" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>
-                                                <a class="edit-constraint" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>
                                             </p>
                                         </div>
                                         <script type="text/javascript">
@@ -84,9 +84,9 @@
       										@forelse($constraintMed as $key=>$constraint)
                                             <div class="priority_entry @if($constraint["not_violated"]) bg-danger @else bg-success @endif" id="medium_{{$key+1}}">
                                                 <p>
+                                                    <a class="edit-constraint pull-left" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit"></span></a>
+                                                    <a class="remove-constraint pull-left" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove"></span></a>
                                                     <b>{{ $constraint["text"] }}</b>
-                                                    <a class="remove-constraint" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>
-                                                    <a class="edit-constraint" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>
                                                 </p>
                                             </div>
                                             <script type="text/javascript">
@@ -127,9 +127,9 @@
       										@forelse($constraintLow as $key=>$constraint)
                                             <div class="priority_entry @if($constraint["not_violated"]) bg-danger @else bg-success @endif" id="low_{{$key+1}}">
                                                 <p>
+                                                    <a class="edit-constraint pull-left" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>
+                                                    <a class="remove-constraint pull-left" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>
                                                     <b>{{ $constraint["text"] }}</b>
-                                                    <a class="remove-constraint" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>
-                                                    <a class="edit-constraint" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>
                                                 </p>
                                             </div>
                                             <script type="text/javascript">
