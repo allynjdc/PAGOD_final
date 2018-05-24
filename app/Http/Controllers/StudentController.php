@@ -585,7 +585,8 @@ class StudentController extends Controller
                     $leclab = $csvLine[4];
                     $section = $csvLine[5];
                     $units = $csvLine[6];
-                    $instructor = $csvLine[7];
+                   // $instructor = $csvLine[7];        // DAPAT I HIDE DAW ANG NAME SNG INSTRUCTOR
+                    $instructor = "";
                     $sessions = explode("|", $csvLine[8]);
                     $array_sessions = array();
                     foreach ($sessions as $key => $session) {
