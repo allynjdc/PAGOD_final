@@ -19,19 +19,19 @@
     <div class="panel-body">
         <div class="btn-group">
             <div class="btn-group-justified btn_logged">
-                <a class="btn but_color" href="/addwishlist"> Check Schedule Generator </a>
+                <a class="btn but_color" href="/addpreference"> Subject Preferences </a>
             </div>
             <div class="btn-group-justified btn_logged">
-                <a class="btn but_color" href="/addpreference"> Edit Subject Preferences </a>
+                <a class="btn but_color" href="/classofferings"> Class Offerings </a>
             </div>
             <div class="btn-group-justified btn_logged">
-                <a class="btn but_color" href="/studyplan"> View Study Plan </a>
+                <a class="btn but_color" href="/addwishlist"> Schedule Generator </a>
             </div>
             <div class="btn-group-justified btn_logged">
-                <a class="btn but_color" href="/acadprogress"> View Academic Progress </a>
+                <a class="btn but_color" href="/studyplan"> Study Plan </a>
             </div>
             <div class="btn-group-justified btn_logged">
-                <a class="btn but_color" href="/classofferings"> View Class Offerings </a>
+                <a class="btn but_color" href="/acadprogress"> Academic Progress </a>
             </div>
         </div>
     </div>
