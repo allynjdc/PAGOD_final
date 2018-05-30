@@ -12,7 +12,7 @@
     	background-position: left top;
     	background-attachment: relative;
 	}
-
+ 
 	.header > h3 {
 		margin-left: 15%;
 		height: 100px;
@@ -72,17 +72,21 @@
 
 	.panel-profile-index-home {
 		height: 250px;
+		position: relative;
+		overflow: hidden;
 	}
-
+	.panel-profile-index-home > .panel-body{
+		display: inline-block;
+	}
 	.img-dp-index {
 		box-sizing: border-box;
 		z-index: 5;
 		margin: auto;
 		width: 100px;
-		left: -90px;
-		position: relative;
+		float: left;
 		transform: translate(0, -40%);
 		margin-bottom: -120px;
+		display: inline-block;
 	}
 
 	.img-dp-index-home {
@@ -90,8 +94,10 @@
 		z-index: 5;
 		margin: auto;
 		width: 100px;
-		left: -200px;
-		position: relative;
+		float: left;
+		/*display: inline-block;
+		position: relative;*/
+		display: inline-block;
 		transform: translate(0, -40%);
 		margin-bottom: -120px;
 	}
@@ -99,7 +105,6 @@
 	.profile-img-index {
 		height: 100px;
 		width: auto;
-
 	}
 
 	.cover-img-index{
@@ -108,9 +113,16 @@
 	}
 
 	.text-name-index {
-		margin-top: 20px;
-		left: 160px;
+		/*float: left;*/
 		position: absolute;
+		/*white-space: nowrap;
+		display: inline-block;
+		overflow: hidden;*/
+		left: 120px;
+	}
+
+	.text-name-index > h4 {
+		/*font-size: 15px;*/
 	}
 
 	.ge-counts {

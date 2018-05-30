@@ -42,7 +42,20 @@
 	}
 
 	.body {
-		margin-top: 25%;
+		margin-top: 15%;
+	}
+
+	.body-head {
+		margin-top: 5%;
+	}
+
+	.img-icon {
+		margin-top: 5%;
+		width: 120px;
+	}
+
+	.txt-title-name {
+		font-size: 60px;
 	}
 
 	.login_panel {
@@ -60,7 +73,23 @@
 	}
 
 	.body {
-		margin-top: 15%;
+		margin-top: 5%;
+	}
+
+	.body-head {
+		margin-top: 3%;
+	}
+
+	.img-icon {
+		width: 100%;
+	}
+
+	.txt-title-name {
+		font-size: 140px;
+	}
+
+	.txt-title {
+		text-align: center;
 	}
 
 }

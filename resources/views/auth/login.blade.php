@@ -18,8 +18,22 @@
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
     </head>
     <body>
-        <div id="container" class="container body">
-            <div class="row">
+        <div id="container" class="container">
+            
+            <div class="row body-head">
+                <div class="col-md-12 header-container">
+                    <div class="col-xs-4 col-md-3 col-md-offset-1">
+                        <img class="img-icon" src="{{ asset('images/pagod.ico') }}">
+                    </div>
+                    <div class="col-xs-8 col-md-6 col-md-offset-1 txt-title">
+                        <h1 class="txt-title-name">PAGOD</h1>
+                        <h3 class="hidden-xs">Pre-enlistment Adviser and Guide via Online Data</h3>
+                        <h5 class="visible-xs">Pre-enlistment Adviser and Guide via Online Data</h5>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row body">
 
                 <div id="welcome" class="col-xs-12 col-md-5 col-md-offset-1 ">
                     <p>
