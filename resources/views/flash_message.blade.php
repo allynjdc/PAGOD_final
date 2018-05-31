@@ -38,10 +38,10 @@
 @endif
 
 @if ($message = Session::get('mult_error'))
-	<div class="alter alert-danger">
+	@foreach($message as $error_text)
+	<div class="alter alert-danger alert-block">
 		<button type="button" class="close" data-dismiss="alert">×</button>
-		@foreach($message as $error_text)
 		<strong>{{ $error_text }}</strong>
-		@endforeach
 	</div>
+	@endforeach
 @endif
