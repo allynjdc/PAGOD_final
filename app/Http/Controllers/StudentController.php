@@ -414,20 +414,40 @@ class StudentController extends Controller
         }
         
         if($flag == 1){
-            $text = array();
+            $error_messages = array();
             if (!empty($invalid_subjects)){
-                $error_message = "INVALID SUBJECT ERROR! Problems were found at the following inputs: ".implode(", ", $invalid_subjects);
-                array_push($text, $error_message);
+                $error_message = array(
+                    "is_invalid" => 1,
+                    "is_quoted" => 0,
+                    "is_blank" => 0,
+                    "title" => "INVALID SUBJECT ERROR. ",
+                    "body" => "Problems were found at the following inputs:",
+                    "subjects" => $invalid_subjects
+                );
+                array_push($error_messages, $error_message);
             }
             if (!empty($quoted_subjects)){
-                $error_message = "QUOTED INPUT ERROR! Problems were found at the following inputs: ".implode(", ", $quoted_subjects);
-                array_push($text, $error_message);
+                $error_message = array(
+                    "is_invalid" => 0,
+                    "is_quoted" => 1,
+                    "is_blank" => 0,
+                    "title" => "QUOTED INPUT ERROR. ",
+                    "body" => "Problems were found at the following inputs:",
+                    "subjects" => $quoted_subjects
+                );
+                array_push($error_messages, $error_message);
             }
             if($flag_no_input){
-                $error_message = "BLANK INPUT ERROR! Some fields had no input.";
-                array_push($text, $error_message);
+                $error_message = array(
+                    "is_invalid" => 0,
+                    "is_quoted" => 0,
+                    "is_blank" => 1,
+                    "title" => "BLANK INPUT ERROR. ",
+                    "body" =>  "Some fields had no input.",
+                );
+                array_push($error_messages, $error_message);
             }
-            return Redirect::to('addpreference')->with('mult_error', $text);
+            return Redirect::to('addpreference')->with('mult_error', $error_messages);
             // NOT VALIDATED
             // if ($flag_no_input && !empty($invalid_subjects)){
             //     $text = 
@@ -724,7 +744,9 @@ class StudentController extends Controller
     public function saveFile($Array_data,$type){
         $userid = Auth::user()->id;
         $filename = $userid.".csv";
-
+        Auth::user()->update([
+            'need_restart' => 1
+        ]);
         if(substr_count($type, "preferences")>0){
             // PREFERENCES
             $selected_array = array('year','semester','courseName','type','units','lec/lab');
