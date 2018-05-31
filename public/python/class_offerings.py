@@ -29,4 +29,5 @@ if __name__ == '__main__':
 				ses.displaySession()
 			print("|")
 			print(subject.instructor+"|")
+			print(subject.leclab+"|")
 			print('/')

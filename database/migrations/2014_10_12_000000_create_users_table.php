@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('preferences');
             $table->string('constraints');
             $table->string('schedule');
+            $table->string('need_restart');
             $table->rememberToken();
             $table->timestamps();
         });
