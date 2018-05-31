@@ -585,7 +585,8 @@ class StudentController extends Controller
                     $leclab = $csvLine[4];
                     $section = $csvLine[5];
                     $units = $csvLine[6];
-                    $instructor = $csvLine[7];
+                   // $instructor = $csvLine[7];        // DAPAT I HIDE DAW ANG NAME SNG INSTRUCTOR
+                    $instructor = "";
                     $sessions = explode("|", $csvLine[8]);
                     $array_sessions = array();
                     foreach ($sessions as $key => $session) {
@@ -773,6 +774,10 @@ class StudentController extends Controller
                 $data = explode('|', $set);
                 for($j = 0; $j < sizeof($data)-1 ; $j++){
                     $final[$i][$j] = $data[$j];
+                    if($j == 8 and substr_count(strtolower($final[$i][8]),"lab")>0){
+                        $final[$i][4] = "";
+                        //echo yes;
+                    }
                     // $final[$i][1] = $data[1];
                     // $final[$i][2] = $data[2];
                     // $final[$i][3] = $data[3];
@@ -780,6 +785,7 @@ class StudentController extends Controller
                     // $final[$i][5] = $data[5];
                     // $final[$i][6] = $data[6];
                     // $final[$i][7] = $data[7];
+                    //echo $data[8];
                 }
                 $i = $i+1;
             }
@@ -787,6 +793,6 @@ class StudentController extends Controller
             return view('classoffering',compact('final'));
         }
 
-        return Redirect::to('addpreference')->with('error',"Your subject preferences have yet to be added. Please input your preferences first.");
+        #return Redirect::to('addpreference')->with('error',"Your subject preferences have yet to be added. Please input your preferences first.");
     }
 }

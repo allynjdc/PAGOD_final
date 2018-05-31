@@ -1,6 +1,7 @@
 meeting_time,no_class,musthave,mustnothave,maxstraight,maxdaily,subject,days,start,end,instructor,maxnum,priority
 0,1,0,0,0,0,,W,,,,0,H
-0,0,0,1,0,0,LIt1,,,,,0,H
+0,0,0,1,0,0,LIT1,,,,,0,H
+0,0,0,0,0,0,,,,,"AMBITA,A",0,H
 0,0,1,0,0,0,CMSC197,,,,,0,M
 0,1,0,0,0,0,,"M T W Th F","11:30 AM","1:00 PM",,0,M
 1,0,0,0,0,0,,"M T W Th F","8:00 AM","4:00 PM",,0,M

@@ -1,0 +1,49 @@
+ courseName, type
+comm1, ge(AH)
+socsci1, ge(SSP)
+hist1, ge(SSP)
+ ft11, core
+ bio10, service
+ math11, service
+ pe1, service
+cwts, nstp
+comm2, ge(AH)
+ ft15, core
+ ft14, core
+ math14, service
+ chem16, service
+basketball, pe
+cwts, nstp
+comm3, ge(AH)
+envisci10, ge(MST)
+hist2, ge(SSP)
+ ft100, core
+ chem17, service
+softball, pe
+lit1, ge(AH)
+lit2, ge(AH)
+bio1, ge(MST)
+ ft101, core
+ ft110, core
+ chem31, service
+ chem31, service
+volleyball, pe
+psych10, ge(SSP)
+ ft102, core
+ ft111, core
+ ft130, core
+ ft190, core
+ physics21, service
+ft123, elective
+ ft131, core
+ ft122, core
+ ft125, core
+ chem28, service
+ chem28, service
+ math100, service
+ ft170, core
+ ft141, core
+ ft150, core
+ ft195, core
+ pi100, service
+ft154,elective
