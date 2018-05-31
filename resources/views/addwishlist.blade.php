@@ -12,6 +12,16 @@
     @include('modal')
 	<!-- MIDDLE CONTENT -->
 	<div class="container index_container">
+
+        @if($restart == 1)
+        <div id="app">
+            <div class="alert alert-warning alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button> 
+                <strong>You recently updated your preferences, please press the generate button again to update your schedule.</strong>
+            </div>
+        </div>
+        @endif
+
 		<!-- ROW -->
 		<div class="row">
 			<!-- Column md 4 -->
