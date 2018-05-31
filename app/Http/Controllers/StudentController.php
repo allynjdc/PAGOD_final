@@ -570,7 +570,7 @@ class StudentController extends Controller
                             array_push($constraintLow, $constraint);
                         }
                     }
-                }
+                } 
                 fclose($handle);
             }
             $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
@@ -617,7 +617,11 @@ class StudentController extends Controller
                 }
                 fclose($handle);
             }
-            return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed', 'schedule', 'instructors'));
+
+            $restart = Auth::user()->need_restart;
+            return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed', 'schedule', 'instructors','restart'));
+            
+            
         }
         return Redirect::to('addpreference')->with('error',"Your subject preferences have yet to be added. Please input your preferences first.");
     }
