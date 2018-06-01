@@ -38,6 +38,32 @@
 							</div>
 							<!-- PRIORITIES -->
 							<div class="panel-group priorities" id="accordion">
+                                <!-- Preferred Subjects -->
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-target="#preferredsubjects">Preferred Subjects<span class="badge pull-right" id="preferred_badge">{{count($constraintPreferred)}}</span></a>
+                                        </h4>
+                                    </div>
+                                    <div>
+                                        <div class="panel-body">
+                                        @forelse($constraintPreferred as $key=>$constraint)
+                                        <div class="preferred_entry @if($constraint['not_violated']) bg-danger @else bg-success @endif" id="preferred_{{$key+1}}">
+                                            <p>
+                                                <b>{{$constraint['text']}}</b>
+                                            </p>
+                                        </div>
+                                        @empty
+                                        <div class="preferred_entry no_entry">
+                                            <p>
+                                                <b>No Constraints</b>
+                                            </p>
+                                        </div>
+                                        @endforelse
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End of Preferred Subjects -->
 								<!-- High Priority -->
   								<div class="panel panel-default">
     								<div class="panel-heading">

@@ -177,6 +177,7 @@ if __name__ == "__main__":
 	preferencesPath = sys.argv[4]
 	schedulePath = sys.argv[5]
 	violated_path = sys.argv[6]
+	preferred_path = sys.argv[7]
 	############################################
 	# course = "bs cmsc"
 	# csvpath = "../csv/4thYrKomsai3.csv"
@@ -184,12 +185,15 @@ if __name__ == "__main__":
 	# preferencesPath = "../preferences/1.csv"
 	# schedulePath = "../schedule/1.csv"
 	# violated_path = "../violated_constraints/1.csv"
+	# preferred_path = "../preferred subjects/1.csv"
 	############################################
 	student = classes.Student(3, "2016-2017", 2, course, classes.createSubjectList(csvpath))
 	coursesToTake = classes.createSubjectList(preferencesPath)
 	softconstraints = []
 	if Path(constraintspath).is_file():
-		softconstraints = classes.createConstraintsList(constraintspath)
+		softconstraints += classes.createConstraintsList(constraintspath)
+	if Path(preferred_path).is_file():
+		softconstraints += classes.createPreferredConstraintsList(preferred_path)
 	assignment, problem = initls(coursesToTake, student.coursesTaken, student.electiveList, softconstraints, student.campus)
 
 	constraints = problem.all_soft_violations(assignment)

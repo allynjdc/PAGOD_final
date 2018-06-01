@@ -228,13 +228,13 @@ function convertToTime(decimalTime){
 
 function showSchedule(){
 	console.log("running show schedule");
-	loadingSchedModal();
 	$.ajax({
 		method: 'GET',
 		url: "/acquireschedule",
 		processData: false,
 		contentType: false,
 		success: function(data){
+			console.log(data);
 			$("#schedule-loading").jqs("reset");
 			if (data != "NONE") {
 				var subjectArray = [];
@@ -280,7 +280,7 @@ function showSchedule(){
 							{
 								day: subjectDays[j],
 								periods: [
-									[subjObjList[i].start_time, subjObjList[i].end_time, (subjObjList[i].courseName+" - "+subjObjList[i].lecLab).toUpperCase()+"<br />Section "+subjObjList[i].section+"<br />"+subjObjList[i].instructor]
+									[subjObjList[i].start_time, subjObjList[i].end_time, (subjObjList[i].courseName+" - "+subjObjList[i].lecLab).toUpperCase()+"<br />Section "+subjObjList[i].section]
 								]
 							}
 						]);
@@ -289,6 +289,10 @@ function showSchedule(){
 				$("#success-modal").modal();
 				$('body').loadingModal('hide');
 				$('body').loadingModal('destroy');
+				for(i=0; i<10000; i++)
+			    {
+			        window.clearInterval(i);
+			    }
 			}
 		},
 		error:function(data){
@@ -317,32 +321,82 @@ function generateSchedule(e){
 		url: "/generateschedule",
 		processData: false,
 		contentType: false,
+		timeout: 0,
 		success:function(data){
-			var violated_constraints = data;
-			var constraint_entries = $(".priority_entry:not(.no_entry)");
-			$(constraint_entries).removeClass("bg-danger");
-			$(constraint_entries).removeClass("bg-success");
-			if (violated_constraints.length){
-				for (var i = constraint_entries.length - 1; i >= 0; i--) {
-					for (var j = violated_constraints.length - 1; j >= 0; j--) {
-						if (violated_constraints[j]["name"].toLowerCase() == $(constraint_entries[i]).find("b").text().toLowerCase()){
-							$(constraint_entries[i]).addClass("bg-danger");
-						}else{
-							$(constraint_entries[i]).addClass("bg-success");
-						}
-					}
-				}
-			}else{
-				$(constraint_entries).addClass("bg-success");
-			}
+			console.log(data);
+			var procShowSchedule = setInterval(showSchedule, 10000);
+			var procRetrieveViolated = setInterval(showViolated, 10000);
 			loadingSchedModal();
-			var procShowSchedule = setInterval(showSchedule(), 1000);
 		},
-		error:function(error){
-			console.log(error.responseText);
+		error:function(a,b,c){
+			console.log(a);
+			console.log(b);
+			console.log(c);
 			$('body').loadingModal('hide');
 			$('body').loadingModal('destroy');
 			$("#error-modal").modal();
+			for(i=0; i<10000; i++)
+		    {
+		        window.clearInterval(i);
+		    }
+		},
+		complete:function(){
+		},
+	});
+}
+
+function showViolated(){
+	console.log("running show violated");
+	$.ajax({
+		method: 'GET',
+		url: "/acquireviolated",
+		processData: false,
+		contentType: false,
+		success: function(data){
+			console.log(data);
+			if(data!="NONE"){
+				var violated_constraints = data;
+				var constraint_entries = $(".priority_entry:not(.no_entry)");
+				var preferred_entries = $(".preferred_entry:not(.no_entry)");
+				$(constraint_entries).removeClass("bg-danger");
+				$(constraint_entries).removeClass("bg-success");
+				if (violated_constraints.length){
+					for (var i = constraint_entries.length - 1; i >= 0; i--) {
+						for (var j = violated_constraints.length - 1; j >= 0; j--) {
+							if (violated_constraints[j].toLowerCase() == $(constraint_entries[i]).find("b").text().toLowerCase()){
+								$(constraint_entries[i]).addClass("bg-danger");
+							}else{
+								$(constraint_entries[i]).addClass("bg-success");
+							}
+						}
+					}
+					for (var i = preferred_entries.length - 1; i >= 0; i--) {
+						for (var j = violated_constraints.length - 1; j >= 0; j--){
+							if (violated_constraints[j].toLowerCase() == $(preferred_entries[i]).find("b").text().toLowerCase()){
+								$(preferred_entries[i]).addClass("bg-danger");
+							}else{
+								$(preferred_entries[i]).addClass("bg-success");
+							}
+						}
+					}
+				}else{
+					$(constraint_entries).addClass("bg-success");
+				}
+				for(i=0; i<10000; i++)
+			    {
+			        window.clearInterval(i);
+			    }
+			}
+		},
+		error: function(data){
+			console.log(data);
+			for(i=0; i<10000; i++)
+		    {
+		        window.clearInterval(i);
+		    }
+		},
+		complete:function(){
+			clearInterval(showViolated);
 		}
 	});
 }

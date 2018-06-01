@@ -206,9 +206,9 @@ def createClassesList(pathname):
 			elif col in needlower:
 				subjectAttributes.append(row[col].strip().replace(" ","").lower())
 			else:
-				splitted = row[col].split(",")
+				splitted = row[col].split(", ")
 				for index in range(1, len(splitted)):
-					splitted[index] = splitted[index].replace(" ","")
+					splitted[index] = splitted[index].strip()
 				subjectAttributes.append(splitted)
 		classofferings.append(subjectAttributes)
 	classList = []
@@ -294,6 +294,16 @@ def createConstraintsList(pathname):
 			attribute = col.strip().lower()
 			conattrib.append(attribute)
 		constraint = ConstraintCSV(conattrib[0], conattrib[1], conattrib[2], conattrib[3], conattrib[4], conattrib[5], conattrib[6], conattrib[7], conattrib[8], conattrib[9], conattrib[10], conattrib[11], conattrib[12])
+		constraints.append(constraint)
+	ifile.close()
+	return constraints
+
+def createPreferredConstraintsList(pathname):
+	ifile, reader = csvReader(pathname)
+	constraints = []
+	for row in reader:
+		subject = row[0].strip().lower()
+		constraint = ConstraintCSV(0, 0, 1, 0, 0, 0, subject, "", "", "", "", 0, "h")
 		constraints.append(constraint)
 	ifile.close()
 	return constraints

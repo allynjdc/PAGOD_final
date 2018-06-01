@@ -1,7 +1,7 @@
 year,semester,courseName,type,units,lec/lab
 4,2,pi100,service,3,lec
 4,2,cmsc198.2,core,2,lec
-4,2,cmsc124,elective,3,lec
-4,2,cmsc125,elective,3,lec
-4,2,cmsc125,elective,3,lec
-4,2,cmsc129,freeelective,3,lec
+4,2,,elective,3,lec
+4,2,,elective,3,lec
+4,2,,elective,3,lec
+4,2,,freeelective,3,lec
