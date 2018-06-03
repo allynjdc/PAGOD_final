@@ -476,14 +476,22 @@ class StudentController extends Controller
 
             $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
             $violated = array();
+            $included_constraints = array();
             if(file_exists($violated_path)){
                 $handle = fopen($violated_path, "r");
                 while($csvLine = fgetcsv($handle, ",")){
-                    array_push($violated, strtolower($csvLine[0]));
+                    $coursename = strtolower($csvLine[0]);
+                    $included = $csvLine[1];
+                    $is_violated = $csvLine[2];
+                    if ($is_violated){
+                        array_push($violated, $coursename);
+                    }
+                    if ($included){
+                        array_push($included_constraints, $coursename);
+                    }
                 }
                 fclose($handle);
             }
-
             $constraintspath = public_path("constraints/".Auth::user()->id.".csv");
             $header = true;
             $constraintHigh = array();
@@ -553,6 +561,10 @@ class StudentController extends Controller
                         if (is_int($not_violated)){
                             $not_violated = true;
                         }
+                        $included = array_search(strtolower($text), $included_constraints);
+                        if (is_int($included)){
+                            $included = true;
+                        }
                         $constraint = array(
                             "constraint_type" => $constraint_type,
                             "priority" => $priority,
@@ -564,7 +576,8 @@ class StudentController extends Controller
                             "days" => $days,
                             "maxnum" => $maxnum,
                             "text" => $text,
-                            "not_violated" => $not_violated
+                            "not_violated" => $not_violated,
+                            "included" => $included
                         );
                         if ($priority == "high"){
                             array_push($constraintHigh, $constraint);
@@ -588,9 +601,14 @@ class StudentController extends Controller
                     if (is_int($not_violated)){
                         $not_violated = true;
                     }
+                    $included = array_search(strtolower($text), $included_constraints);
+                    if (is_int($included)){
+                        $included = true;
+                    }
                     $constraint = array(
                         "text" => $text,
-                        "not_violated" => $not_violated
+                        "not_violated" => $not_violated,
+                        "included" => $included
                     );
                     array_push($constraintPreferred, $constraint);
                 }
@@ -642,6 +660,10 @@ class StudentController extends Controller
             }
 
             $restart = Auth::user()->need_restart;
+            // var_dump($constraintHigh);
+            // var_dump($constraintMed);
+            // var_dump($constraintLow);
+            // var_dump($constraintPreferred);
             return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed', 'constraintPreferred','schedule', 'instructors','restart'));
             
             
@@ -704,9 +726,6 @@ class StudentController extends Controller
         $command = escapeshellcmd($command);
         $shell = new \COM("WScript.Shell");
         $oExec = $shell->Run("cmd /C $command", 0, false);
-        // set_time_limit(300);
-        // pclose(popen("$command", "r"));
-        // return json_decode($process->getOutput(), true);
         return "run python";
     }
 
@@ -719,32 +738,46 @@ class StudentController extends Controller
             if(!$process->isSuccessful()){
                 throw new ProcessFailedException($process);
             }
-            return json_decode($process->getOutput(), true);
+            $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
+            $violated = array();
+            if(file_exists($violated_path)){
+                $handle = fopen($violated_path, "r");
+                while($csvLine = fgetcsv($handle, ",")){
+                    if($csvLine[2]){
+                        array_push($violated, strtolower($csvLine[0]));
+                    }
+                }
+                fclose($handle);
+            }
+            return array(json_decode($process->getOutput(), true), $violated);
         }
         return "NONE";
     }
 
-    public function acquireViolated(Request $request)
-    {
-        $schedulepath = "schedule/".Auth::user()->id.".csv";
-        $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
-        if(file_exists(public_path($schedulepath)) && file_exists(public_path($violated_path))){
-            $violated = array();
-            $handle = fopen($violated_path, "r");
-            while($csvLine = fgetcsv($handle, ",")){
-                array_push($violated, strtolower($csvLine[0]));
-            }
-            fclose($handle);
-            return $violated;
-        }
-        return "NONE";
-    }
+    // public function acquireViolated(Request $request)
+    // {
+    //     $schedulepath = "schedule/".Auth::user()->id.".csv";
+    //     $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
+    //     if(file_exists(public_path($schedulepath)) && file_exists(public_path($violated_path))){
+    //         $violated = array();
+    //         $handle = fopen($violated_path, "r");
+    //         while($csvLine = fgetcsv($handle, ",")){
+    //             array_push($violated, strtolower($csvLine[0]));
+    //         }
+    //         fclose($handle);
+    //         return $violated;
+    //     }
+    //     return "NONE";
+    // }
 
     public function saveConstraints(Request $request)
     {
-        $filename = "constraints/".Auth::user()->id.".csv";
+        $constraintspath = "constraints/".Auth::user()->id.".csv";
+        $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
+
+        //Saves all of the constraints that are not preferences
         $selected_array = array('meeting_time','no_class','musthave','mustnothave','maxstraight','maxdaily','subject','days','start','end','instructor','maxnum','priority');
-        $output = fopen($filename, 'w');
+        $output = fopen($constraintspath, 'w');
         fputcsv($output, $selected_array);
         if ($request->constraints != null){
             $array_data = array();
@@ -763,6 +796,23 @@ class StudentController extends Controller
                     $constraint['instructor'],
                     $constraint['maxnum'],
                     $constraint['priority']);
+                array_push($array_data, $row);
+            }
+            foreach ($array_data as $row){
+                fputcsv($output, $row);
+            }
+        }
+        fclose($output);
+
+        //Saves all of the constraint names
+        $output = fopen($violated_path, 'w');
+        if ($request->constraint_names != null){
+            $array_data = array();
+            foreach ($request->constraint_names as $key => $constraint) {
+                $row = array(
+                    $constraint['text'],
+                    $constraint['included'],
+                    $constraint['violated']);
                 array_push($array_data, $row);
             }
             foreach ($array_data as $row){

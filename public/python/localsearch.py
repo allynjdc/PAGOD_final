@@ -196,10 +196,10 @@ if __name__ == "__main__":
 		softconstraints += classes.createPreferredConstraintsList(preferred_path)
 	assignment, problem = initls(coursesToTake, student.coursesTaken, student.electiveList, softconstraints, student.campus)
 
-	constraints = problem.all_soft_violations(assignment)
-	classes.csvWriteConstraint(violated_path, constraints)
-	constraints = MyEncoder().encode(constraints)
-	print(constraints)
+	all_soft_violations = problem.all_soft_violations(assignment)
+	classes.csvWriteConstraint(violated_path, all_soft_violations)
+	all_soft_violations = MyEncoder().encode(all_soft_violations)
+	print(all_soft_violations)
 
 	assignment = MyEncoder().encode(assignment)
 	assignment = json.loads(assignment)
