@@ -13,6 +13,7 @@ def variableCourses(coursesToTake):
 	elective_cnt = 1
 	pe_cnt = 1
 	for course in coursesToTake:
+		elective_names = ["majorelective", "cmselective", "historyelective", "qualifiedelective", "polscielective", "psychelective", "socioelective", "freeelective", "econelective", "cs/mathelective", "statelective", "elective"]
 		if course.courseName != "":
 			mult_sections = ["cmsc197", "stat197", "cd168", "econ198", "psych195", "cl195", "econ198"]
 			applied_chem = "chem181"
@@ -22,10 +23,12 @@ def variableCourses(coursesToTake):
 			elif course.courseName == applied_chem:
 				coursenamesToTake.append(course.courseName+"-lec")
 				coursenamesToTake.append(course.courseName+"-lab")
+			elif course.courseType in elective_names:
+				coursenamesToTake.append(course.courseType+str(elective_cnt)+"-"+course.leclab)
+				elective_cnt += 1
 			else:
 				coursenamesToTake.append(course.courseName+"-"+course.leclab)
 		else:
-			elective_names = ["majorelective", "cmselective", "historyelective", "qualifiedelective", "polscielective", "psychelective", "socioelective", "freeelective", "econelective", "cs/mathelective", "statelective", "elective"]
 			if course.courseType == "ge(ah)":
 				coursenamesToTake.append(course.courseType+str(ge_ah_cnt)+"-"+course.leclab)
 				ge_ah_cnt += 1

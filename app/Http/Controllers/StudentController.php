@@ -731,7 +731,7 @@ class StudentController extends Controller
 
     public function acquireSchedule(Request $request)
     {
-        $schedulepath = Auth::user()->schedule;
+        $schedulepath = "\"schedule\\\\".Auth::user()->id.".csv\"";
         if (file_exists(public_path("schedule/".Auth::user()->id.".csv"))){
             $process = new Process("python python\acquire_schedule.py $schedulepath");
             $process->run();
@@ -749,6 +749,7 @@ class StudentController extends Controller
                 }
                 fclose($handle);
             }
+            // var_dump($process->getOutput());
             return array(json_decode($process->getOutput(), true), $violated);
         }
         return "NONE";
@@ -840,7 +841,7 @@ class StudentController extends Controller
             $courseName = strtolower(str_replace("",'"',$row[2]));
             if (strpos($type, "elective") !== false){
                 fputcsv($preferred_subjects_output, array($courseName));
-                $courseName = "";
+                // $courseName = "";
             }
             $row[2] = $courseName;
             fputcsv($preferences_output, $row);

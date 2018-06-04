@@ -255,6 +255,7 @@ function convertToTime(decimalTime){
 }
 
 function processSchedule(data){
+	console.log(data);
 	var subjectArray = [];
 	$.each(data, function(key, course){
 		// course = JSON.parse(course);
@@ -307,11 +308,9 @@ function processSchedule(data){
 }
 
 function processViolatedConstraints(data){
-	console.log(data);
 	var violated_constraints = data;
 	var constraint_entries = $(".priority_entry:not(.no_entry)");
 	var preferred_entries = $(".preferred_entry:not(.no_entry)");
-	console.log(preferred_entries);
 	$(constraint_entries).removeClass("bg-danger");
 	$(constraint_entries).removeClass("bg-success");
 	$(preferred_entries).removeClass("bg-danger");
@@ -337,6 +336,7 @@ function processViolatedConstraints(data){
 		}
 	}else{
 		$(constraint_entries).addClass("bg-success");
+		$(preferred_entries).addClass("bg-success");
 	}
 }
 

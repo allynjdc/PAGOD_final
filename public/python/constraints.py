@@ -144,7 +144,7 @@ class MaxDaily(Constraint):
 		self.name = 'undefined'
 
 	def test(self, solution):
-		day_counter = {"M":0, "T":0, "W":0, "Th":0, "F":0}
+		day_counter = {"M":0, "T":0, "W":0, "Th":0, "F":0, "S":0}
 		for var in self.variables:
 			classoffering = solution[var]
 			sessions = classoffering.sessions
@@ -159,7 +159,7 @@ class MaxDaily(Constraint):
 
 class MaxStraightClasses(MaxDaily):
 	def test(self, solution):
-		day_dict = {"M":[], "T":[], "W":[], "Th":[], "F":[]}
+		day_dict = {"M":[], "T":[], "W":[], "Th":[], "F":[], "S":[]}
 		for var in self.variables:
 			classoffering = solution[var]
 			sessions = classoffering.sessions

@@ -140,11 +140,9 @@ def csvWriteConstraint(pathname, constraints):
 	ifile = open(pathname, "rt", encoding="utf8", errors="ignore")
 	reader = csv.reader(ifile)
 	constraint_names = [constraint.name.lower() for constraint in constraints]
-	print(constraint_names)
 	all_constraints = []
 	for row in reader:
 		constraint_name = row[0]
-		print(constraint_name)
 		included = 1
 		violated = 1 if constraint_name.lower() in constraint_names else 0
 		all_constraints.append([constraint_name, included, violated])
