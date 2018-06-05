@@ -372,16 +372,11 @@ class StudentController extends Controller
         $flag_no_input = 0;
         $invalid_subjects = array();
         $quoted_subjects = array();
-        // $quoteDetected = 0;
         foreach($subjs as $sub){
-            // $quoteDetected +=  $this->detectQuotes($sub[2]);
-            // echo "$sub[2]: $quoteDetected: ";
             $str = $this->sanitize($sub[2]);
-            // echo "$str <br/>";
             $type = strtolower(str_replace(" ", "", $sub[3]));
             if (!empty($str))
             {
-                //echo " | ".$type." - ".strpos(strtolower($type),"pe")." - ";
                 if($this->detectQuotes($sub[2])){
                     array_push($quoted_subjects, $sub[2]);
                     $flag = 1;
@@ -396,7 +391,6 @@ class StudentController extends Controller
                         throw new ProcessFailedException($process);
                     }
                     $output = $process->getOutput();
-                    //echo $str." - ".$output;
                     if(strcmp($output,"FALSE") > 1){
                         array_push($invalid_subjects, $sub[2]);
                         $flag = 1;
@@ -414,32 +408,43 @@ class StudentController extends Controller
         }
         
         if($flag == 1){
-            $text = array();
+            $error_messages = array();
             if (!empty($invalid_subjects)){
-                $error_message = "INVALID SUBJECT ERROR! Problems were found at the following inputs: ".implode(", ", $invalid_subjects);
-                array_push($text, $error_message);
+                $error_message = array(
+                    "is_invalid" => 1,
+                    "is_quoted" => 0,
+                    "is_blank" => 0,
+                    "title" => "INVALID SUBJECT ERROR. ",
+                    "body" => "Problems were found at the following inputs:",
+                    "subjects" => $invalid_subjects
+                );
+                array_push($error_messages, $error_message);
             }
             if (!empty($quoted_subjects)){
-                $error_message = "QUOTED INPUT ERROR! Problems were found at the following inputs: ".implode(", ", $quoted_subjects);
-                array_push($text, $error_message);
+                $error_message = array(
+                    "is_invalid" => 0,
+                    "is_quoted" => 1,
+                    "is_blank" => 0,
+                    "title" => "QUOTED INPUT ERROR. ",
+                    "body" => "Problems were found at the following inputs:",
+                    "subjects" => $quoted_subjects
+                );
+                array_push($error_messages, $error_message);
             }
             if($flag_no_input){
-                $error_message = "BLANK INPUT ERROR! Some fields had no input.";
-                array_push($text, $error_message);
+                $error_message = array(
+                    "is_invalid" => 0,
+                    "is_quoted" => 0,
+                    "is_blank" => 1,
+                    "title" => "BLANK INPUT ERROR. ",
+                    "body" =>  "Some fields had no input.",
+                );
+                array_push($error_messages, $error_message);
             }
-            return Redirect::to('addpreference')->with('mult_error', $text);
-            // NOT VALIDATED
-            // if ($flag_no_input && !empty($invalid_subjects)){
-            //     $text = 
-            //     return Redirect::to('addpreference')->with('error',"INVALID INPUT SUBJECT! Problems were found at the following inputs: ".implode(", ", $invalid_subjects).". Some fields also had no input.");
-            // }else if($flag_no_input && empty($invalid_subjects)){
-            //     return Redirect::to('addpreference')->with('error',"INVALID INPUT SUBJECT! Some fields had no input.");
-            // }
-            // return Redirect::to('addpreference')->with('error',"INVALID INPUT SUBJECT! Problems were found at the following subjects: ".implode(", ", $invalid_subjects));
+            return Redirect::to('addpreference')->with('mult_error', $error_messages);
         } else {
-            return $this->saveFile($subjs,"preferences");
+            return $this->savePreferences($subjs);
         }
-        
 
     }
 
@@ -471,20 +476,27 @@ class StudentController extends Controller
 
             $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
             $violated = array();
+            $included_constraints = array();
             if(file_exists($violated_path)){
                 $handle = fopen($violated_path, "r");
                 while($csvLine = fgetcsv($handle, ",")){
-                    array_push($violated, strtolower($csvLine[0]));
+                    $coursename = strtolower($csvLine[0]);
+                    $included = $csvLine[1];
+                    $is_violated = $csvLine[2];
+                    if ($is_violated){
+                        array_push($violated, $coursename);
+                    }
+                    if ($included){
+                        array_push($included_constraints, $coursename);
+                    }
                 }
                 fclose($handle);
             }
-
             $constraintspath = public_path("constraints/".Auth::user()->id.".csv");
             $header = true;
             $constraintHigh = array();
             $constraintLow = array();
             $constraintMed = array();
-
             if(file_exists($constraintspath)){
                 $handle = fopen($constraintspath, "r");
                 $header = true;
@@ -549,6 +561,10 @@ class StudentController extends Controller
                         if (is_int($not_violated)){
                             $not_violated = true;
                         }
+                        $included = array_search(strtolower($text), $included_constraints);
+                        if (is_int($included)){
+                            $included = true;
+                        }
                         $constraint = array(
                             "constraint_type" => $constraint_type,
                             "priority" => $priority,
@@ -560,7 +576,8 @@ class StudentController extends Controller
                             "days" => $days,
                             "maxnum" => $maxnum,
                             "text" => $text,
-                            "not_violated" => $not_violated
+                            "not_violated" => $not_violated,
+                            "included" => $included
                         );
                         if ($priority == "high"){
                             array_push($constraintHigh, $constraint);
@@ -573,6 +590,30 @@ class StudentController extends Controller
                 } 
                 fclose($handle);
             }
+
+            $constraintpreferredpath = public_path("preferred subjects/".Auth::user()->id.".csv");
+            $constraintPreferred = array();
+            if(file_exists($constraintpreferredpath)){
+                $handle = fopen($constraintpreferredpath, "r");
+                while($csvLine = fgetcsv($handle, ",")){
+                    $text = "Must Have ".strtoupper($csvLine[0]);
+                    $not_violated = array_search(strtolower($text), $violated);
+                    if (is_int($not_violated)){
+                        $not_violated = true;
+                    }
+                    $included = array_search(strtolower($text), $included_constraints);
+                    if (is_int($included)){
+                        $included = true;
+                    }
+                    $constraint = array(
+                        "text" => $text,
+                        "not_violated" => $not_violated,
+                        "included" => $included
+                    );
+                    array_push($constraintPreferred, $constraint);
+                }
+            }
+
             $schedulepath = public_path("schedule/".Auth::user()->id.".csv");
             $schedule = array();
             if(file_exists($schedulepath)){
@@ -619,7 +660,11 @@ class StudentController extends Controller
             }
 
             $restart = Auth::user()->need_restart;
-            return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed', 'schedule', 'instructors','restart'));
+            // var_dump($constraintHigh);
+            // var_dump($constraintMed);
+            // var_dump($constraintLow);
+            // var_dump($constraintPreferred);
+            return view('addwishlist', compact('constraintHigh', 'constraintLow', 'constraintMed', 'constraintPreferred','schedule', 'instructors','restart'));
             
             
         }
@@ -664,39 +709,76 @@ class StudentController extends Controller
         $preferencespath =  "\"preferences\\\\".Auth::user()->id.".csv\"";
         $schedulepath = "\"schedule\\\\".Auth::user()->id.".csv\"";
         $violated_path = "\"violated_constraints\\\\".Auth::user()->id.".csv\"";
-        Auth::user()->update([
-            'schedule' => $schedulepath
-        ]);
+        $preferred_path = "\"preferred subjects\\\\".Auth::user()->id.".csv\"";
+        $user = Auth::user();
+        $user->schedule = $schedulepath;
+        $user->need_restart = 0;
+        $user->save();
         if (file_exists(public_path("schedule/".Auth::user()->id.".csv"))){
             unlink(public_path("schedule/".Auth::user()->id.".csv"));
         }
-        $process = new Process("python python\localsearch.py $course $courses_taken $constraintspath $preferencespath $schedulepath $violated_path");
-        $process->run();
-        if(!$process->isSuccessful()){
-            throw new ProcessFailedException($process);
-        }
-        return json_decode($process->getOutput(), true);
+        // $process = new Process("python python\localsearch.py $course $courses_taken $constraintspath $preferencespath $schedulepath $violated_path $preferred_path");
+        // $process->run();
+        // if(!$process->isSuccessful()){
+        //     throw new ProcessFailedException($process);
+        // }
+        $command = "start /B python.exe python\localsearch.py $course $courses_taken $constraintspath $preferencespath $schedulepath $violated_path $preferred_path 2>&1";
+        $command = escapeshellcmd($command);
+        $shell = new \COM("WScript.Shell");
+        $oExec = $shell->Run("cmd /C $command", 0, false);
+        return "run python";
     }
 
     public function acquireSchedule(Request $request)
     {
-        $schedulepath = Auth::user()->schedule;
+        $schedulepath = "\"schedule\\\\".Auth::user()->id.".csv\"";
         if (file_exists(public_path("schedule/".Auth::user()->id.".csv"))){
             $process = new Process("python python\acquire_schedule.py $schedulepath");
             $process->run();
             if(!$process->isSuccessful()){
                 throw new ProcessFailedException($process);
             }
-            return json_decode($process->getOutput(), true);
+            $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
+            $violated = array();
+            if(file_exists($violated_path)){
+                $handle = fopen($violated_path, "r");
+                while($csvLine = fgetcsv($handle, ",")){
+                    if($csvLine[2]){
+                        array_push($violated, strtolower($csvLine[0]));
+                    }
+                }
+                fclose($handle);
+            }
+            // var_dump($process->getOutput());
+            return array(json_decode($process->getOutput(), true), $violated);
         }
         return "NONE";
     }
 
+    // public function acquireViolated(Request $request)
+    // {
+    //     $schedulepath = "schedule/".Auth::user()->id.".csv";
+    //     $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
+    //     if(file_exists(public_path($schedulepath)) && file_exists(public_path($violated_path))){
+    //         $violated = array();
+    //         $handle = fopen($violated_path, "r");
+    //         while($csvLine = fgetcsv($handle, ",")){
+    //             array_push($violated, strtolower($csvLine[0]));
+    //         }
+    //         fclose($handle);
+    //         return $violated;
+    //     }
+    //     return "NONE";
+    // }
+
     public function saveConstraints(Request $request)
     {
-        $filename = "constraints/".Auth::user()->id.".csv";
+        $constraintspath = "constraints/".Auth::user()->id.".csv";
+        $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
+
+        //Saves all of the constraints that are not preferences
         $selected_array = array('meeting_time','no_class','musthave','mustnothave','maxstraight','maxdaily','subject','days','start','end','instructor','maxnum','priority');
-        $output = fopen($filename, 'w');
+        $output = fopen($constraintspath, 'w');
         fputcsv($output, $selected_array);
         if ($request->constraints != null){
             $array_data = array();
@@ -722,35 +804,51 @@ class StudentController extends Controller
             }
         }
         fclose($output);
+
+        //Saves all of the constraint names
+        $output = fopen($violated_path, 'w');
+        if ($request->constraint_names != null){
+            $array_data = array();
+            foreach ($request->constraint_names as $key => $constraint) {
+                $row = array(
+                    $constraint['text'],
+                    $constraint['included'],
+                    $constraint['violated']);
+                array_push($array_data, $row);
+            }
+            foreach ($array_data as $row){
+                fputcsv($output, $row);
+            }
+        }
+        fclose($output);
         return $request->constraints;
     }
 
-    public function saveFile($Array_data,$type){
+    public function savePreferences($array_data){
         $userid = Auth::user()->id;
         $filename = $userid.".csv";
+        $user = Auth::user();
+        $user->need_restart = 1;
+        $user->save();
+        $selected_array = array('year','semester','courseName','type','units','lec/lab');
+        $preferences_output = fopen('preferences/'.$filename, 'w') ;
+        $preferred_subjects_output = fopen('preferred subjects/'.$filename, 'w');
 
-        if(substr_count($type, "preferences")>0){
-            // PREFERENCES
-            $selected_array = array('year','semester','courseName','type','units','lec/lab');
-            $output = fopen('preferences/'.$filename, 'w') ;//or die('Cannot open file:  '.$filename);
-        } else {
-            // CONSTRAINTS
-            $selected_array = array('meeting_time','no_class','musthave','mustnothave','subject','days','start','end','priority');
-            $output = fopen('constraints/'.$filename, 'w') ;//or die('Cannot open file:  '.$filename);
+        fputcsv($preferences_output, $selected_array);
+
+        foreach ($array_data as $row){
+            $type = $row[3];
+            $courseName = strtolower(str_replace("",'"',$row[2]));
+            if (strpos($type, "elective") !== false){
+                fputcsv($preferred_subjects_output, array($courseName));
+                // $courseName = "";
+            }
+            $row[2] = $courseName;
+            fputcsv($preferences_output, $row);
         }
         
-        fputcsv($output, $selected_array); 
-
-        if(sizeof($Array_data) > 1) {
-            foreach ($Array_data as $row){
-                $row[2] = strtolower(str_replace("",'"',$row[2]));
-                fputcsv($output, $row);
-            } 
-        } else {
-            fputcsv($output, $Array_data);
-        }  
-        
-        fclose($output);
+        fclose($preferences_output);
+        fclose($preferred_subjects_output);
 
         return Redirect::to('home')->with('success','Preferences created successfully!');
     }

@@ -26,7 +26,8 @@
 		margin: 1.5% 0%;
 	}
 
-	.priority_entry p {
+	.priority_entry p ,
+	.preferred_entry p{
 		border-bottom: 1px solid green;
 	}
 
@@ -266,7 +267,8 @@
 		margin: 2% 0%;
 	}
 
-	.priority_entry {
+	.priority_entry ,
+	.preferred_entry{
 
 	}
 }

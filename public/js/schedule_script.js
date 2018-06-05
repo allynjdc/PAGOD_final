@@ -74,7 +74,22 @@ function timeToSeconds(time) {
 
 function saveConstraints(){
 	var constraint_entries = $(".priority_entry:not(.no_entry)");
+	var preferred_constraints = $(".preferred_entry");
+	var constraint_names = [];
 	var constraints = [];
+	$.each(preferred_constraints, function(key, entry){
+		var text = $(entry).find('b').text();
+		var included = 0;
+		if ($(entry).hasClass('bg-danger') || $(entry).hasClass('bg-success')){
+			included = 1;
+		}
+		var violated = 0;
+		if ($(entry).hasClass('bg-danger')){
+			violated = 1;
+		}
+		var row = {text: text, included: included, violated: violated}
+		constraint_names.push(row);
+	});
 	$.each(constraint_entries, function(key, entry){
 		var constraint_type = $(entry).data("constraint_type");
 		var musthave = 0;
@@ -89,13 +104,22 @@ function saveConstraints(){
 		var days = "";
 		var start = "";
 		var end = "";
+		var text = $(entry).find('b').text();
+		var included = 0;
+		if ($(entry).hasClass('bg-danger') || $(entry).hasClass('bg-success')){
+			included = 1;
+		}
+		var violated = 0;
+		if ($(entry).hasClass('bg-danger')){
+			violated = 1;
+		}
+		var row = {text: text, included: included, violated: violated}
 		var priority = $(entry).data("priority")[0].toUpperCase();
 		if (constraint_type == "meetingtime"){
 			var toggle_text = "No Classes from "+$(entry).data("start_time")+" to "+$(entry).data("end_time")+" on "+$(entry).data("days").join(", ");
-			var possible_text = $(entry).find('b').text();
 			if ($(entry).data("start_time") == $(entry).data("end_time")){
 				no_class = 1;
-			}else if (toggle_text.toLowerCase() == possible_text.toLowerCase()){
+			}else if (toggle_text.toLowerCase() == text.toLowerCase()){
 				no_class = 1;
 				start = $(entry).data("start_time");
 				end = $(entry).data("end_time");
@@ -139,14 +163,18 @@ function saveConstraints(){
 			priority: priority,
 		}
 		constraints.push(constraint);
+		constraint_names.push(row);
 	});
 	if (constraints.length == 0 ){
-		constraints = [""]
+		constraints = [""];
+	}
+	if (constraint_names.length == 0){
+		constraint_names = [""];
 	}
 	$.ajax({
 		method: 'POST',
 		url: '/saveconstraints',
-		data: {constraints: constraints},
+		data: {constraints: constraints, constraint_names: constraint_names},
 		dataType: 'json',
 		success: function(data){
 			console.log(data);
@@ -226,69 +254,112 @@ function convertToTime(decimalTime){
 	return stringTime;
 }
 
+function processSchedule(data){
+	console.log(data);
+	var subjectArray = [];
+	$.each(data, function(key, course){
+		// course = JSON.parse(course);
+		for (var i = course["sessions"].length - 1; i >= 0; i--) {
+			var days = course["sessions"][i]["days"].split(" ");
+			var start = course["sessions"][i]["start"];
+			var end = course["sessions"][i]["end"];
+			for (var i = days.length - 1; i >= 0; i--) {
+				days[i] = returnIndex(days[i]);
+			}
+			var subject = {
+				courseName: course["courseName"].toUpperCase(),
+				leclab: course["leclab"],
+				units: course["units"],
+				section: course["section"],
+				days: days,
+				start_time: convertToTime(start),
+				end_time: convertToTime(end),
+				instructor: course["instructor"]
+			}
+			subjectArray.push(subject);
+		}
+	});
+	subjObjList = [];
+	for (var i = subjectArray.length - 1; i >= 0; i--) {
+		subjObj = new Subject();
+		subjObj.setCourseName(subjectArray[i].courseName);
+		subjObj.setTime(subjectArray[i].start_time, subjectArray[i].end_time);
+		subjObj.setDays(subjectArray[i].days);
+		subjObj.setUnits(subjectArray[i].units);
+		subjObj.setLecLab(subjectArray[i].leclab);
+		subjObj.setInstructor(subjectArray[i].instructor);
+		subjObj.setSection(subjectArray[i].section);
+		subjObjList.push(subjObj);
+	}
+
+	for (var i = subjObjList.length - 1; i >= 0; i--) {
+		subjectDays = subjObjList[i].days;
+		for (var j = subjectDays.length - 1; j >= 0; j--) {
+			$("#schedule-loading").jqs('import',[
+				{
+					day: subjectDays[j],
+					periods: [
+						[subjObjList[i].start_time, subjObjList[i].end_time, (subjObjList[i].courseName+" - "+subjObjList[i].lecLab).toUpperCase()+"<br />Section "+subjObjList[i].section]
+					]
+				}
+			]);
+		}
+	}
+}
+
+function processViolatedConstraints(data){
+	var violated_constraints = data;
+	var constraint_entries = $(".priority_entry:not(.no_entry)");
+	var preferred_entries = $(".preferred_entry:not(.no_entry)");
+	$(constraint_entries).removeClass("bg-danger");
+	$(constraint_entries).removeClass("bg-success");
+	$(preferred_entries).removeClass("bg-danger");
+	$(preferred_entries).removeClass("bg-success");
+	if (violated_constraints.length){
+		for (var i = constraint_entries.length - 1; i >= 0; i--) {
+			for (var j = violated_constraints.length - 1; j >= 0; j--) {
+				if (violated_constraints[j].toLowerCase() == $(constraint_entries[i]).find("b").text().toLowerCase()){
+					$(constraint_entries[i]).addClass("bg-danger");
+				}else{
+					$(constraint_entries[i]).addClass("bg-success");
+				}
+			}
+		}
+		for (var i = preferred_entries.length - 1; i >= 0; i--) {
+			for (var j = violated_constraints.length - 1; j >= 0; j--){
+				if (violated_constraints[j].toLowerCase() == $(preferred_entries[i]).find("b").text().toLowerCase()){
+					$(preferred_entries[i]).addClass("bg-danger");
+				}else{
+					$(preferred_entries[i]).addClass("bg-success");
+				}
+			}
+		}
+	}else{
+		$(constraint_entries).addClass("bg-success");
+		$(preferred_entries).addClass("bg-success");
+	}
+}
+
 function showSchedule(){
 	console.log("running show schedule");
-	loadingSchedModal();
 	$.ajax({
 		method: 'GET',
 		url: "/acquireschedule",
 		processData: false,
 		contentType: false,
 		success: function(data){
+			console.log(data);
 			$("#schedule-loading").jqs("reset");
 			if (data != "NONE") {
-				var subjectArray = [];
-				$.each(data, function(key, course){
-					// course = JSON.parse(course);
-					for (var i = course["sessions"].length - 1; i >= 0; i--) {
-						var days = course["sessions"][i]["days"].split(" ");
-						var start = course["sessions"][i]["start"];
-						var end = course["sessions"][i]["end"];
-						for (var i = days.length - 1; i >= 0; i--) {
-							days[i] = returnIndex(days[i]);
-						}
-						var subject = {
-							courseName: course["courseName"].toUpperCase(),
-							leclab: course["leclab"],
-							units: course["units"],
-							section: course["section"],
-							days: days,
-							start_time: convertToTime(start),
-							end_time: convertToTime(end),
-							instructor: course["instructor"]
-						}
-						subjectArray.push(subject);
-					}
-				});
-				subjObjList = [];
-				for (var i = subjectArray.length - 1; i >= 0; i--) {
-					subjObj = new Subject();
-					subjObj.setCourseName(subjectArray[i].courseName);
-					subjObj.setTime(subjectArray[i].start_time, subjectArray[i].end_time);
-					subjObj.setDays(subjectArray[i].days);
-					subjObj.setUnits(subjectArray[i].units);
-					subjObj.setLecLab(subjectArray[i].leclab);
-					subjObj.setInstructor(subjectArray[i].instructor);
-					subjObj.setSection(subjectArray[i].section);
-					subjObjList.push(subjObj);
-				}
-
-				for (var i = subjObjList.length - 1; i >= 0; i--) {
-					subjectDays = subjObjList[i].days;
-					for (var j = subjectDays.length - 1; j >= 0; j--) {
-						$("#schedule-loading").jqs('import',[
-							{
-								day: subjectDays[j],
-								periods: [
-									[subjObjList[i].start_time, subjObjList[i].end_time, (subjObjList[i].courseName+" - "+subjObjList[i].lecLab).toUpperCase()+"<br />Section "+subjObjList[i].section+"<br />"+subjObjList[i].instructor]
-								]
-							}
-						]);
-					}
-				}
+				processSchedule(data[0]);
+				processViolatedConstraints(data[1]);
 				$("#success-modal").modal();
 				$('body').loadingModal('hide');
 				$('body').loadingModal('destroy');
+				for(i=0; i<10000; i++)
+			    {
+			        window.clearInterval(i);
+			    }
 			}
 		},
 		error:function(data){
@@ -317,35 +388,84 @@ function generateSchedule(e){
 		url: "/generateschedule",
 		processData: false,
 		contentType: false,
+		timeout: 0,
 		success:function(data){
-			var violated_constraints = data;
-			var constraint_entries = $(".priority_entry:not(.no_entry)");
-			$(constraint_entries).removeClass("bg-danger");
-			$(constraint_entries).removeClass("bg-success");
-			if (violated_constraints.length){
-				for (var i = constraint_entries.length - 1; i >= 0; i--) {
-					for (var j = violated_constraints.length - 1; j >= 0; j--) {
-						if (violated_constraints[j]["name"].toLowerCase() == $(constraint_entries[i]).find("b").text().toLowerCase()){
-							$(constraint_entries[i]).addClass("bg-danger");
-						}else{
-							$(constraint_entries[i]).addClass("bg-success");
-						}
-					}
-				}
-			}else{
-				$(constraint_entries).addClass("bg-success");
-			}
+			console.log(data);
+			var procShowSchedule = setInterval(showSchedule, 10000);
 			loadingSchedModal();
-			var procShowSchedule = setInterval(showSchedule(), 1000);
 		},
-		error:function(error){
-			console.log(error.responseText);
+		error:function(a,b,c){
+			console.log(a);
+			console.log(b);
+			console.log(c);
 			$('body').loadingModal('hide');
 			$('body').loadingModal('destroy');
 			$("#error-modal").modal();
-		}
+			for(i=0; i<10000; i++)
+		    {
+		        window.clearInterval(i);
+		    }
+		},
+		complete:function(){
+		},
 	});
 }
+
+// function showViolated(){
+// 	console.log("running show violated");
+// 	$.ajax({
+// 		method: 'GET',
+// 		url: "/acquireviolated",
+// 		processData: false,
+// 		contentType: false,
+// 		success: function(data){
+// 			console.log(data);
+// 			if(data!="NONE"){
+// 				var violated_constraints = data;
+// 				var constraint_entries = $(".priority_entry:not(.no_entry)");
+// 				var preferred_entries = $(".preferred_entry:not(.no_entry)");
+// 				$(constraint_entries).removeClass("bg-danger");
+// 				$(constraint_entries).removeClass("bg-success");
+// 				if (violated_constraints.length){
+// 					for (var i = constraint_entries.length - 1; i >= 0; i--) {
+// 						for (var j = violated_constraints.length - 1; j >= 0; j--) {
+// 							if (violated_constraints[j].toLowerCase() == $(constraint_entries[i]).find("b").text().toLowerCase()){
+// 								$(constraint_entries[i]).addClass("bg-danger");
+// 							}else{
+// 								$(constraint_entries[i]).addClass("bg-success");
+// 							}
+// 						}
+// 					}
+// 					for (var i = preferred_entries.length - 1; i >= 0; i--) {
+// 						for (var j = violated_constraints.length - 1; j >= 0; j--){
+// 							if (violated_constraints[j].toLowerCase() == $(preferred_entries[i]).find("b").text().toLowerCase()){
+// 								$(preferred_entries[i]).addClass("bg-danger");
+// 							}else{
+// 								$(preferred_entries[i]).addClass("bg-success");
+// 							}
+// 						}
+// 					}
+// 				}else{
+// 					$(constraint_entries).addClass("bg-success");
+// 				}
+// 				for(i=0; i<10000; i++)
+// 			    {
+// 			        window.clearInterval(i);
+// 			    }
+// 			}
+// 		},
+// 		error: function(data){
+// 			console.log(data);
+// 			for(i=0; i<10000; i++)
+// 		    {
+// 		        window.clearInterval(i);
+// 		    }
+// 		},
+// 		complete:function(){
+// 			clearInterval(showViolated);
+// 		}
+// 	});
+// }
 
 function calculateModal(){
 	$('body').loadingModal({

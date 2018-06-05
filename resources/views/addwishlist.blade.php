@@ -38,6 +38,32 @@
 							</div>
 							<!-- PRIORITIES -->
 							<div class="panel-group priorities" id="accordion">
+                                <!-- Preferred Subjects -->
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-target="#preferredsubjects">Preferred Subjects<span class="badge pull-right" id="preferred_badge">{{count($constraintPreferred)}}</span></a>
+                                        </h4>
+                                    </div>
+                                    <div>
+                                        <div class="panel-body">
+                                        @forelse($constraintPreferred as $key=>$constraint)
+                                        <div class="preferred_entry @if(!Auth::user()->need_restart && $constraint['included']) @if($constraint['not_violated']) bg-danger @else bg-success @endif @endif" id="preferred_{{$key+1}}">
+                                            <p>
+                                                <b>{{$constraint['text']}}</b>
+                                            </p>
+                                        </div>
+                                        @empty
+                                        <div class="preferred_entry no_entry">
+                                            <p>
+                                                <b>No Constraints</b>
+                                            </p>
+                                        </div>
+                                        @endforelse
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End of Preferred Subjects -->
 								<!-- High Priority -->
   								<div class="panel panel-default">
     								<div class="panel-heading">
@@ -49,7 +75,7 @@
     								<div id="high" class="panel-collapse collapse @if(count($constraintHigh) >= 1) in @endif">
       									<div class="panel-body">
                                         @forelse($constraintHigh as $key=>$constraint)
-                                        <div class="priority_entry @if($constraint["not_violated"]) bg-danger @else bg-success @endif" id="high_{{$key+1}}">
+                                        <div class="priority_entry @if(!Auth::user()->need_restart && $constraint['included']) @if($constraint['not_violated']) bg-danger @else bg-success @endif @endif" id="high_{{$key+1}}">
                                             <p>
                                                 <a class="edit-constraint pull-left" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>
                                                 <a class="remove-constraint pull-left" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>
@@ -92,7 +118,7 @@
     								<div id="medium" class="panel-collapse collapse @if(count($constraintMed) >= 1) in @endif">
       									<div class="panel-body">
       										@forelse($constraintMed as $key=>$constraint)
-                                            <div class="priority_entry @if($constraint["not_violated"]) bg-danger @else bg-success @endif" id="medium_{{$key+1}}">
+                                            <div class="priority_entry @if(!Auth::user()->need_restart && $constraint['included']) @if($constraint['not_violated']) bg-danger @else bg-success @endif @endif" id="medium_{{$key+1}}">
                                                 <p>
                                                     <a class="edit-constraint pull-left" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit"></span></a>
                                                     <a class="remove-constraint pull-left" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove"></span></a>
@@ -135,7 +161,7 @@
     								<div id="low" class="panel-collapse collapse @if(count($constraintLow) >= 1) in @endif">
       									<div class="panel-body">
       										@forelse($constraintLow as $key=>$constraint)
-                                            <div class="priority_entry @if($constraint["not_violated"]) bg-danger @else bg-success @endif" id="low_{{$key+1}}">
+                                            <div class="priority_entry @if(!Auth::user()->need_restart && $constraint['included']) @if($constraint['not_violated']) bg-danger @else bg-success @endif @endif" id="low_{{$key+1}}">
                                                 <p>
                                                     <a class="edit-constraint pull-left" data-toggle="modal" href="#editconstraint"><span class="glyphicon glyphicon-edit pull-right"></span></a>
                                                     <a class="remove-constraint pull-left" data-toggle="modal"  href="#remove" ><span class="glyphicon glyphicon-remove pull-right"></span></a>

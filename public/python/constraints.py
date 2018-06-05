@@ -144,7 +144,7 @@ class MaxDaily(Constraint):
 		self.name = 'undefined'
 
 	def test(self, solution):
-		day_counter = {"M":0, "T":0, "W":0, "Th":0, "F":0}
+		day_counter = {"M":0, "T":0, "W":0, "Th":0, "F":0, "S":0}
 		for var in self.variables:
 			classoffering = solution[var]
 			sessions = classoffering.sessions
@@ -159,7 +159,7 @@ class MaxDaily(Constraint):
 
 class MaxStraightClasses(MaxDaily):
 	def test(self, solution):
-		day_dict = {"M":[], "T":[], "W":[], "Th":[], "F":[]}
+		day_dict = {"M":[], "T":[], "W":[], "Th":[], "F":[], "S":[]}
 		for var in self.variables:
 			classoffering = solution[var]
 			sessions = classoffering.sessions
@@ -212,18 +212,6 @@ class PreferredInstructor(Constraint):
 					solution_instructor = [x.strip() for x in solution_instructor.lower().split(" / ")]
 					if preferred_instructor not in solution_instructor:
 						return False
-			# if self.prefInstructor in instructors:
-			# 	curr_instructor = solution[var].instructor
-			# 	if (len(curr_instructor.split(" / ")) < 2):
-			# 		curr_instructor = curr_instructor.strip().lower()
-			# 		preferred_instructor = self.prefInstructor.strip().lower()
-			# 		if curr_instructor != preferred_instructor:
-			# 			return False
-			# 	else:
-			# 		curr_instructor = [x.strip() for x in curr_instructor.lower().split(" / ")]
-			# 		preferred_instructor = self.prefInstructor.strip().lower()
-			# 		if preferred_instructor not in curr_instructor:
-			# 			return False
 		return True
 
 
