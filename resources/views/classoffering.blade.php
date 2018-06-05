@@ -14,7 +14,7 @@
 						<th>Course Name</th>
 						<th>Units</th>
 						<th>Schedule</th>
-						<th>Instructor</th>
+						<!-- <th>Instructor</th> -->
 					</tr>
 				</thead>
 				<tbody>
@@ -23,7 +23,7 @@
 						<td>{{strtoupper($col[2])}} - {{$col[3]}}</td>
 						<td>{{$col[4]}}</td>
 						<td>{{$col[6]}}<br>{{$col[5]}}</td>
-						<td>{{$col[7]}}</td>
+						<!-- <td>{{$col[7]}}</td>   --> 
 					</tr>
 					@endforeach
 					<!-- <tr>
@@ -38,7 +38,7 @@
 						<td></td>
 						<td></td>
 						<td></td>
-						<td></td>
+						<!-- <td></td> -->
 						<!-- <td><strong>TOTAL</strong></td>
 						<td> units</td>
 						<td><span class="glyphicon glyphicon-ok"></span></td>
