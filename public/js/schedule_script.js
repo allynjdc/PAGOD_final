@@ -73,6 +73,14 @@ function timeToSeconds(time) {
 }
 
 function saveConstraints(){
+	var warning_div = $(".warning-message-div");
+	if (!(warning_div.find(".changed-constraints-alert").length > 0)){
+		var newDiv = "<div class='alert alert-warning alert-block changed-constraints-alert'>"+
+			            "<button type='button' class='close' data-dismiss='alert'>×</button>"+
+			            "<strong>There were some changes with your constraints please generate your schedule again.</strong>"+
+			        "</div>";
+		warning_div.append(newDiv);
+	}
 	var constraint_entries = $(".priority_entry:not(.no_entry)");
 	var preferred_constraints = $(".preferred_entry");
 	var constraint_names = [];

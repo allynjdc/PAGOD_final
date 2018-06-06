@@ -41,7 +41,7 @@ def test1():
 		"psych10": createCourse("psych10", timeDecimal("10:00 am"), timeDecimal("11:30 am"), ["T", "F"], 1),
 		"psych101": createCourse("psych180", timeDecimal("11:30 am"), timeDecimal("1:00 pm"), ["T", "F"], 1)
 	}
-	displaySolution(sol1)
+	# #displaySolution(sol1)
 	c = NoConflictsConstraint(sol1.keys())
 	c.name = 'No Conflicts'
 	c.penalty = float('inf')
@@ -51,7 +51,7 @@ def test1():
 		"pi100": createCourse("pi100", timeDecimal("8:30 am"), timeDecimal("10:00 am"), ["T", "F"], 1),
 		"psych199.2": createCourse("psych199.2", timeDecimal("8:30 am"), timeDecimal("10:00 am"), ["T", "F"], 1)
 	}
-	displaySolution(sol2)
+	# #displaySolution(sol2)
 	c = NoConflictsConstraint(sol2.keys())
 	c.name = 'No Conflicts'
 	c.penalty = float('inf')
@@ -61,7 +61,7 @@ def test1():
 		"pi100": createCourse("pi100", timeDecimal("8:30 am"), timeDecimal("10:00 am"), ["T", "F"], 1),
 		"psych195": createCourse("psych195", timeDecimal("8:30 am"), timeDecimal("10:00 am"), ["M", "Th"], 1)
 	}
-	displaySolution(sol3)
+	# #displaySolution(sol3)
 	c = NoConflictsConstraint(sol3.keys())
 	c.name = 'No Conflicts'
 	c.penalty = float('inf')
@@ -71,7 +71,7 @@ def test1():
 		"mgt142": createCourse("mgt142", timeDecimal("11:30 am"), timeDecimal("1:00 pm"), ["T", "F"], 1),
 		"math173": createCourse("math173", timeDecimal("12:00 pm"), timeDecimal("1:00 pm"), ["T", "F"], 1)
 	}
-	displaySolution(sol4)
+	# #displaySolution(sol4)
 	c = NoConflictsConstraint(sol4.keys())
 	c.name = 'No Conflicts'
 	c.penalty = float('inf')
@@ -84,7 +84,7 @@ def test2():
 		"psych10": createCourse("psych10", timeDecimal("10:00 am"), timeDecimal("11:30 am"), ["T", "F"], 1),
 		"psych101": createCourse("psych180", timeDecimal("11:30 am"), timeDecimal("1:00 pm"), ["T", "F"], 1)
 	}
-	displaySolution(sol1)
+	# #displaySolution(sol1)
 	c = MustHaveConstraint(sol1.keys(), "pi100")
 	c.name = 'Must Have PI 100'
 	c.penalty = float('inf')
@@ -94,7 +94,7 @@ def test2():
 		"mgt142": createCourse("mgt142", timeDecimal("11:30 am"), timeDecimal("1:00 pm"), ["T", "F"], 1),
 		"math173": createCourse("math173", timeDecimal("12:00 pm"), timeDecimal("1:00 pm"), ["T", "F"], 1)
 	}
-	displaySolution(sol2)
+	#displaySolution(sol2)
 	c = MustHaveConstraint(sol2.keys(), "pi100")
 	c.name = 'Must Have PI 100'
 	c.penalty = float('inf')
@@ -128,7 +128,7 @@ def test4():
 		"psych10": createCourse("psych10", timeDecimal("10:00 am"), timeDecimal("11:30 am"), ["T", "F"], 1),
 		"psych101": createCourse("psych180", timeDecimal("11:30 am"), timeDecimal("1:00 pm"), ["T", "F"], 1)
 	}
-	displaySolution(sol1)
+	#displaySolution(sol1)
 	c = StartEndConstraint(sol1.keys(), ["T", "F"], "8:30 am", "1:00 pm")
 	c.name = 'Classes must start from 8:30 AM to 1:00 PM on T, F'
 	c.penalty = float('inf')
@@ -138,7 +138,7 @@ def test4():
 		"pi100": createCourse("pi100", timeDecimal("8:30 am"), timeDecimal("10:00 am"), ["T", "F"], 1),
 		"mgt142": createCourse("mgt142", timeDecimal("11:30 am"), timeDecimal("1:00 pm"), ["T", "F"], 1)
 	}
-	displaySolution(sol2)
+	#displaySolution(sol2)
 	c = StartEndConstraint(sol2.keys(), ["T", "F"], "10:00 am", "1:00 pm")
 	c.name = 'Classes must start from 8:30 AM to 1:00 PM on T, F'
 	c.penalty = float('inf')
@@ -148,7 +148,7 @@ def test4():
 		"pi100": createCourse("pi100", timeDecimal("8:30 am"), timeDecimal("10:00 am"), ["T", "F"], 1),
 		"mgt142": createCourse("mgt142", timeDecimal("11:30 am"), timeDecimal("1:00 pm"), ["T", "F"], 1)
 	}
-	displaySolution(sol3)
+	#displaySolution(sol3)
 	c = StartEndConstraint(sol3.keys(), ["M", "Th"], "8:30 am", "1:00 pm")
 	c.name = 'Classes must start from 8:30 AM to 1:00 PM on M, Th'
 	c.penalty = float('inf')
@@ -158,7 +158,7 @@ def test4():
 		"math54": createCourse("math54", None, None, None, 1),
 		"math55": createCourse("math55", None, None, None, 1)
 	}
-	displaySolution(sol4)
+	#displaySolution(sol4)
 	c = StartEndConstraint(sol4.keys(), ["M", "Th"], "1:00 pm", "2:30 pm")
 	c.name = 'Classes must start from 8:30 AM to 1:00 PM on M, Th'
 	c.penalty = float('inf')
@@ -169,7 +169,7 @@ def test4():
 		"math54": createCourse("math54", None, None, None, 1),
 		"math55": createCourse("math55", None, None, None, 1)
 	}
-	displaySolution(sol5)
+	#displaySolution(sol5)
 	c = StartEndConstraint(sol5.keys(), ["T", "F"], "8:30 am", "1:00 pm")
 	c.name = 'Classes must start from 8:30 AM to 1:00 PM on T, F'
 	c.penalty = float('inf')
@@ -263,7 +263,7 @@ def test7():
 		"psych10": createCourse("psych10", timeDecimal("10:00 am"), timeDecimal("11:30 am"), ["T", "F"], 1),
 		"psych101": createCourse("psych180", timeDecimal("11:30 am"), timeDecimal("1:00 pm"), ["T", "F"], 1)
 	}
-	displaySolution(sol1)
+	#displaySolution(sol1)
 	c = MaxDaily(sol1.keys(), 4)
 	c.name = "Maximum Number of Daily Classes must be 4"
 	c.penalty = float('inf')
@@ -302,7 +302,7 @@ def test9():
 		"pi100": createCourse("pi100", timeDecimal("8:30 am"), timeDecimal("10:00 am"), ["T", "F"], 1),
 		"psych10": createCourse("psych10", timeDecimal("10:00 am"), timeDecimal("11:30 am"), ["T", "F"], 1)
 	}
-	displaySolution(sol1)
+	#displaySolution(sol1)
 	instructor_dict = create_instructor_dictionary(sol1)
 	c = PreferredInstructor(instructor_dict, sol1.keys(), "ambita,a")
 	c.name = "Preferred instructor is AMBITA,A"
@@ -323,7 +323,7 @@ def test9():
 		"mgt101": createCourse("mgt101", None, None, None, 1),
 		"fish237": createCourse("fish237", None, None, None, 1),
 	}
-	displaySolution(sol2)
+	#displaySolution(sol2)
 	instructor_dict = create_instructor_dictionary(sol2)
 	# print(instructor_dict)
 	# for var, value in sol2.items():

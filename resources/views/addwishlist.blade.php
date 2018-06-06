@@ -13,14 +13,22 @@
 	<!-- MIDDLE CONTENT -->
 	<div class="container index_container">
 
-        @if($restart == 1)
         <div id="app">
+            @if($restart == 1)
             <div class="alert alert-warning alert-block">
                 <button type="button" class="close" data-dismiss="alert">×</button> 
                 <strong>You recently updated your preferences, please press the generate button again to update your schedule.</strong>
             </div>
+            @endif
         </div>
-        @endif
+        <div class="warning-message-div">
+            @if(Auth::user()->constraints_changed == 1)
+            <div class="alert alert-warning alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button> 
+                <strong>There were some changes with your constraints please generate your schedule again.</strong>
+            </div>
+            @endif
+        </div>
 
 		<!-- ROW -->
 		<div class="row">

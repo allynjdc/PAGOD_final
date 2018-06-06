@@ -26,6 +26,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'constraints' => "\"constraints\\\\1.csv\"",
         'schedule' => "\"schedule\\\\1.csv\"",
         'need_restart' => '0',
+        'constraints_changed' => '0',
         'remember_token' => str_random(10),
     ];
 });

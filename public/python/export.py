@@ -35,7 +35,7 @@ def all_subjects_list(subjects_path):
 
 def create_exportable(preference_directory):
 	preferences_count = read_preferences(preference_directory)
-	ifile = open(preference_directory+"/preference_count.csv", "w", newline="")
+	ifile = open("../preference_count/preference_count.csv", "w", newline="")
 	writer = csv.writer(ifile, delimiter=",")
 	for subject in preferences_count.keys():
 		writer.writerow([

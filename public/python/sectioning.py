@@ -63,18 +63,18 @@ def findSections(courseName, classOfferingList, electiveList, coursesTaken, camp
 			available_electives = [classoffering for classoffering in classOfferingList if (classoffering.courseName in elective_names  and classoffering.campus==campus)]
 			electives_taken = [course.courseName for course in coursesTaken if course.courseType == "elective"]
 			output = [elective for elective in available_electives if elective.courseName not in electives_taken]
-			if "freeelective" in courseName:
-				############################################
-				# geah = set(classoffering.courseName for classoffering in classes.createClassesList("../csv/ge(ah).csv"))
-				# gessp = set(classoffering.courseName for classoffering in classes.createClassesList("../csv/ge(ssp).csv"))
-				# gemst = set(classoffering.courseName for classoffering in classes.createClassesList("../csv/ge(mst).csv"))
-				geah = set(classoffering.courseName for classoffering in classes.createClassesList("csv\\ge(ah).csv"))
-				gessp = set(classoffering.courseName for classoffering in classes.createClassesList("csv\\ge(ssp).csv"))
-				gemst = set(classoffering.courseName for classoffering in classes.createClassesList("csv\\ge(mst).csv"))
-				############################################
-				gesubjects = list(geah)+list(gessp)+list(gemst)
-				subjectsTaken = [classoffering.courseName for classoffering in coursesTaken]
-				output += [classoffering for classoffering in classOfferingList if (classoffering.courseName not in subjectsTaken and classoffering.courseName not in gesubjects and classoffering.campus==campus)]
+			# if "freeelective" in courseName:
+			# 	############################################
+			# 	# geah = set(classoffering.courseName for classoffering in classes.createClassesList("../csv/ge(ah).csv"))
+			# 	# gessp = set(classoffering.courseName for classoffering in classes.createClassesList("../csv/ge(ssp).csv"))
+			# 	# gemst = set(classoffering.courseName for classoffering in classes.createClassesList("../csv/ge(mst).csv"))
+			# 	geah = set(classoffering.courseName for classoffering in classes.createClassesList("csv\\ge(ah).csv"))
+			# 	gessp = set(classoffering.courseName for classoffering in classes.createClassesList("csv\\ge(ssp).csv"))
+			# 	gemst = set(classoffering.courseName for classoffering in classes.createClassesList("csv\\ge(mst).csv"))
+			# 	############################################
+			# 	gesubjects = list(geah)+list(gessp)+list(gemst)
+			# 	subjectsTaken = [classoffering.courseName for classoffering in coursesTaken]
+			# 	output += [classoffering for classoffering in classOfferingList if (classoffering.courseName not in subjectsTaken and classoffering.courseName not in gesubjects and classoffering.campus==campus)]
 			return output
 		if len(courseName.split("_")) == 2:
 			courseName = courseName.split("_")[0]

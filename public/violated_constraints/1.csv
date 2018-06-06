@@ -1,8 +1,8 @@
 Must Have CMSC170,1,0
 Must Have CMSC197,1,0
-Must Have CMSC152,1,0
-Must Have PSYCH101,1,0
+Must Have MATH55,1,0
+Must Have PSYCH101,1,1
 Maximum Number of Daily Classes must be 3,1,0
-"No Classes on T, W, F",1,1
+"No Classes on T, F",1,1
 "Preferred instructor is SANSAIT,J",1,0
-Maximum Number of Straight Classes must be 2,1,1
+Maximum Number of Straight Classes must be 2,1,0

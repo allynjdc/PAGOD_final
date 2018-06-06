@@ -713,6 +713,7 @@ class StudentController extends Controller
         $user = Auth::user();
         $user->schedule = $schedulepath;
         $user->need_restart = 0;
+        $user->constraints_changed = 0;
         $user->save();
         if (file_exists(public_path("schedule/".Auth::user()->id.".csv"))){
             unlink(public_path("schedule/".Auth::user()->id.".csv"));
@@ -773,6 +774,9 @@ class StudentController extends Controller
 
     public function saveConstraints(Request $request)
     {
+        $user = Auth::user();
+        $user->constraints_changed = 1;
+        $user->save();
         $constraintspath = "constraints/".Auth::user()->id.".csv";
         $violated_path = public_path("violated_constraints/".Auth::user()->id.".csv");
 
